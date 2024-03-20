@@ -1,4 +1,4 @@
-name: py38torch18
+name: diffvr3
 channels:
   - pytorch
   - conda-forge
@@ -66,5 +66,5 @@ dependencies:
   - pip:
     - ilock==1.0.3
     - portalocker==2.2.1
-prefix: /home/weiss/anaconda3/envs/py38torch18
+prefix: /home/sangwon/anaconda3/envs/diffvr3
 

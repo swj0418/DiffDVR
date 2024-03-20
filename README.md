@@ -14,7 +14,29 @@ This is the setup which was used to develop the code and execute the experiments
 - Python > 3.6, PyTorch 1.8
   See `environment.yml` or `requirements.txt` for the used packages
 
-Installation: simply run cmake and compile
+To create a conda environment using the specified packages, first change the first and last line in the 
+`environment.yml` file to set to correct names and run,
+
+    conda env create -f environment.yml
+
+**Installation: simply run cmake and compile**
+
+- You need to set TORCH_PATH in CMAKE file.
+- You need to install cudnn
+- You need to install GLM
+- You need to install OpenGL
+-     sudo apt-get update
+      sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+      sudo apt-get install libglew-dev
+      sudo apt-get install libglfw3-dev
+
+**CMake**
+
+    cmake . -DTORCH_PATH=/home/sangwon/anaconda3/envs/diffvr3/lib/python3.8/site-packages/torch -DTorch_DIR=/home/sangwon/anaconda3/envs/diffvr3/lib/python3.8/site-packages/torch/share/cmake/Torch -DPYTHON_LIBRARY=/home/sangwon/anaconda3/envs/diffvr3/lib/libpython3.8.so -DPYTHON_EXECUTABLE=/home/sangwon/anaconda3/envs/diffvr3/bin/python
+
+**Make**
+
+
 
 Note: some users reported that the script to find the PyTorch installation may not be always sucessful. The error reads as something like `CMake Error: The following variables are used in this project, but they are set to NOTFOUND. Please set them or make sure they are set and tested correctly in the CMake files: TORCH_LIB_c10 ...`.
 In that case you need to manually specify the paths, see issue [#2](https://github.com/shamanDevel/DiffDVR/issues/2#issuecomment-1038396900).

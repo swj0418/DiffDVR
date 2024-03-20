@@ -9,10 +9,10 @@ import matplotlib.colors
 import tqdm
 import imageio
 
-from diffdvr import Renderer, CameraOnASphere, Entropy, ColorMatches, Settings, setup_default_settings, \
+from pytests.diffdvr import Renderer, CameraOnASphere, Entropy, ColorMatches, Settings, setup_default_settings, \
     fibonacci_sphere, renderer_dtype_torch, renderer_dtype_np, ProfileRenderer, cvector_to_numpy
-from results import get_result_folder
-from tests import CommonVariables
+from pytests.results import get_result_folder
+from pytests.tests import CommonVariables
 import pyrenderer
 
 
