@@ -320,7 +320,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(3, 2, figsize=(8, 6))
+    fig, axs = plt.subplots(4, 2, figsize=(8, 6))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -332,6 +332,11 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
+    axs[3, 0].set_ylabel("Img Loss")
+    axs[3, 1].set_ylabel("CLIP Loss")
+    axs[3, 0].plot(reconstructed_loss)
+    axs[3, 1].plot(reconstructed_cliploss)
+
     for i in range(3):
         for j in range(2):
             axs[i, j].set_xticks([])
