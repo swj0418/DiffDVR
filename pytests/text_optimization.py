@@ -14,7 +14,7 @@ from utils import _clip_preprocess
 sys.path.insert(0, os.getcwd())
 
 # load pyrenderer
-from diffdvr import make_real3
+from diffdvr import make_real3, Settings
 import pyrenderer
 
 from vis import tfvis
@@ -80,7 +80,11 @@ if __name__ == '__main__':
     print(pyrenderer.__doc__)
 
     print("Create Marschner Lobb")
-    volume = pyrenderer.Volume.create_implicit(pyrenderer.ImplicitEquation.MarschnerLobb, 64)
+    # volume = pyrenderer.Volume.create_implicit(pyrenderer.ImplicitEquation.MarschnerLobb, 64)
+    # volume.copy_to_gpu()
+
+    s = Settings("config-files/skull1b.json")
+    volume = s.load_dataset()
     volume.copy_to_gpu()
     print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
