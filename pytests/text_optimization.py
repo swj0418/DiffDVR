@@ -257,10 +257,10 @@ if __name__ == '__main__':
         # Text feature
         text_features = clipmodel.encode_text(text)
 
-        embedding /= embedding.norm(dim=-1, keepdim=True)
-        text_features /= text_features.norm(dim=-1, keepdim=True)
+        nembedding = embedding / embedding.norm(dim=-1, keepdim=True)
+        ntext_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        score = embedding @ text_features.T
+        score = nembedding @ ntext_features.T
         # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
