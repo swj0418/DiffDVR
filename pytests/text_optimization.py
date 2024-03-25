@@ -281,8 +281,9 @@ if __name__ == '__main__':
     fig.tight_layout()
 
     tmp_fig_folder = 'tmp_figure'
-    os.removedirs(tmp_fig_folder)
-    os.makedirs(tmp_fig_folder)
+    if os.path.exists(tmp_fig_folder):
+        os.removedirs(tmp_fig_folder)
+    os.makedirs(tmp_fig_folder, exist_ok=True)
 
     print("Write frames")
     with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
