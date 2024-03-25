@@ -27,6 +27,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["Marschner Lobb"]).cuda()
 
+lr = 1.0
 iterations = 2000  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
@@ -233,7 +234,7 @@ if __name__ == '__main__':
     reconstructed_cliploss = []
     current_tf = tf.clone()
     current_tf.requires_grad_()
-    optimizer = torch.optim.Adam([current_tf], lr=0.2)
+    optimizer = torch.optim.Adam([current_tf], lr=lr)
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)
