@@ -27,7 +27,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a person skull"]).cuda()
 
-lr = 1.0
+lr = 5.0
 step_size = 100
 gamma = 0.1
 iterations = 300  # Optimization iterations
@@ -332,8 +332,8 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
-    axs[3, 0].set_ylabel("Img Loss")
-    axs[3, 1].set_ylabel("CLIP Loss")
+    axs[3, 0].set_title("Img Loss")
+    axs[3, 1].set_title("CLIP Loss")
     axs[3, 0].plot(reconstructed_loss)
     axs[3, 1].plot(reconstructed_cliploss)
 
