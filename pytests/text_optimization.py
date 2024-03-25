@@ -25,7 +25,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["Sandwich"]).cuda()
+text = tokenizer(["Skull of a person"]).cuda()
 
 lr = 1.0
 step_size = 100
@@ -102,6 +102,8 @@ if __name__ == '__main__':
     opacity_scaling = 25.0
 
     tf_mode = pyrenderer.TFMode.Linear
+    tf = s.get_tf_points()
+    print(tf)
     tf = torch.tensor([[
         # r,g,b,a,pos
         [0.9, 0.01, 0.01, 0.001, 0],
