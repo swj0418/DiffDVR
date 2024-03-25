@@ -257,7 +257,7 @@ if __name__ == '__main__':
         # loss.backward()
         cliploss.backward(retain_graph=True)
         optimizer.step()
-        print("Iteration % 4d, Loss: %7.5f" % (iteration, loss.item()))
+        print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), cliploss.item()))
 
     print("Visualize Optimization")
     fig, axs = plt.subplots(3, 2, figsize=(8, 6))
