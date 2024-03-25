@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
     tf_mode = pyrenderer.TFMode.Linear
     tf = s.get_tf_points()
-    print(tf)
+    tf = torch.tensor(tf, dtype=dtype, device=device)
     tf = torch.tensor([[
         # r,g,b,a,pos
         [0.9, 0.01, 0.01, 0.001, 0],
