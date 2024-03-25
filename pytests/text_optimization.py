@@ -286,15 +286,16 @@ if __name__ == '__main__':
     os.makedirs(tmp_fig_folder, exist_ok=True)
 
     print("Write frames")
-    frame = 0
-    with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
+    for frame in range(len(reconstructed_tf)):
+    # with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
         # def update(frame):
+        print(frame)
         axs[1, 0].imshow(reconstructed_color[frame])
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
         fig.suptitle("Iteration % 4d, Loss: %7.5f" % (frame, reconstructed_loss[frame]))
         fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
-        frame += 1
-        if frame > 0: pbar.update(1)
+        # frame += 1
+        # if frame > 0: pbar.update(1)
 
         # anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
         # anim.save("test_tf_optimization.gif")
