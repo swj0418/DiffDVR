@@ -232,7 +232,8 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)
-        reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
+        if iteration % 4 == 0:
+            reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -286,28 +287,17 @@ if __name__ == '__main__':
     os.makedirs(tmp_fig_folder, exist_ok=True)
 
     print("Write frames")
-    skip = 4
-    for frame in range(len(reconstructed_tf)):
-    # with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
-        # def update(frame):
-        if frame % skip == 0:
-            print(frame)
-            axs[1, 0].imshow(reconstructed_color[frame])
-            tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
-            fig.suptitle("Iteration % 4d, Loss: %7.5f" % (frame, reconstructed_loss[frame]))
-            fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
-        # frame += 1
-        # if frame > 0: pbar.update(1)
+    with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
+        def update(frame):
+            if frame % skip == 0:
+                print(frame)
+                axs[1, 0].imshow(reconstructed_color[frame])
+                tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
+                fig.suptitle("Iteration % 4d, Loss: %7.5f" % (frame, reconstructed_loss[frame]))
+                fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
+            if frame > 0: pbar.update(1)
 
-        # anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
-        # anim.save("test_tf_optimization.gif")
-
-    # Compile saved frames into a GIF using imageio
-    images = []
-    for frame_number in range(len(reconstructed_color)):
-        frame_path = f"{tmp_fig_folder}/frame_{frame_number:04d}.png"
-        if frame % skip == 0:
-            images.append(imageio.v3.imread(frame_path))
-    imageio.mimsave('test_tf_optimization.gif', images, fps=10)
+        anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
+        anim.save("test_tf_optimization.gif")
 
     pyrenderer.cleanup()
