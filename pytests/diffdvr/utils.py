@@ -73,6 +73,12 @@ def toCHW(bhwc : torch.Tensor):
   """
   return bhwc.movedim((0,1,2,3), (0,2,3,1))
 
+def toHWC(bhwc : torch.Tensor):
+  """
+  Converts a tensor from BxCxHxW back to BxHxWxC
+  """
+  return bhwc.movedim((0, 2, 3, 1),(0, 1, 2, 3))
+
 def fibonacci_sphere(N:int, *, dtype=np.float32) -> Tuple[np.ndarray, np.ndarray]:
   """
   Generates points on a sphere using the Fibonacci spiral

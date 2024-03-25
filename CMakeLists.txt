@@ -79,9 +79,6 @@ endif()
 # Pytorch
 ####################################
 
-set(TORCH_PATH "/home/sangwon/anaconda3/envs/diffvr3/lib/python3.8/site-packages/torch/share/cmake/Torch/")
-list(APPEND CMAKE_PREFIX_PATH ${TORCH_PATH})
-
 if(NOT ${RENDERER_ONLY_RESOURCES})
 # find installation path
 if(NOT DEFINED ${TORCH_PATH})
@@ -183,7 +180,7 @@ cmrc_add_resource_library(
 	)
 #set_property(TARGET ${LIBRARY_NAME}-kernels PROPERTY
 #	    MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-set_property(TARGET ${LIBRARY_NAME}-kernels PROPERTY CUDA_ARCHITECTURES 61 72 86)
+set_property(TARGET ${LIBRARY_NAME}-kernels PROPERTY CUDA_ARCHITECTURES 61 72)
 
 ####################################
 # TEST APPLICATION

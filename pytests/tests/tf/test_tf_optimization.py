@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation
 import tqdm
 
+sys.path.insert(0, os.getcwd())
+
 # load pyrenderer
 from diffdvr import make_real3
 import pyrenderer
