@@ -232,8 +232,6 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)
-        if iteration % 4 == 0:
-            reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -254,8 +252,10 @@ if __name__ == '__main__':
         cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
-        reconstructed_loss.append(loss.item())
-        reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
+        if iteration % 4 == 0:
+            reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
+            reconstructed_loss.append(loss.item())
+            reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         # loss.backward()
         cliploss.backward(retain_graph=True)
         optimizer.step()
