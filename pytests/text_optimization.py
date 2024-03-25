@@ -50,7 +50,8 @@ class TransformTF(torch.nn.Module):
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
             self.softplus(tf[:, :, 3:4]),  # opacity
-            torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
+            # torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
+            self.softplus(tf[:, :, 4:5])  # position
         ], dim=2)
 
 
