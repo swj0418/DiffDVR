@@ -149,7 +149,7 @@ if __name__ == '__main__':
     #     [8, 9, 10, 11, -1],
     #     [-1, -1, -1, -1, -1]
     # ]], dtype=torch.int32)
-    differences_settings.D = 4 * 8 # I want gradients for all inner control points
+    differences_settings.D = 4 * 9 # I want gradients for all inner control points
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
         [0, 1, 2, 3, -1],
@@ -160,6 +160,7 @@ if __name__ == '__main__':
         [20, 21, 22, 23, -1],
         [24, 25, 26, 27, -1],
         [28, 29, 30, 31, -1],
+        [32, 33, 34, 35, -1],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
