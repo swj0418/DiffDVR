@@ -257,7 +257,7 @@ if __name__ == '__main__':
             reconstructed_loss.append(loss.item())
             reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         # loss.backward()
-        cliploss.backward(retain_graph=True)
+        cliploss.backward()
         optimizer.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), cliploss.item()))
 
