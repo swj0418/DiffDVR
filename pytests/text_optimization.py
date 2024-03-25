@@ -286,10 +286,12 @@ if __name__ == '__main__':
     os.makedirs(tmp_fig_folder, exist_ok=True)
 
     print("Write frames")
+    skip = 4
     for frame in range(len(reconstructed_tf)):
     # with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
         # def update(frame):
-        if frame % 4 == 0:
+        if frame % skip == 0:
+            print(frame)
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
             fig.suptitle("Iteration % 4d, Loss: %7.5f" % (frame, reconstructed_loss[frame]))
@@ -304,7 +306,8 @@ if __name__ == '__main__':
     images = []
     for frame_number in range(len(reconstructed_color)):
         frame_path = f"{tmp_fig_folder}/frame_{frame_number:04d}.png"
-        images.append(imageio.v3.imread(frame_path))
+        if frame % skip == 0:
+            images.append(imageio.v3.imread(frame_path))
     imageio.mimsave('test_tf_optimization.gif', images, fps=10)
 
     pyrenderer.cleanup()
