@@ -8,7 +8,7 @@ import tqdm
 import open_clip
 from PIL import Image
 
-from pytests.utils import _clip_preprocess
+from utils import _clip_preprocess
 
 sys.path.insert(0, os.getcwd())
 
