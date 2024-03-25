@@ -105,20 +105,18 @@ if __name__ == '__main__':
     tf_points = s.get_tf_points()
     # pyrenderer.TFUtils.get_piecewise_tensor or pyrenderer.TFUtils.get_texture_tensor
     tf = pyrenderer.TFUtils.get_piecewise_tensor(tf_points)
-    print(tf)
     tf = torch.tensor(tf, dtype=dtype, device=device)
     # tf = torch.tensor(tf, dtype=dtype, device=device)
     # tf_attributes = [print(p) for p in tf_points]
     # tf_tensor = torch.tensor(tf_attributes, dtype=torch.float32)
-    print(tf)
-    tf = torch.tensor([[
-        # r,g,b,a,pos
-        [0.9, 0.01, 0.01, 0.001, 0],
-        [0.9, 0.58, 0.46, 0.001, 0.45],
-        [0.9, 0.61, 0.50, 0.8 * opacity_scaling, 0.5],
-        [0.9, 0.66, 0.55, 0.001, 0.55],
-        [0.9, 0.99, 0.99, 0.001, 1]
-    ]], dtype=dtype, device=device)
+    # tf = torch.tensor([[
+    #     # r,g,b,a,pos
+    #     [0.9, 0.01, 0.01, 0.001, 0],
+    #     [0.9, 0.58, 0.46, 0.001, 0.45],
+    #     [0.9, 0.61, 0.50, 0.8 * opacity_scaling, 0.5],
+    #     [0.9, 0.66, 0.55, 0.001, 0.55],
+    #     [0.9, 0.99, 0.99, 0.001, 1]
+    # ]], dtype=dtype, device=device)
 
     invViewMatrix = pyrenderer.Camera.compute_matrix(
         make_real3(camera_origin), make_real3(camera_lookat), make_real3(camera_up),
