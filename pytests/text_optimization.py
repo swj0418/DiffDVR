@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation
 import tqdm
 import open_clip
+import imageio
 from PIL import Image
 
 from utils import _clip_preprocess
@@ -279,17 +280,28 @@ if __name__ == '__main__':
     fig.suptitle("Iteration % 4d, Loss: %7.3f" % (0, reconstructed_loss[0]))
     fig.tight_layout()
 
+    tmp_fig_folder = 'tmp_figure'
+    os.removedirs(tmp_fig_folder)
+    os.makedirs(tmp_fig_folder)
+
     print("Write frames")
     with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
         def update(frame):
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
             fig.suptitle("Iteration % 4d, Loss: %7.5f" % (frame, reconstructed_loss[frame]))
+            fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
             if frame > 0: pbar.update(1)
 
 
-        anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
-        anim.save("test_tf_optimization.gif")
-    plt.show()
+        # anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
+        # anim.save("test_tf_optimization.gif")
+
+    # Compile saved frames into a GIF using imageio
+    images = []
+    for frame_number in range(len(reconstructed_color)):
+        frame_path = f"{tmp_fig_folder}/frame_{frame_number:04d}.png"
+        images.append(imageio.v3.imread(frame_path))
+    imageio.mimsave('test_tf_optimization.gif', images, fps=10)
 
     pyrenderer.cleanup()
