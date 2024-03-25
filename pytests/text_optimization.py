@@ -287,6 +287,7 @@ if __name__ == '__main__':
 
     print("Write frames")
     frame = 0
+    print(len(reconstructed_color))
     with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
         # def update(frame):
         axs[1, 0].imshow(reconstructed_color[frame])
