@@ -19,10 +19,13 @@ import pyrenderer
 
 from vis import tfvis
 
-# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
-clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
+clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+tokenizer = open_clip.get_tokenizer('ViT-B-32')
+
+# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
+text = tokenizer(["Marschner Lobb"])
 
 iterations = 200  # Optimization iterations
 B = 1  # batch dimension
@@ -251,16 +254,23 @@ if __name__ == '__main__':
         embedding = clipmodel.encode_image(prep_img.unsqueeze(0).cuda())[0]
         gtembedding = clipmodel.encode_image(prep_gt.unsqueeze(0).cuda())[0]
 
-        cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
+        # Text feature
+        text_features = clipmodel.encode_text(text)
+
+        embedding /= embedding.norm(dim=-1, keepdim=True)
+        text_features /= text_features.norm(dim=-1, keepdim=True)
+
+        score = embedding @ text_features.T
+        # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
         if iteration % 4 == 0:
             reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
             reconstructed_loss.append(loss.item())
-            reconstructed_cliploss.append(cliploss.item())
+            reconstructed_cliploss.append(score.item())
             reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         # loss.backward()
-        cliploss.backward()
+        score.backward()
         optimizer.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), cliploss.item()))
 
@@ -294,7 +304,7 @@ if __name__ == '__main__':
         def update(frame):
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
-            fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (0, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+            fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
             fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
             if frame > 0: pbar.update(1)
 
