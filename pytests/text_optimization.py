@@ -95,7 +95,7 @@ if __name__ == '__main__':
     dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 60.0
+    fov_degree = 45.0
     camera_origin = np.array([0.0, -0.71, -0.70])
     camera_lookat = np.array([0.0, 0.0, 0.0])
     camera_up = np.array([0, -1, 0])
@@ -284,8 +284,8 @@ if __name__ == '__main__':
             reconstructed_loss.append(loss.item())
             reconstructed_cliploss.append(score.item())
             reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
-        # loss.backward()
-        score.backward()
+        loss.backward()
+        # score.backward()
         optimizer.step()
         scheduler.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
