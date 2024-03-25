@@ -102,8 +102,10 @@ if __name__ == '__main__':
     opacity_scaling = 25.0
 
     tf_mode = pyrenderer.TFMode.Linear
-    tf = s.get_tf_points()
-    tf = torch.tensor(tf, dtype=dtype, device=device)
+    tf_points = s.get_tf_points()
+    # tf = torch.tensor(tf, dtype=dtype, device=device)
+    tf_attributes = [[p.r, p.g, p.b, p.a, p.pos] for p in tf_points]
+    tf_tensor = torch.tensor(tf_attributes, dtype=torch.float32)
     tf = torch.tensor([[
         # r,g,b,a,pos
         [0.9, 0.01, 0.01, 0.001, 0],
