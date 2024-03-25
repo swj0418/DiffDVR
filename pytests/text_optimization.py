@@ -288,7 +288,7 @@ if __name__ == '__main__':
             if frame > 0: pbar.update(1)
 
 
-        anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=True)
+        anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
         anim.save("test_tf_optimization.gif")
     plt.show()
 
