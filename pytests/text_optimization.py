@@ -28,6 +28,8 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["Marschner Lobb"]).cuda()
 
 lr = 1.0
+step_size = 100
+gamma = 0.1
 iterations = 2000  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
@@ -235,6 +237,7 @@ if __name__ == '__main__':
     current_tf = tf.clone()
     current_tf.requires_grad_()
     optimizer = torch.optim.Adam([current_tf], lr=lr)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=0.1)
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)
@@ -273,6 +276,7 @@ if __name__ == '__main__':
         # loss.backward()
         score.backward()
         optimizer.step()
+        scheduler.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
