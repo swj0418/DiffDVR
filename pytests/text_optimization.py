@@ -178,14 +178,23 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
+    # initial_tf = torch.tensor([[
+    #     # r,g,b,a,pos
+    #     [0.9, 0.01, 0.01, 0.001, 0],
+    #     [0.2, 0.4, 0.3, 10, 0.45],
+    #     [0.6, 0.7, 0.2, 7, 0.5],
+    #     [0.5, 0.6, 0.4, 5, 0.55],
+    #     [0.9, 0.99, 0.99, 0.001, 1]
+    # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.9, 0.01, 0.01, 0.001, 0],
         [0.2, 0.4, 0.3, 10, 0.45],
-        [0.6, 0.7, 0.2, 7, 0.5],
+        [0.9, 0.99, 0.99, 0.001, 1],
         [0.5, 0.6, 0.4, 5, 0.55],
-        [0.9, 0.99, 0.99, 0.001, 1]
+        [0.6, 0.7, 0.2, 7, 0.5],
     ]], dtype=dtype, device=device)
+
     print("Initial tf (original):", initial_tf)
     inputs.tf = initial_tf
     pyrenderer.Renderer.render_forward(inputs, outputs)
