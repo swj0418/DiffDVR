@@ -104,7 +104,7 @@ if __name__ == '__main__':
     tf_mode = pyrenderer.TFMode.Linear
     tf_points = s.get_tf_points()
     # pyrenderer.TFUtils.get_piecewise_tensor or pyrenderer.TFUtils.get_texture_tensor
-    tf = pyrenderer.TFUtils.get_texture_tensor(tf_points, tf_mode)
+    tf = pyrenderer.TFUtils.get_piecewise_tensor(tf_points, tf_mode)
     tf = torch.tensor(tf, dtype=dtype, device=device)
     # tf = torch.tensor(tf, dtype=dtype, device=device)
     # tf_attributes = [print(p) for p in tf_points]
