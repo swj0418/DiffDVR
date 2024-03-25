@@ -25,7 +25,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["Skull of a person"]).cuda()
+text = tokenizer(["Teeth of a person"]).cuda()
 
 lr = 1.0
 step_size = 100
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 45.0
+    fov_degree = 15.0
     camera_origin = np.array([0.0, -0.71, -0.70])
     camera_lookat = np.array([0.0, 0.0, 0.0])
     camera_up = np.array([0, -1, 0])
@@ -313,8 +313,8 @@ if __name__ == '__main__':
             reconstructed_loss.append(loss.item())
             reconstructed_cliploss.append(score.item())
             reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
-        loss.backward()
-        # score.backward()
+        # loss.backward()
+        score.backward()
         optimizer.step()
         scheduler.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
