@@ -127,14 +127,14 @@ if __name__ == '__main__':
     # tf = torch.tensor(tf, dtype=dtype, device=device)
     # tf_attributes = [print(p) for p in tf_points]
     # tf_tensor = torch.tensor(tf_attributes, dtype=torch.float32)
-    # tf = torch.tensor([[
-    #     # r,g,b,a,pos
-    #     [0.9, 0.01, 0.01, 0.001, 0],
-    #     [0.9, 0.58, 0.46, 0.001, 0.45],
-    #     [0.9, 0.61, 0.50, 0.8 * opacity_scaling, 0.5],
-    #     [0.9, 0.66, 0.55, 0.001, 0.55],
-    #     [0.9, 0.99, 0.99, 0.001, 1]
-    # ]], dtype=dtype, device=device)
+    tf = torch.tensor([[
+        # r,g,b,a,pos
+        [0.85, 0.85, 0.85, 0.001, 0],
+        [0.85, 0.85, 0.85, 0.001, 0.45],
+        [0.85, 0.85, 0.85, 0.8 * opacity_scaling, 0.5],
+        [0.85, 0.85, 0.85, 0.001, 0.55],
+        [0.85, 0.85, 0.85, 0.001, 1]
+    ]], dtype=dtype, device=device)
 
     invViewMatrix = pyrenderer.Camera.compute_matrix(
         make_real3(camera_origin), make_real3(camera_lookat), make_real3(camera_up),
@@ -169,16 +169,16 @@ if __name__ == '__main__':
     differences_settings.D = 4 * 9 # I want gradients for all inner control points
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, -1],
-        [4, 5, 6, 7, -1],
-        [8, 9, 10, 11, -1],
-        [12, 13, 14, 15, -1],
-        [16, 17, 18, 19, -1],
-        [20, 21, 22, 23, -1],
-        [24, 25, 26, 27, -1],
-        [28, 29, 30, 31, -1],
-        [32, 33, 34, 35, -1],
-        [-1, -1, -1, -1, -1]
+        [-1, -1, -1, 0, -1],
+        [-1, -1, -1, 1, -1],
+        [-1, -1, -1, 2, -1],
+        [-1, -1, -1, 3, -1],
+        [-1, -1, -1, 4, -1],
+        [-1, -1, -1, 5, -1],
+        [-1, -1, -1, 6, -1],
+        [-1, -1, -1, 7, -1],
+        [-1, -1, -1, 8, -1],
+        [-1, -1, -1, -1, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
@@ -220,17 +220,17 @@ if __name__ == '__main__':
     # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.9, 0.01, 0.01, 0.001, 0],
-        [0.9, 0.01, 0.01, 0.001, 0.1],
-        [0.2, 0.4, 0.3, 10, 0.2],
-        [0.2, 0.4, 0.3, 10, 0.4],
-        [0.6, 0.7, 0.2, 7, 0.5],
-        [0.5, 0.6, 0.4, 5, 0.6],
-        [0.5, 0.6, 0.4, 7, 0.7],
-        [0.5, 0.6, 0.4, 7, 0.8],
-        [0.5, 0.6, 0.4, 7, 0.9],
-        [0.5, 0.6, 0.4, 7, 0.99],
-        [0.9, 0.99, 0.99, 0.001, 1]
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
+        [0.85, 0.85, 0.85, 5, 0],
     ]], dtype=dtype, device=device)
     # initial_tf = torch.tensor([[
     #     # r,g,b,a,pos
