@@ -276,6 +276,7 @@ if __name__ == '__main__':
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
         tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
         gtimg =torch.swapdims(gtimg, 0, 2)
+        gtimg =torch.swapdims(gtimg, 1, 2)
 
         prep_img = grad_preprocess(tmpimg)
         prep_gt = grad_preprocess(gtimg)
