@@ -275,9 +275,9 @@ if __name__ == '__main__':
         gtimg = reference_color_gpu[:, :, :, :3][0]
 
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
-        # gtimg =torch.swapdims(gtimg, 0, 2)
+        gtimg =torch.swapdims(gtimg, 0, 2)
 
-        tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
+        # tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
         # gtimg =torch.swapdims(gtimg, 1, 2)
 
         prep_img = grad_preprocess(tmpimg)
