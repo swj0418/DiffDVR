@@ -109,9 +109,9 @@ if __name__ == '__main__':
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
-    Y = volume.resolution.y
-    Z = volume.resolution.z
-    X = volume.resolution.x
+    Y = 512
+    Z = 373
+    X = 512
     # device = volume.getDataGpu(0).device
     # dtype = volume.getDataGpu(0).dtype
 
