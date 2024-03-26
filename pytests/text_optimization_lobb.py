@@ -27,9 +27,9 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A rendering of a Marschner Lobb"]).cuda()
 
-lr = 1.0
+lr = 0.2
 step_size = 50
-gamma = 0.5
+gamma = 1
 iterations = 200  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
