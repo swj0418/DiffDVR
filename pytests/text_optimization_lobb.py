@@ -264,7 +264,7 @@ if __name__ == '__main__':
     current_tf = tf.clone()
     current_tf.requires_grad_()
     optimizer = torch.optim.Adam([current_tf], lr=lr)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)
@@ -275,10 +275,10 @@ if __name__ == '__main__':
         gtimg = reference_color_gpu[:, :, :, :3][0]
 
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
-        gtimg =torch.swapdims(gtimg, 0, 2)
+        # gtimg =torch.swapdims(gtimg, 0, 2)
 
         tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
-        gtimg =torch.swapdims(gtimg, 1, 2)
+        # gtimg =torch.swapdims(gtimg, 1, 2)
 
         prep_img = grad_preprocess(tmpimg)
         prep_gt = grad_preprocess(gtimg)
