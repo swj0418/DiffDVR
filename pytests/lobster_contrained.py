@@ -113,10 +113,10 @@ if __name__ == '__main__':
     # dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 60.0
+    fov_degree = 90.0
     # camera_origin = np.array([0.0, -0.71, -0.70])
-    camera_origin = np.array([45, 45, 45])
-    camera_lookat = np.array([0.0, 0.0, 0.0])
+    camera_origin = np.array([0, 0, 0])
+    camera_lookat = np.array([90, 90, 90])
     camera_up = np.array([0, -1, 0])
     opacity_scaling = 25.0
 
