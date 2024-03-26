@@ -28,7 +28,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A rendering of a Marschner Lobb"]).cuda()
 
 lr = 0.2
-step_size = 50
+step_size = 200
 gamma = 1
 iterations = 200  # Optimization iterations
 B = 1  # batch dimension
