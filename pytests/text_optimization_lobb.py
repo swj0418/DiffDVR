@@ -4,6 +4,7 @@ import sys
 import os
 import matplotlib.pyplot as plt
 import matplotlib.animation
+import torchvision.utils
 import tqdm
 import open_clip
 import imageio
@@ -272,7 +273,7 @@ if __name__ == '__main__':
         # Tensor [C, H, W]
         tmpimg = color[:, :, :, :3][0]
         gtimg = reference_color_gpu[:, :, :, :3][0]
-        tmpimg = torch.swapdims(tmpimg, 0, 2)  # [c, W, H]
+        tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
         gtimg =torch.swapdims(gtimg, 0, 2)
 
         prep_img = grad_preprocess(tmpimg)
@@ -304,6 +305,9 @@ if __name__ == '__main__':
         optimizer.step()
         scheduler.step()
         print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
+
+    # Last epoch image
+    torchvision.utils.save_image(prep_img.unsqueeze(0), 'last_iter.png', normalize=True)
 
     print("Visualize Optimization")
     fig, axs = plt.subplots(4, 2, figsize=(8, 6))
