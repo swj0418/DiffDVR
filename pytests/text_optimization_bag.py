@@ -41,7 +41,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a person skull"]).cuda()
+text = tokenizer(["A CT scan of a jumping rope"]).cuda()
 
 lr = 5.0
 step_size = 100
@@ -96,11 +96,7 @@ class InverseTransformTF(torch.nn.Module):
 if __name__ == '__main__':
     print(pyrenderer.__doc__)
 
-    print("Create Marschner Lobb")
-    # volume = pyrenderer.Volume.create_implicit(pyrenderer.ImplicitEquation.MarschnerLobb, 64)
-    # volume.copy_to_gpu()
-
-    s = Settings("config-files/skull1b.json")
+    s = Settings("config-files/skull1b.json")  # I need this from ref TF for now.
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     dtype = torch.float32
