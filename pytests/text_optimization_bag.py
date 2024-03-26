@@ -43,7 +43,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a jumping rope"]).cuda()
 
-lr = 5.0
+lr = 1.0
 step_size = 100
 gamma = 0.1
 iterations = 300  # Optimization iterations
@@ -229,7 +229,7 @@ if __name__ == '__main__':
         [0.5, 0.6, 0.4, 7, 0.7],
         [0.5, 0.6, 0.4, 7, 0.8],
         [0.5, 0.6, 0.4, 7, 0.9],
-        [0.5, 0.6, 0.4, 7, 0.5],
+        [0.5, 0.6, 0.4, 7, 0.99],
         [0.9, 0.99, 0.99, 0.001, 1]
     ]], dtype=dtype, device=device)
     # initial_tf = torch.tensor([[
