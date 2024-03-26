@@ -274,6 +274,7 @@ if __name__ == '__main__':
         tmpimg = color[:, :, :, :3][0]
         gtimg = reference_color_gpu[:, :, :, :3][0]
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
+        tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
         gtimg =torch.swapdims(gtimg, 0, 2)
 
         prep_img = grad_preprocess(tmpimg)
@@ -308,6 +309,7 @@ if __name__ == '__main__':
 
     # Last epoch image
     torchvision.utils.save_image(prep_img.unsqueeze(0), 'last_iter.png', normalize=True)
+    torchvision.utils.save_image(prep_gt.unsqueeze(0), 'last_iter_gt.png', normalize=True)
 
     print("Visualize Optimization")
     fig, axs = plt.subplots(4, 2, figsize=(8, 6))
