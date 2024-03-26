@@ -44,7 +44,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a jumping rope"]).cuda()
 
 lr = 1.0
-step_size = 100
+step_size = 150
 gamma = 0.1
 iterations = 300  # Optimization iterations
 B = 1  # batch dimension
@@ -320,7 +320,7 @@ if __name__ == '__main__':
         tmpimg = color[:, :, :, :3][0]
         gtimg = reference_color_gpu[:, :, :, :3][0]
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [c, W, H]
-        gtimg =torch.swapdims(gtimg, 0, 2)
+        gtimg = torch.swapdims(gtimg, 0, 2)
 
         prep_img = grad_preprocess(tmpimg)
         prep_gt = grad_preprocess(gtimg)
