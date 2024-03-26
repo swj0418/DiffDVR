@@ -20,7 +20,7 @@ import pyrenderer
 
 from vis import tfvis
 
-dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/backpack/backpack.idx', cache_dir='.')
+dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/backpack/backpack.idx', cache_dir='./cache')
 data = dataset.read(x=(
 0
 ,
