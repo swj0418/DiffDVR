@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # camera_origin = np.array([0.0, -0.71, -0.70])
     camera_origin = np.array([0, 0, 0])
     camera_lookat = np.array([90, 90, 90])
-    camera_up = np.array([0, -1, 0])
+    camera_up = np.array([0, -1, -1])
     opacity_scaling = 25.0
 
     tf_mode = pyrenderer.TFMode.Linear
