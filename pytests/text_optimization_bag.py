@@ -105,7 +105,7 @@ if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     dtype = torch.float32
     data = data.astype(np.float)
-    volume = torch.from_numpy(data)
+    volume = torch.from_numpy(data).unsqueeze(0)
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
