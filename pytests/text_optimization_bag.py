@@ -106,6 +106,7 @@ if __name__ == '__main__':
     dtype = torch.float32
     data = data.astype(np.float)
     volume = torch.from_numpy(data).unsqueeze(0)
+    volume = torch.tensor(volume, dtype=dtype, device=device)
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
