@@ -46,7 +46,7 @@ text = tokenizer(["A CT scan of a jumping rope"]).cuda()
 lr = 1.0
 step_size = 150
 gamma = 0.1
-iterations = 300  # Optimization iterations
+iterations = 40  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224  # screen width
@@ -129,11 +129,11 @@ if __name__ == '__main__':
     # tf_tensor = torch.tensor(tf_attributes, dtype=torch.float32)
     tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.1, 0.1, 0.1, 0.001, 0],
-        [0.1, 0.1, 0.1, 0.001, 0.45],
-        [0.1, 0.1, 0.1, 0.8 * opacity_scaling, 0.5],
-        [0.1, 0.1, 0.1, 0.001, 0.55],
-        [0.1, 0.1, 0.1, 0.001, 1]
+        [0.2, 0.5, 0.2, 0.001, 0],
+        [0.2, 0.5, 0.2, 0.001, 0.45],
+        [0.2, 0.5, 0.2, 0.8 * opacity_scaling, 0.5],
+        [0.2, 0.5, 0.2, 0.001, 0.55],
+        [0.2, 0.5, 0.2, 0.001, 1]
     ]], dtype=dtype, device=device)
 
     invViewMatrix = pyrenderer.Camera.compute_matrix(
