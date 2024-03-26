@@ -310,7 +310,7 @@ if __name__ == '__main__':
     current_tf = tf.clone()
     current_tf.requires_grad_()
     optimizer = torch.optim.Adam([current_tf], lr=lr)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
         loss, transformed_tf, color = model(current_tf)

@@ -132,22 +132,22 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    # differences_settings.D = 4 * 3  # I want gradients for all inner control points
-    # derivative_tf_indices = torch.tensor([[
-    #     [-1, -1, -1, -1, -1],
-    #     [0, 1, 2, 3, -1],
-    #     [4, 5, 6, 7, -1],
-    #     [8, 9, 10, 11, -1],
-    #     [-1, -1, -1, -1, -1]
-    # ]], dtype=torch.int32)
-    differences_settings.D = 3  # I want gradients for all inner control points
+    differences_settings.D = 4 * 3  # I want gradients for all inner control points
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [-1, -1, -1, 0, -1],
-        [-1, -1, -1, 1, -1],
-        [-1, -1, -1, 2, -1],
+        [0, 1, 2, 3, -1],
+        [4, 5, 6, 7, -1],
+        [8, 9, 10, 11, -1],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
+    # differences_settings.D = 3  # I want gradients for all inner control points
+    # derivative_tf_indices = torch.tensor([[
+    #     [-1, -1, -1, -1, -1],
+    #     [-1, -1, -1, 0, -1],
+    #     [-1, -1, -1, 1, -1],
+    #     [-1, -1, -1, 2, -1],
+    #     [-1, -1, -1, -1, -1]
+    # ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
 
@@ -186,14 +186,6 @@ if __name__ == '__main__':
     #     [0.5, 0.6, 0.4, 5, 0.55],
     #     [0.9, 0.99, 0.99, 0.001, 1]
     # ]], dtype=dtype, device=device)
-    # initial_tf = torch.tensor([[
-    #     # r,g,b,a,pos
-    #     [0.9, 0.01, 0.01, 0.001, 0],
-    #     [0.9, 0.58, 0.46, 0.001, 0.45],
-    #     [0.9, 0.61, 0.50, 0.8 * opacity_scaling, 0.5],
-    #     [0.9, 0.66, 0.55, 0.001, 0.55],
-    #     [0.9, 0.99, 0.99, 0.001, 1]
-    # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.9, 0.01, 0.01, 0.001, 0],
@@ -202,6 +194,14 @@ if __name__ == '__main__':
         [0.9, 0.66, 0.55, 0.001, 0.55],
         [0.9, 0.99, 0.99, 0.001, 1]
     ]], dtype=dtype, device=device)
+    # initial_tf = torch.tensor([[
+    #     # r,g,b,a,pos
+    #     [0.9, 0.01, 0.01, 0.001, 0],
+    #     [0.9, 0.58, 0.46, 0.001, 0.45],
+    #     [0.9, 0.61, 0.50, 0.8 * opacity_scaling, 0.5],
+    #     [0.9, 0.66, 0.55, 0.001, 0.55],
+    #     [0.9, 0.99, 0.99, 0.001, 1]
+    # ]], dtype=dtype, device=device)
     print("Initial tf (original):", initial_tf)
     inputs.tf = initial_tf
     pyrenderer.Renderer.render_forward(inputs, outputs)
@@ -251,7 +251,7 @@ if __name__ == '__main__':
             # TODO: softplus for opacity, sigmoid for color
             transformed_tf = self.tf_transform(current_tf)
             color = rendererDerivTF(transformed_tf)
-            loss = torch.nn.functional.mse_loss(color, reference_color_gpu)
+            loss = torch.nn.functional.mse_loss(color[:, :, :, 0:3], reference_color_gpu[:, :, :, 0:3])
             return loss, transformed_tf, color
 
     model = OptimModel()
