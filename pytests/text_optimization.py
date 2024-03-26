@@ -94,6 +94,7 @@ if __name__ == '__main__':
     X = volume.resolution.x
     device = volume.getDataGpu(0).device
     dtype = volume.getDataGpu(0).dtype
+    print(f"Data Type: {dtype}")
 
     # settings
     fov_degree = 45.0
