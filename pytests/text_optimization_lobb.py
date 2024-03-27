@@ -9,6 +9,7 @@ import tqdm
 import open_clip
 import imageio
 from PIL import Image
+from argparse import ArgumentParser
 
 from utils import _clip_preprocess
 
@@ -20,18 +21,27 @@ import pyrenderer
 
 from vis import tfvis
 
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument('--prompt', '-p', type=str, required=True)
+    parser.add_argument('--file_id', '-f', type=str, required=True)
+    return parser.parse_args()
+
+args = parse_args()
+
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
 tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A beige rendering of ripples in black background"]).cuda()
+# text = tokenizer(["A beige rendering of ripples in black background"]).cuda()
+text = tokenizer([args.prompt]).cuda()
 
 lr = 0.2
 step_size = 200
 gamma = 1
-iterations = 200  # Optimization iterations
+iterations = 300  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224  # screen width
@@ -354,6 +364,6 @@ if __name__ == '__main__':
             if frame > 0: pbar.update(1)
 
         anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
-        anim.save("test_tf_optimization.gif")
+        anim.save(f"test_tf_optimization_{args.file_id}.gif")
 
     pyrenderer.cleanup()
