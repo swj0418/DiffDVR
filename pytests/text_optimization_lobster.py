@@ -21,19 +21,7 @@ import pyrenderer
 from vis import tfvis
 
 dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
-data = dataset.read(x=(
-0
-,
-301
-), y=(
-0
-,
-324
-), z=(
-0
-,
-56
-))
+data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
 
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
 tokenizer = open_clip.get_tokenizer('ViT-B-32')
@@ -41,12 +29,12 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a jumping rope"]).cuda()
+text = tokenizer(["A CT scan of a lobster"]).cuda()
 
 lr = 1.0
-step_size = 150
+step_size = 200
 gamma = 0.1
-iterations = 40  # Optimization iterations
+iterations = 400  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224  # screen width
@@ -67,7 +55,7 @@ class TransformTF(torch.nn.Module):
             self.sigmoid(tf[:, :, 0:3]),  # color
             self.softplus(tf[:, :, 3:4]),  # opacity
             # torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
-            tf[:, :, 4:5] # position
+            tf[:, :, 4:5]  # position
         ], dim=2)
 
 
@@ -113,27 +101,21 @@ if __name__ == '__main__':
     # dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 90.0
-    camera_origin = np.array([0.0, -0.71, -0.70])
-    camera_lookat = np.array([0.0, 0.0, 0.0])
-    camera_up = np.array([0, -1, 0])
+    fov_degree = 45.0
+    camera_origin = np.array([0.0, 0, 0])
+    camera_lookat = np.array([150, 161, 27])
+    camera_up = np.array([-0.28, 0.94, 0.16])
     opacity_scaling = 25.0
 
     tf_mode = pyrenderer.TFMode.Linear
-    tf_points = s.get_tf_points()
-    # pyrenderer.TFUtils.get_piecewise_tensor or pyrenderer.TFUtils.get_texture_tensor
-    tf = pyrenderer.TFUtils.get_piecewise_tensor(tf_points)
-    tf = torch.tensor(tf, dtype=dtype, device=device)
-    # tf = torch.tensor(tf, dtype=dtype, device=device)
-    # tf_attributes = [print(p) for p in tf_points]
-    # tf_tensor = torch.tensor(tf_attributes, dtype=torch.float32)
     tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.2, 0.5, 0.2, 0.001, 0],
-        [0.2, 0.5, 0.2, 0.001, 0.45],
-        [0.2, 0.5, 0.2, 0.8 * opacity_scaling, 0.5],
-        [0.2, 0.5, 0.2, 0.001, 0.55],
-        [0.2, 0.5, 0.2, 0.001, 1]
+        [0.0, 0.0, 0.0, 0.001, 0],
+        [0.8, 0.1, 0.1, 0.001, 0.1],
+        [0.5, 0.1, 0.1, 0.4 * opacity_scaling, 0.3],
+        [0.3, 0.1, 0.1, 0.8 * opacity_scaling, 0.5],
+        [0.0, 0.0, 0.0, 0.99, 0.7],
+        [0.0, 0.0, 0.0, 0.99, 0.99]
     ]], dtype=dtype, device=device)
 
     invViewMatrix = pyrenderer.Camera.compute_matrix(
@@ -158,40 +140,14 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    # differences_settings.D = 4 * 3  # I want gradients for all inner control points
-    # derivative_tf_indices = torch.tensor([[
-    #     [-1, -1, -1, -1, -1],
-    #     [0, 1, 2, 3, -1],
-    #     [4, 5, 6, 7, -1],
-    #     [8, 9, 10, 11, -1],
-    #     [-1, -1, -1, -1, -1]
-    # ]], dtype=torch.int32)
-    differences_settings.D = 4 * 9 # I want gradients for all inner control points
-    # derivative_tf_indices = torch.tensor([[
-    #     [-1, -1, -1, -1, -1],
-    #     [-1, -1, -1, 0, -1],
-    #     [-1, -1, -1, 1, -1],
-    #     [-1, -1, -1, 2, -1],
-    #     [-1, -1, -1, 3, -1],
-    #     [-1, -1, -1, 4, -1],
-    #     [-1, -1, -1, 5, -1],
-    #     [-1, -1, -1, 6, -1],
-    #     [-1, -1, -1, 7, -1],
-    #     [-1, -1, -1, 8, -1],
-    #     [-1, -1, -1, -1, -1],
-    # ]], dtype=torch.int32)
+    differences_settings.D = 4 * 6  # I want gradients for all inner control points
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
         [0, 1, 2, 3, -1],
         [4, 5, 6, 7, -1],
         [8, 9, 10, 11, -1],
         [12, 13, 14, 15, -1],
-        [16, 17, 18, 19, -1],
-        [20, 21, 22, 23, -1],
-        [24, 25, 26, 27, -1],
-        [28, 29, 30, 31, -1],
-        [32, 33, 34, 35, -1],
-        [-1, -1, -1, -1, -1]
+        [-1, -1, -1, -1, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
@@ -218,62 +174,21 @@ if __name__ == '__main__':
     def rescale_array(array):
         return np.clip(array * 255, 0, 255).astype(np.uint8)
 
+
     gtimg = Image.fromarray(rescale_array(reference_color_image), 'RGBA')
     gtimg.save('test_ref.png')
 
     # initialize initial TF and render
     print("Render initial")
-    # initial_tf = torch.tensor([[
-    #     # r,g,b,a,pos
-    #     [0.9, 0.01, 0.01, 0.001, 0],
-    #     [0.2, 0.4, 0.3, 10, 0.45],
-    #     [0.6, 0.7, 0.2, 7, 0.5],
-    #     [0.5, 0.6, 0.4, 5, 0.55],
-    #     [0.9, 0.99, 0.99, 0.001, 1]
-    # ]], dtype=dtype, device=device)
-    # initial_tf = torch.tensor([[
-    #     # r,g,b,a,pos
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    #     [0.5, 0.5, 0.5, 5, 0],
-    # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.9, 0.01, 0.01, 0.001, 0],
-        [0.9, 0.01, 0.01, 0.001, 0.1],
-        [0.2, 0.4, 0.3, 10, 0.2],
-        [0.2, 0.4, 0.3, 10, 0.4],
-        [0.6, 0.7, 0.2, 7, 0.5],
-        [0.5, 0.6, 0.4, 5, 0.6],
-        [0.5, 0.6, 0.4, 7, 0.7],
-        [0.5, 0.6, 0.4, 7, 0.8],
-        [0.5, 0.6, 0.4, 7, 0.9],
-        [0.5, 0.6, 0.4, 7, 0.99],
-        [0.9, 0.99, 0.99, 0.001, 1]
+        [0.0, 0.0, 0.0, 0.001, 0],
+        [0.2, 0.9, 0.5, 0.001, 0.1],
+        [0.1, 0.4, 0.7, 0.4 * opacity_scaling, 0.3],
+        [0.6, 0.6, 0.3, 0.8 * opacity_scaling, 0.5],
+        [0.3, 0.2, 0.2, 0.99, 0.7],
+        [0.0, 0.0, 0.0, 0.99, 0.99]
     ]], dtype=dtype, device=device)
-    # initial_tf = torch.tensor([[
-    #     # r,g,b,a,pos
-    #     [0.0, 0.0, 0.0, 0.5, 0.01],
-    #     [0.0, 0.0, 0.0, 0.5, 0.1],
-    #     [0.0, 0.0, 0.0, 0.5, 0.2],
-    #     [0.0, 0.0, 0.0, 0.5, 0.3],
-    #     [55.0, 55.0, 55.0, 0.5, 0.4],
-    #     [0.0, 0.0, 0.0, 0.5, 0.5],
-    #     [0.0, 0.0, 0.0, 0.5, 0.6],
-    #     [0.0, 0.0, 0.0, 0.5, 0.7],
-    #     [0.0, 0.0, 0.0, 0.5, 0.8],
-    #     [0.0, 0.0, 0.0, 0.5, 0.9],
-    #     [0.0, 0.0, 0.0, 0.5, 0.99]
-    # ]], dtype=dtype, device=device)
-
 
     print("Initial tf (original):", initial_tf)
     inputs.tf = initial_tf
@@ -327,6 +242,7 @@ if __name__ == '__main__':
             loss = torch.nn.functional.mse_loss(color, reference_color_gpu)
             return loss, transformed_tf, color
 
+
     model = OptimModel()
 
     # run optimization
@@ -348,10 +264,10 @@ if __name__ == '__main__':
         gtimg = reference_color_gpu[:, :, :, :3][0]
 
         tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
-        gtimg =torch.swapdims(gtimg, 0, 2)
+        gtimg = torch.swapdims(gtimg, 0, 2)
 
         tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
-        gtimg =torch.swapdims(gtimg, 1, 2)
+        gtimg = torch.swapdims(gtimg, 1, 2)
 
         prep_img = grad_preprocess(tmpimg)
         prep_gt = grad_preprocess(gtimg)
@@ -405,7 +321,8 @@ if __name__ == '__main__':
         for j in range(2):
             axs[i, j].set_xticks([])
             if j == 0: axs[i, j].set_yticks([])
-    fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (0, reconstructed_loss[0], reconstructed_cliploss[0]))
+    fig.suptitle(
+        "Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (0, reconstructed_loss[0], reconstructed_cliploss[0]))
     fig.tight_layout()
 
     tmp_fig_folder = 'tmp_figure'
@@ -418,9 +335,11 @@ if __name__ == '__main__':
         def update(frame):
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
-            fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+            fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (
+            frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
             fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
             if frame > 0: pbar.update(1)
+
 
         anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
         anim.save("test_tf_optimization.gif")
