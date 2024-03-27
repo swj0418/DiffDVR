@@ -102,8 +102,8 @@ if __name__ == '__main__':
 
     # settings
     fov_degree = 45.0
-    camera_origin = np.array([150, 161, 885]) # Camera Position
-    camera_lookat = np.array([150, 161, 27])  # Focal point
+    camera_origin = np.array([150, 161, 885]) / 885 # Camera Position
+    camera_lookat = np.array([150, 161, 27]) / 885  # Focal point
     camera_up = np.array([0.0, 1.0, 0.0])
     opacity_scaling = 25.0
 
