@@ -102,20 +102,20 @@ if __name__ == '__main__':
 
     # settings
     fov_degree = 45.0
-    camera_origin = np.array([0.0, 0, 0])
-    camera_lookat = np.array([150, 161, 27])
-    camera_up = np.array([-0.28, 0.94, 0.16])
+    camera_origin = np.array([150, 161, 885]) # Camera Position
+    camera_lookat = np.array([150, 161, 27])  # Focal point
+    camera_up = np.array([0.0, 1.0, 0.0])
     opacity_scaling = 25.0
 
     tf_mode = pyrenderer.TFMode.Linear
     tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.0, 0.0, 0.0, 0.001, 0],
-        [0.8, 0.1, 0.1, 0.001, 0.1],
-        [0.5, 0.1, 0.1, 0.4 * opacity_scaling, 0.3],
-        [0.3, 0.1, 0.1, 0.8 * opacity_scaling, 0.5],
-        [0.0, 0.0, 0.0, 0.99, 0.7],
-        [0.0, 0.0, 0.0, 0.99, 0.99]
+        [0.0, 0.0, 0.0, 0.01, 0],
+        [0.8, 0.1, 0.1, 0.01, 0.1],
+        [0.5, 0.3, 0.3, 0.4 * opacity_scaling, 0.3],
+        [0.3, 0.3, 0.3, 0.8 * opacity_scaling, 0.5],
+        [0.0, 0.0, 0.0, 0.01, 0.7],
+        [0.0, 0.0, 0.0, 0.01, 0.99]
     ]], dtype=dtype, device=device)
 
     invViewMatrix = pyrenderer.Camera.compute_matrix(
