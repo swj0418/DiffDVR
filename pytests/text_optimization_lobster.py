@@ -104,7 +104,7 @@ if __name__ == '__main__':
     fov_degree = 60.0
     camera_origin = np.array([150, 161, 885]) / 1000 # Camera Position
     camera_lookat = np.array([150, 161, 27]) / 1000  # Focal point
-    camera_up = np.array([0.0, 1.0, 0.0])
+    camera_up = np.array([0.0, 0.0, 1.0])
 
     # fov_radians = np.radians(45.0)
     # camera_orientation = pyrenderer.Orientation.Ym
