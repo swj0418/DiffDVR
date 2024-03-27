@@ -367,3 +367,6 @@ if __name__ == '__main__':
         anim.save(f"test_tf_optimization_{args.file_id}.gif")
 
     pyrenderer.cleanup()
+
+    with open('training_loss.txt', 'a+') as file:
+        file.writelines(f"{args.prompt}    {reconstructed_loss[-1]}  {reconstructed_cliploss[-1]}")
