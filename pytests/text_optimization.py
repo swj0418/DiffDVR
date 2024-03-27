@@ -321,20 +321,20 @@ if __name__ == '__main__':
         nembedding = embedding / embedding.norm(dim=-1, keepdim=True)
         ntext_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        score = nembedding @ ntext_features.T
+        distance = (1 - nembedding @ ntext_features.T)
         # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
         if iteration % 4 == 0:
             reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
             reconstructed_loss.append(loss.item())
-            reconstructed_cliploss.append(score.item())
+            reconstructed_cliploss.append(distance.item())
             reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         # loss.backward()
-        score.backward()
+        distance.backward()
         optimizer.step()
         scheduler.step()
-        print("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (iteration, loss.item(), score.item()))
+        print("Iteration % 4d, Loss: %7.5f, Cos Dist: %7.5f" % (iteration, loss.item(), distance.item()))
 
     print("Visualize Optimization")
     fig, axs = plt.subplots(4, 2, figsize=(8, 6))
@@ -358,7 +358,7 @@ if __name__ == '__main__':
         for j in range(2):
             axs[i, j].set_xticks([])
             if j == 0: axs[i, j].set_yticks([])
-    fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (0, reconstructed_loss[0], reconstructed_cliploss[0]))
+    fig.suptitle("Iteration % 4d, Loss: %7.5f, Cos Dist: %7.5f" % (0, reconstructed_loss[0], reconstructed_cliploss[0]))
     fig.tight_layout()
 
     tmp_fig_folder = 'tmp_figure'
@@ -371,7 +371,7 @@ if __name__ == '__main__':
         def update(frame):
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
-            fig.suptitle("Iteration % 4d, Loss: %7.5f, CLIP Loss: %7.5f" % (frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+            fig.suptitle("Iteration % 4d, Loss: %7.5f, Cos Dist: %7.5f" % (frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
             fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
             if frame > 0: pbar.update(1)
 
