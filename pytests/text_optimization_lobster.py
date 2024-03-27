@@ -147,9 +147,10 @@ if __name__ == '__main__':
     inputs.volume_filter_mode = pyrenderer.VolumeFilterMode.Trilinear
     inputs.box_min = pyrenderer.real3(-0.5, -0.5, -0.5)
     inputs.box_size = pyrenderer.real3(1, 1, 1)
-    inputs.camera_mode = pyrenderer.CameraMode.InverseViewMatrix
+    # inputs.camera_mode = pyrenderer.CameraMode.InverseViewMatrix
     inputs.camera_mode = pyrenderer.CameraMode.RayStartDir
     # inputs.camera = invViewMatrix
+    inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
     inputs.step_size = 0.5 / X
     inputs.tf_mode = tf_mode
     inputs.tf = tf
