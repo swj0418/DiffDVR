@@ -101,7 +101,7 @@ if __name__ == '__main__':
     # dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 45.0
+    fov_degree = 60.0
     camera_origin = np.array([150, 161, 885]) / 1000 # Camera Position
     camera_lookat = np.array([150, 161, 27]) / 1000  # Focal point
     camera_up = np.array([0.0, 1.0, 0.0])
