@@ -7,6 +7,7 @@ import matplotlib.animation
 import torchvision.utils
 import tqdm
 import open_clip
+import csv
 import imageio
 from PIL import Image
 from argparse import ArgumentParser
@@ -368,5 +369,13 @@ if __name__ == '__main__':
 
     pyrenderer.cleanup()
 
-    with open('training_loss.txt', 'a+') as file:
-        file.writelines(f"{args.prompt}    {reconstructed_loss[-1]}  {reconstructed_cliploss[-1]}")
+    prompt = args.prompt
+    reconstructed_loss_last = reconstructed_loss[-1]  # Get the last value of the reconstructed_loss list
+    reconstructed_cliploss_last = reconstructed_cliploss[-1]  # Get the last value of the reconstructed_cliploss list
+
+    # Open the CSV file in append mode ('a') and create a csv.writer object for it
+    with open('training_loss.csv', 'a+', newline='') as file:
+        writer = csv.writer(file)
+
+        # Write the data as a row in the CSV file
+        writer.writerow([prompt, reconstructed_loss_last, reconstructed_cliploss_last])
