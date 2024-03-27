@@ -26,7 +26,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A beige rendering of ripples"]).cuda()
+text = tokenizer(["A beige rendering of ripples in black background"]).cuda()
 
 lr = 0.2
 step_size = 200
