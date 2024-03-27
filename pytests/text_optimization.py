@@ -27,7 +27,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a person skull"]).cuda()
 
-lr = 5.0
+lr = 1.0
 step_size = 100
 gamma = 0.1
 iterations = 300  # Optimization iterations

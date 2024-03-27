@@ -295,7 +295,7 @@ if __name__ == '__main__':
         nembedding = embedding / embedding.norm(dim=-1, keepdim=True)
         ntext_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        score = nembedding @ ntext_features.T
+        score = 1 - nembedding @ ntext_features.T
         # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
