@@ -32,7 +32,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a lobster"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 1.0
+lr = 0.5
 step_size = 200
 gamma = 0.1
 iterations = 200  # Optimization iterations
@@ -204,8 +204,8 @@ if __name__ == '__main__':
     print("Render initial")
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.2, 0.9, 0.5, 0.99 * opacity_scaling, 0],
-        [0.2, 0.9, 0.5, 0.99 * opacity_scaling, 0.1],
+        [0.2, 0.9, 0.5, 0.0 * opacity_scaling, 0],
+        [0.2, 0.9, 0.5, 0.0 * opacity_scaling, 0.3],
         [0.1, 0.4, 0.7, 0.3 * opacity_scaling, 0.4],
         [0.6, 0.6, 0.3, 0.6 * opacity_scaling, 0.6],
         [0.3, 0.2, 0.2, 0.0 * opacity_scaling, 0.9],
