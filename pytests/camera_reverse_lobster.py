@@ -22,7 +22,7 @@ from vis import tfvis
 
 # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
 # data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
-dataset = ov.LoadDataset('volumes/lobster.vti')
+dataset = ov.load_dataset('volumes/lobster.vti')
 data = ov.ReadEntireScalarField(dataset)
 print(data)
 
