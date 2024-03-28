@@ -4,6 +4,7 @@ import sys
 import os
 import matplotlib.pyplot as plt
 import matplotlib.animation
+from matplotlib import gridspec
 import tqdm
 import open_clip
 import imageio
@@ -351,20 +352,53 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(4, 2, figsize=(8, 8))
-    axs[0, 0].imshow(reference_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(reference_tf, axs[0, 1])
-    axs[1, 0].imshow(reconstructed_color[0])
-    tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 1])
-    axs[2, 0].imshow(initial_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    axs[0, 0].set_title("Color")
-    axs[0, 1].set_title("Transfer Function")
-    axs[0, 0].set_ylabel("Reference")
-    axs[1, 0].set_ylabel("Optimization")
-    axs[2, 0].set_ylabel("Initial")
-    axs[3, 1].set_ylabel("Cos Dist")
-    axs[3, :].plot(reconstructed_cliploss)
+    fig, axs = plt.figure(figsize=(8, 10))  # Adjust the figure size as needed
+    gs = gridspec.GridSpec(5, 2, height_ratios=[1, 1, 1, 0.2, 0.2])  # Last two rows smaller for plots
+
+    # First row - Reference
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+    ax1.imshow(reference_color_image[:, :, 0:3])
+    tfvis.renderTfLinear(reference_tf, ax2)
+    ax1.set_title("Color")
+    ax2.set_title("Transfer Function")
+    ax1.set_ylabel("Reference")
+
+    # Second row - Optimization
+    ax3 = fig.add_subplot(gs[1, 0])
+    ax4 = fig.add_subplot(gs[1, 1])
+    ax3.imshow(reconstructed_color[0])
+    tfvis.renderTfLinear(reconstructed_tf[0], ax4)
+    ax3.set_ylabel("Optimization")
+
+    # Third row - Initial
+    ax5 = fig.add_subplot(gs[2, 0])
+    ax6 = fig.add_subplot(gs[2, 1])
+    ax5.imshow(initial_color_image[:, :, 0:3])
+    tfvis.renderTfLinear(initial_tf, ax6)
+    ax5.set_ylabel("Initial")
+
+    # Fourth row - Cosine Distance Plot
+    ax7 = fig.add_subplot(gs[3, :])  # Spanning both columns
+    ax7.plot(reconstructed_cliploss)
+    ax7.set_ylabel("Cos Dist")
+    # fig, axs = plt.subplots(4, 2, figsize=(8, 8))
+    # axs[0, 0].imshow(reference_color_image[:, :, 0:3])
+    # tfvis.renderTfLinear(reference_tf, axs[0, 1])
+    # axs[1, 0].imshow(reconstructed_color[0])
+    # tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 1])
+    # axs[2, 0].imshow(initial_color_image[:, :, 0:3])
+    # tfvis.renderTfLinear(initial_tf, axs[2, 1])
+    # axs[0, 0].set_title("Color")
+    # axs[0, 1].set_title("Transfer Function")
+    # axs[0, 0].set_ylabel("Reference")
+    # axs[1, 0].set_ylabel("Optimization")
+    # axs[2, 0].set_ylabel("Initial")
+    # axs[3, 1].set_ylabel("Cos Dist")
+
+    # ax7 = fig.add_subplot(gs[3, :])  # Spanning both columns
+    # ax7.plot(reconstructed_cliploss)
+    # axs[3, :].plot(reconstructed_cliploss)
 
     # axs[3, 1].set_title("Img Loss")
     # axs[4, 1].set_title("CLIP Loss")
