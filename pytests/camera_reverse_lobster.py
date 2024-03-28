@@ -205,10 +205,10 @@ if __name__ == '__main__':
         # r,g,b,a,pos
         [0.2, 0.9, 0.5, 0.01, 0],
         [0.2, 0.9, 0.5, 0.01, 0.1],
-        [0.1, 0.4, 0.7, 0.8 * opacity_scaling, 0.3],
-        [0.6, 0.6, 0.3, 0.4 * opacity_scaling, 0.5],
-        [0.3, 0.2, 0.2, 0.99 * opacity_scaling, 0.7],
-        [0.2, 0.9, 0.5, 0.99 * opacity_scaling, 0.99]
+        [0.1, 0.4, 0.7, 0.8, 0.3],
+        [0.6, 0.6, 0.3, 0.4, 0.5],
+        [0.3, 0.2, 0.2, 0.99, 0.7],
+        [0.2, 0.9, 0.5, 0.99, 0.99]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
