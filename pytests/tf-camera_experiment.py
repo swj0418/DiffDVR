@@ -91,6 +91,7 @@ if __name__ == '__main__':
     volume = torch.from_numpy(data).unsqueeze(0)
     volume = torch.tensor(volume, dtype=dtype, device=device)
     X, Y, Z = 301, 324, 56
+    camera_gradient_discount_factor = 5
 
     # Camera settings
     fov_radians = np.radians(45.0)
@@ -170,10 +171,10 @@ if __name__ == '__main__':
     print("Render initial")
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 0],
-        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 20],
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 0],
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 20],
         [0.96, 0.75, 0.65, 0.6 * opacity_scaling, 235],
-        [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 255]
+        [0.96, 0.75, 0.65, 0.6 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
@@ -214,8 +215,8 @@ if __name__ == '__main__':
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 0:3] / 5
-            grad_ray_dir = c_gradients[..., 3:6] / 5
+            grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
+            grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
 
             # TF map
             grad_tf = torch.zeros_like(current_tf)
