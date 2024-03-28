@@ -29,7 +29,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a red lobster"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 0.5
+lr = 0.1
 step_size = 200
 gamma = 0.1
 iterations = 200  # Optimization iterations
@@ -206,7 +206,7 @@ if __name__ == '__main__':
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
-            print("Gradient size: ", gradients.shape)
+            # print("Gradient size: ", gradients.shape)  # [1, 224, 224, 22 (D), 4 (Channel)]
 
             # I don't know how to aggregate if I were to compute gradients for camera and TF
             c_gradients = torch.sum(gradients, dim=4)  # reduce over channel
