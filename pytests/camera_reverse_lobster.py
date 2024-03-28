@@ -24,7 +24,7 @@ dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lo
 data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
 # data = ov.LoadDataset('volumes/lobster.vti')
 # print(data)
-print(data)
+print(np.min(data), np.max(data))
 
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
 tokenizer = open_clip.get_tokenizer('ViT-B-32')
