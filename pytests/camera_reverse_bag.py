@@ -107,9 +107,9 @@ if __name__ == '__main__':
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
-    Y = 324
-    Z = 56
-    X = 301
+    Y = 512
+    Z = 373
+    X = 512
     # device = volume.getDataGpu(0).device
     # dtype = volume.getDataGpu(0).dtype
 
@@ -138,8 +138,7 @@ if __name__ == '__main__':
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     tf_mode = pyrenderer.TFMode.Linear
-    # opacity_scaling = 25.0
-    opacity_scaling = 10.0
+    opacity_scaling = 25.0
     tf = torch.tensor([[
         # r,g,b,a,pos
         [0.0, 0.0, 0.0, 0.01 * opacity_scaling, 0],
@@ -177,11 +176,11 @@ if __name__ == '__main__':
     differences_settings.D = 4 * 6  # I want gradients for all inner control points
     derivative_tf_indices = torch.tensor([[
         [0, 1, 2, 3, -1],
-        [0, 1, 2, 3, -1],
         [4, 5, 6, 7, -1],
         [8, 9, 10, 11, -1],
         [12, 13, 14, 15, -1],
         [16, 17, 18, 19, -1],
+        [20, 21, 22, 23, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
