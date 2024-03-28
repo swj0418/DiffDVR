@@ -386,8 +386,8 @@ if __name__ == '__main__':
         axs[0, 0].set_ylabel("Reference")
         axs[1, 0].set_ylabel("Optimization")
         axs[2, 0].set_ylabel("Initial")
-        axs[3, 1].set_title("Img Loss")
-        axs[3, 0].set_title("Cos Dist")
+        axs[3, 1].set_title("Cos Dist")
+        axs[3, 0].set_title("Img Loss")
 
         for i in range(3):
             for j in range(2):
