@@ -118,7 +118,7 @@ if __name__ == '__main__':
     volume = torch.from_numpy(data).unsqueeze(0)
     volume = torch.tensor(volume, dtype=dtype, device=device)
     X, Y, Z = 301, 324, 56
-    camera_gradient_discount_factor = 5
+    camera_gradient_discount_factor = 10
 
     # Camera settings
     fov_radians = np.radians(45.0)
