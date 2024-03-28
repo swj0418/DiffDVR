@@ -170,9 +170,9 @@ if __name__ == '__main__':
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 0],
-        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 20],
+        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 20],
         [0.96, 0.75, 0.65, 0.6 * opacity_scaling, 235],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 255]
+        [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
