@@ -95,9 +95,11 @@ if __name__ == '__main__':
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
     Y = 324
-    Z = 56
-    X = 301
-    # device = volume.getDataGpu(0).device
+    # Z = 56
+    X = 56
+    # X = 301
+    Z = 301
+    #  device = volume.getDataGpu(0).device
     # dtype = volume.getDataGpu(0).dtype
 
     # settings
