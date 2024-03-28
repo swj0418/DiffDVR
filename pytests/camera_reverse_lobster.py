@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 5  # I want gradients for all inner control points
+    differences_settings.D = 4  # I want gradients for all inner control points
     # derivative_tf_indices = torch.tensor([[
     #     [-1, -1, -1, -1, -1],
     #     [0, 1, 2, 3, -1],
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     # ]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, 4],
+        [0, 1, 2, 3, -1],
         [-1, -1, -1, -1, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
