@@ -164,15 +164,20 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 4 * 6  # I want gradients for all inner control points
+    differences_settings.D = 5  # I want gradients for all inner control points
+    # derivative_tf_indices = torch.tensor([[
+    #     [-1, -1, -1, -1, -1],
+    #     [0, 1, 2, 3, -1],
+    #     [4, 5, 6, 7, -1],
+    #     [8, 9, 10, 11, -1],
+    #     [12, 13, 14, 15, -1],
+    #     [16, 17, 18, 19, -1],
+    #     [20, 21, 22, 23, -1],
+    #     [-1, -1, -1, -1, -1],
+    # ]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, -1],
-        [4, 5, 6, 7, -1],
-        [8, 9, 10, 11, -1],
-        [12, 13, 14, 15, -1],
-        [16, 17, 18, 19, -1],
-        [20, 21, 22, 23, -1],
+        [0, 1, 2, 3, 4],
         [-1, -1, -1, -1, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
@@ -206,15 +211,21 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
+    # initial_tf = torch.tensor([[
+    #     # r,g,b,a,pos
+    #     [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
+    #     [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.0255 / 255],
+    #     [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 31.307 / 255],
+    #     [0.86, 0.86, 0.86, 0.9 * opacity_scaling, 85.2038 / 255],
+    #     [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 120 / 255],
+    #     [0.87, 0.39, 0.31, 0.8 * opacity_scaling, 204 / 255],
+    #     [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 254 / 255],
+    #     [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 255 / 255]
+    # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
-        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.0255 / 255],
-        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 31.307 / 255],
-        [0.86, 0.86, 0.86, 0.9 * opacity_scaling, 85.2038 / 255],
         [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 120 / 255],
-        [0.87, 0.39, 0.31, 0.8 * opacity_scaling, 204 / 255],
-        [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 254 / 255],
         [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 255 / 255]
     ]], dtype=dtype, device=device)
 
