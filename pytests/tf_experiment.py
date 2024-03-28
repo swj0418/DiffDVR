@@ -350,52 +350,59 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(5, 2, figsize=(6, 12))
-    axs[0, 0].imshow(reference_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(reference_tf, axs[0, 1])
-    axs[1, 0].imshow(reconstructed_color[0])
-    tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 1])
-    axs[2, 0].imshow(initial_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    axs[0, 0].set_title("Color")
-    axs[0, 1].set_title("Transfer Function")
-    axs[0, 0].set_ylabel("Reference")
-    axs[1, 0].set_ylabel("Optimization")
-    axs[2, 0].set_ylabel("Initial")
-
-    axs[3, 0].axis('off')  # Hides the subplot
-    axs[4, 0].axis('off')  # Hides the subplot
-
-    axs[3, 1].set_title("Img Loss")
-    axs[4, 1].set_title("Cos Dist")
-    axs[3, 1].plot(reconstructed_loss)
-    axs[4, 1].plot(reconstructed_cliploss)
-
-    for i in range(3):
-        for j in range(2):
-            axs[i, j].set_xticks([])
-            if j == 0: axs[i, j].set_yticks([])
-    fig.suptitle(
-        "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (0, reconstructed_loss[0], reconstructed_cliploss[0]))
-    fig.tight_layout()
-
     tmp_fig_folder = 'tmp_figure'
-    if os.path.exists(tmp_fig_folder):
-        os.removedirs(tmp_fig_folder)
     os.makedirs(tmp_fig_folder, exist_ok=True)
 
-    print("Write frames")
-    with tqdm.tqdm(total=len(reconstructed_color)) as pbar:
-        def update(frame):
-            axs[1, 0].imshow(reconstructed_color[frame])
-            tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
-            fig.suptitle("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-                          frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
-            fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
-            if frame > 0: pbar.update(1)
+    num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
+    for frame in range(num_frames):
+        fig, axs = plt.subplots(4, 2, figsize=(6, 9))
+
+        # Your plotting logic here
+        # For example:
+        axs[0, 0].imshow(reference_color_image[:, :, 0:3])
+        tfvis.renderTfLinear(reference_tf, axs[0, 1])
+
+        axs[1, 0].imshow(reconstructed_color[frame])
+        tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
+
+        axs[2, 0].imshow(initial_color_image[:, :, 0:3])
+        tfvis.renderTfLinear(initial_tf, axs[2, 1])
+
+        # Update other plots as needed
+        axs[3, 0].plot(reconstructed_loss)
+        axs[3, 1].plot(reconstructed_cliploss)
 
 
-        anim = matplotlib.animation.FuncAnimation(fig, update, frames=len(reconstructed_color), blit=False)
-        anim.save("test_tf_optimization.gif")
+        # Adjust titles, labels, etc., here
+        axs[0, 0].set_title("Color")
+        axs[0, 1].set_title("Transfer Function")
+        axs[0, 0].set_ylabel("Reference")
+        axs[1, 0].set_ylabel("Optimization")
+        axs[2, 0].set_ylabel("Initial")
+        axs[3, 1].set_title("Img Loss")
+        axs[3, 0].set_title("Cos Dist")
+
+        for i in range(3):
+            for j in range(2):
+                axs[i, j].set_xticks([])
+                if j == 0: axs[i, j].set_yticks([])
+        fig.suptitle(
+            "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
+            0, reconstructed_loss[0], reconstructed_cliploss[0]))
+        fig.tight_layout()
+
+        # Save the frame
+        frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
+        fig.savefig(frame_filename)
+        plt.close(fig)  # Close the figure to free memory
+
+    # Compile frames into a GIF
+    frame_files = [f"{tmp_fig_folder}/frame_{frame:04d}.png" for frame in range(num_frames)]
+    images = [imageio.imread(frame_file) for frame_file in frame_files]
+    imageio.mimsave('test_tf_optimization.gif', images, fps=10)  # Adjust fps as needed
+
+    # Optionally, clean up the frame files after creating the GIF
+    for frame_file in frame_files:
+        os.remove(frame_file)
 
     pyrenderer.cleanup()
