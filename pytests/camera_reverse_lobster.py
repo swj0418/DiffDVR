@@ -224,7 +224,7 @@ if __name__ == '__main__':
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
-        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 120 / 255],
+        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 20],
         [0.70, 0.015, 0.15, 0.9 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
