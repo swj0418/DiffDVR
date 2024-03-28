@@ -298,6 +298,8 @@ if __name__ == '__main__':
         current_tf = torch.rand(size=(1, 8, 5), dtype=dtype, device=device)
         current_tf.requires_grad_()
         # current_tf = current_tf[:, :, 4]
+        for i in range(8):
+            current_tf[:, i, 5] = i / 10
 
         loss, transformed_tf, color = model(current_tf)
         print(transformed_tf)
@@ -358,7 +360,11 @@ if __name__ == '__main__':
     axs[2, 0].set_ylabel("Initial")
     axs[3, 1].set_title("Img Loss")
     axs[4, 1].set_title("CLIP Loss")
+    axs[3, 0].imshow(initial_color_image[:, :, 0:3])
+    tfvis.renderTfLinear(initial_tf, axs[2, 1])
     axs[3, 1].plot(reconstructed_loss)
+    axs[4, 0].imshow(initial_color_image[:, :, 0:3])
+    tfvis.renderTfLinear(initial_tf, axs[2, 1])
     axs[4, 1].plot(reconstructed_cliploss)
 
     for i in range(3):
