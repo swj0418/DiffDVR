@@ -296,7 +296,7 @@ if __name__ == '__main__':
         # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
 
         current_tf = torch.rand(size=(1, 8, 5), dtype=dtype, device=device)
-        current_tf.requires_grad_()
+        # current_tf.requires_grad_()
         # current_tf[:, :, 3] = current_tf[:, :, 3] * opacity_scaling
         for i in range(8):
             current_tf[:, i, 3] = current_tf[:, i, 3] * opacity_scaling
