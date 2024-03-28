@@ -17,6 +17,7 @@ sys.path.insert(0, os.getcwd())
 # load pyrenderer
 from diffdvr import make_real3, Settings
 import pyrenderer
+from concurrent.futures import ProcessPoolExecutor
 
 from vis import tfvis
 
@@ -255,6 +256,7 @@ if __name__ == '__main__':
     reconstructed_tf = []
     reconstructed_loss = []
     reconstructed_cliploss = []
+    reconstructed_pitchyaw = []
 
     # Working parameters
     current_pitch = camera_initial_pitch.clone()
@@ -266,7 +268,6 @@ if __name__ == '__main__':
 
     current_tf = tf.clone()
     current_tf.requires_grad_()
-
 
     optimizer = torch.optim.Adam([current_pitch, current_yaw, current_distance, current_tf], lr=lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
@@ -310,6 +311,7 @@ if __name__ == '__main__':
         reconstructed_loss.append(loss.item())
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
+        reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
         score.backward()
         optimizer.step()
@@ -319,6 +321,7 @@ if __name__ == '__main__':
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
     os.makedirs(tmp_fig_folder, exist_ok=True)
+
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
@@ -353,16 +356,16 @@ if __name__ == '__main__':
                 axs[i, j].set_xticks([])
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
-            "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-                frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+            "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f, P-Y:%7.5f-%7.5f" % (
+                frame, reconstructed_loss[frame], reconstructed_cliploss[frame],
+                reconstructed_pitchyaw[frame][0], reconstructed_pitchyaw[frame][1]
+            ))
         fig.tight_layout()
 
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
         fig.savefig(frame_filename)
         plt.close(fig)  # Close the figure to free memory
-
-    from concurrent.futures import ProcessPoolExecutor
 
     # Parallelize frame generation
     with ProcessPoolExecutor() as executor:
@@ -372,11 +375,7 @@ if __name__ == '__main__':
     frame_files = [f"{tmp_fig_folder}/frame_{frame:04d}.png" for frame in range(num_frames)]
     images = [imageio.v2.imread(frame_file) for frame_file in frame_files]
     imageio.mimsave('test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
-
-
-
-    # Optionally, clean up the frame files after creating the GIF
-    for frame_file in frame_files:
+    for frame_file in frame_files:  # Cleanup
         os.remove(frame_file)
 
     pyrenderer.cleanup()
