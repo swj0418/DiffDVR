@@ -295,7 +295,7 @@ if __name__ == '__main__':
         # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
         # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
 
-        current_tf = torch.randn(size=(1, 1, 8, 5), dtype=dtype, device=device).requires_grad_()
+        current_tf = torch.randn(size=(1, 8, 5), dtype=dtype, device=device).requires_grad_()
 
         loss, transformed_tf, color = model(current_tf)
         print(transformed_tf)
