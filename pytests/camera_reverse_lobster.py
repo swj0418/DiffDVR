@@ -137,7 +137,7 @@ if __name__ == '__main__':
         [0.5, 0.3, 0.3, 0.4 * opacity_scaling, 0.3],
         [0.3, 0.3, 0.3, 0.8 * opacity_scaling, 0.5],
         [0.0, 0.0, 0.0, 0.01, 0.7],
-        [0.0, 0.0, 0.0, 0.01, 0.99]
+        [0.0, 0.0, 0.0, 0.01, 1.5]
     ]], dtype=dtype, device=device)
 
     # invViewMatrix = pyrenderer.Camera.compute_matrix(
