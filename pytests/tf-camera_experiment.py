@@ -100,9 +100,9 @@ if __name__ == '__main__':
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
-    camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(10)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(-20)]], dtype=dtype,
+    camera_initial_yaw = torch.tensor([[np.radians(10)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
