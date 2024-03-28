@@ -125,7 +125,8 @@ if __name__ == '__main__':
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     tf_mode = pyrenderer.TFMode.Linear
-    opacity_scaling = 25.0
+    # opacity_scaling = 25.0
+    opacity_scaling = 10.0
     tf = torch.tensor([[
         # r,g,b,a,pos
         [0.0, 0.0, 0.0, 0.01 * opacity_scaling, 0],
