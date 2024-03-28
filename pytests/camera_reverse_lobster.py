@@ -114,7 +114,7 @@ if __name__ == '__main__':
     camera_orientation = pyrenderer.Orientation.Ym
     camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
     # camera_center = torch.tensor([[150, 161, 27]], dtype=dtype, device=device)
-    camera_reference_pitch = torch.tensor([[np.radians(-37.5)]], dtype=dtype, device=device)
+    camera_reference_pitch = torch.tensor([[np.radians(-20)]], dtype=dtype, device=device)
     camera_reference_yaw = torch.tensor([[np.radians(47.5)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
@@ -347,7 +347,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(5, 2, figsize=(8, 6))
+    fig, axs = plt.subplots(3, 2, figsize=(8, 6))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -359,14 +359,14 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
-    axs[3, 1].set_title("Img Loss")
-    axs[4, 1].set_title("CLIP Loss")
-    axs[3, 0].imshow(initial_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    axs[3, 1].plot(reconstructed_loss)
-    axs[4, 0].imshow(initial_color_image[:, :, 0:3])
-    tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    axs[4, 1].plot(reconstructed_cliploss)
+    # axs[3, 1].set_title("Img Loss")
+    # axs[4, 1].set_title("CLIP Loss")
+    # axs[3, 0].imshow(initial_color_image[:, :, 0:3])
+    # tfvis.renderTfLinear(initial_tf, axs[2, 1])
+    # axs[3, 1].plot(reconstructed_loss)
+    # axs[4, 0].imshow(initial_color_image[:, :, 0:3])
+    # tfvis.renderTfLinear(initial_tf, axs[2, 1])
+    # axs[4, 1].plot(reconstructed_cliploss)
 
     for i in range(3):
         for j in range(2):
