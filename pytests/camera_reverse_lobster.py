@@ -365,8 +365,9 @@ if __name__ == '__main__':
     axs[2, 0].set_ylabel("Initial")
     axs[3, 1].set_ylabel("Cos Dist")
 
-    ax7 = fig.add_subplot(axs[3, :])  # Spanning both columns
-    ax7.plot(reconstructed_cliploss)
+    plt.subplot(2, 1, 1)
+    plt.plot(reconstructed_cliploss)
+
     # axs[3, :].plot(reconstructed_cliploss)
 
     # axs[3, 1].set_title("Img Loss")
