@@ -264,14 +264,13 @@ if __name__ == '__main__':
             self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
+            # Camera transform = activation
+            transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
+
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
-                camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
+                camera_center, transformed_yaw, transformed_pitch, current_distance, camera_orientation)
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
-
-            # Camera transform = activation
-            transformed_camera = self.camera_transform(current_pitch, current_yaw)
-            print(transformed_camera.shape)
 
             # TF transform - activation
             transformed_tf = self.tf_transform(current_tf)
