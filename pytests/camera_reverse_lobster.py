@@ -197,7 +197,6 @@ if __name__ == '__main__':
     reference_tf = tf.cpu().numpy()[0]
     print("GT Shape: ", reference_color_gpu.shape)
 
-
     # Save image
     # torchvision.utils.save_image(reference_color_gpu, 'test_ref.png')
     # print(reference_color_image)  # betwen 0 and 1
@@ -226,7 +225,7 @@ if __name__ == '__main__':
         # r,g,b,a,pos
         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
         [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 120 / 255],
-        [0.70, 0.015, 0.15, 0.9 * opacity_scaling, 370 / 255]
+        [0.70, 0.015, 0.15, 0.9 * opacity_scaling, (255 * 3) / 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
