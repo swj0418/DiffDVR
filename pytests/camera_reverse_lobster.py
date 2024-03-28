@@ -297,7 +297,7 @@ if __name__ == '__main__':
 
         current_tf = torch.rand(size=(1, 8, 5), dtype=dtype, device=device)
         current_tf.requires_grad_()
-        current_tf = current_tf[:, :, 4] * 10
+        # current_tf = current_tf[:, :, 4]
 
         loss, transformed_tf, color = model(current_tf)
         print(transformed_tf)
