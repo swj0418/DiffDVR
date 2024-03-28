@@ -306,7 +306,6 @@ if __name__ == '__main__':
         #     camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
         # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
         # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
-
         loss, transformed_tf, color = model(current_tf)
 
         # preprocess and embed
@@ -351,7 +350,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(4, 2)
+    fig, axs = plt.subplots(5, 2, figsize=(8, 6))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -363,12 +362,16 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
-    axs[3, 1].set_ylabel("Cos Dist")
 
-    plt.subplot(2, 1, 1)
-    plt.plot(reconstructed_cliploss)
+    axs[3, 0].axis('off')  # Hides the subplot
+    axs[4, 0].axis('off')  # Hides the subplot
 
-    for i in range(3):
+    axs[3, 1].set_title("Img Loss")
+    axs[4, 1].set_title("Cos Dist")
+    axs[3, 1].plot(reconstructed_loss)
+    axs[4, 1].plot(reconstructed_cliploss)
+
+    for i in range(4):
         for j in range(2):
             axs[i, j].set_xticks([])
             if j == 0: axs[i, j].set_yticks([])
