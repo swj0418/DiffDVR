@@ -350,7 +350,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(5, 2, figsize=(12, 6))
+    fig, axs = plt.subplots(5, 2, figsize=(6, 12))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
