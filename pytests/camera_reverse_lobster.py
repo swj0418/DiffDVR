@@ -204,8 +204,8 @@ if __name__ == '__main__':
     print("Render initial")
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.23, 0.30, 0.75, -0.2 * opacity_scaling, 0.0255 / 255],
-        [0.39, 0.52, 0.92, -0.2 * opacity_scaling, 31.307 / 255],
+        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.0255 / 255],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 31.307 / 255],
         [0.86, 0.86, 0.86, 0.9 * opacity_scaling, 85.2038 / 255],
         [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 120 / 255],
         [0.87, 0.39, 0.31, 0.5 * opacity_scaling, 204 / 255],
