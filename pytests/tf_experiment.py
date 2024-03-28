@@ -338,11 +338,11 @@ if __name__ == '__main__':
         # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
-        if iteration % 4 == 0:
-            reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
-            reconstructed_loss.append(loss.item())
-            reconstructed_cliploss.append(score.item())
-            reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
+        # if iteration % 4 == 0:
+        reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
+        reconstructed_loss.append(loss.item())
+        reconstructed_cliploss.append(score.item())
+        reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         # loss.backward()
         score.backward()
         optimizer.step()
@@ -355,6 +355,7 @@ if __name__ == '__main__':
 
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     for frame in range(num_frames):
+        print(frame)
         fig, axs = plt.subplots(4, 2, figsize=(6, 9))
 
         # Your plotting logic here
