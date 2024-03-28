@@ -123,7 +123,7 @@ if __name__ == '__main__':
     # Camera settings
     fov_radians = np.radians(45.0)
     camera_orientation = pyrenderer.Orientation.Ym
-    camera_center = torch.tensor([[1, 0.0, 0.0]], dtype=dtype, device=device)  # Origin is different Lobster, Teapot.
+    camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)  # Origin is different Lobster, Teapot.
 
     camera_reference_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[3.0]], dtype=dtype, device=device)
+    camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
