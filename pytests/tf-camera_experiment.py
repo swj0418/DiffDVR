@@ -209,11 +209,12 @@ if __name__ == '__main__':
             print("Gradient size: ", gradients.shape)
 
             # I don't know how to aggregate if I were to compute gradients for camera and TF
+            c_gradients = torch.sum(gradients, dim=4)  # reduce over channel
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
 
             # Map to output variables
-            grad_ray_start = gradients[..., 0:3]
-            grad_ray_dir = gradients[..., 3:6]
+            grad_ray_start = c_gradients[..., 0:3]
+            grad_ray_dir = c_gradients[..., 3:6]
 
             # TF map
             grad_tf = torch.zeros_like(current_tf)
