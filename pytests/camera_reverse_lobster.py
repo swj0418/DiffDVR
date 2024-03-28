@@ -31,6 +31,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a lobster"]).cuda()
 
+torch.set_printoptions(sci_mode=False, precision=3)
 lr = 1.0
 step_size = 200
 gamma = 0.1
