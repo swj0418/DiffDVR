@@ -87,8 +87,8 @@ class TransformCamera(torch.nn.Module):
 
     def forward(self, pitch, yaw):
         return torch.cat([
-            self.sigmoid(pitch) * 3.14,
-            self.sigmoid(yaw) * 3.14
+            self.sigmoid(pitch) * 3.14 * 2,
+            self.sigmoid(yaw) * 3.14 * 2
         ])
 
 
@@ -98,7 +98,7 @@ class InverseTransformCamera(torch.nn.Module):
 
     def forward(self, pitch, yaw):
         def inverseSigmoid(y):
-            y = y / 3.14
+            y = y / 3.14 * 2
             return torch.log(-y / (y - 1))
 
         return torch.cat([
