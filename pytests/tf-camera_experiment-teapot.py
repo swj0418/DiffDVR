@@ -27,7 +27,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A lobster inside a round object"]).cuda()
+text = tokenizer(["a red lobster"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 5.0
@@ -127,14 +127,14 @@ if __name__ == '__main__':
 
     camera_reference_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-    camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
+    camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
     camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
+    camera_initial_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
