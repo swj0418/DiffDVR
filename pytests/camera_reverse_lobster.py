@@ -278,14 +278,14 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        camera_reference_pitch = torch.tensor([[np.radians(-37.5 + count)]], dtype=dtype, device=device)
-        camera_reference_yaw = torch.tensor([[np.radians(87.5 + count)]], dtype=dtype, device=device)
-        count += 1
+        # camera_reference_pitch = torch.tensor([[np.radians(-37.5 + count)]], dtype=dtype, device=device)
+        # camera_reference_yaw = torch.tensor([[np.radians(87.5 + count)]], dtype=dtype, device=device)
+        # count += 1
 
-        viewport = pyrenderer.Camera.viewport_from_sphere(
-            camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
-        ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
-        inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
+        # viewport = pyrenderer.Camera.viewport_from_sphere(
+        #     camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
+        # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
+        # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
 
         loss, transformed_tf, color = model(current_tf)
 
