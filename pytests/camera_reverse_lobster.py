@@ -307,15 +307,7 @@ if __name__ == '__main__':
         # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
         # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
 
-        # current_tf = torch.rand(size=(1, 8, 5), dtype=dtype, device=device)
-        # # current_tf.requires_grad_()
-        # # current_tf[:, :, 3] = current_tf[:, :, 3] * opacity_scaling
-        # for i in range(8):
-        #     current_tf[:, i, 3] = current_tf[:, i, 3] * opacity_scaling
-        #     current_tf[:, i, 4] = i / 10
-
         loss, transformed_tf, color = model(current_tf)
-        print(transformed_tf)
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -359,7 +351,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(4, 2, figsize=(8, 6))
+    fig, axs = plt.subplots(4, 2, figsize=(8, 8))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -372,7 +364,7 @@ if __name__ == '__main__':
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
     axs[3, 1].set_ylabel("Cos Dist")
-    axs[3, 1].plot(reconstructed_cliploss)
+    axs[3, :].plot(reconstructed_cliploss)
 
     # axs[3, 1].set_title("Img Loss")
     # axs[4, 1].set_title("CLIP Loss")
