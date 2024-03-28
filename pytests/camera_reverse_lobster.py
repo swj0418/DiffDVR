@@ -297,8 +297,9 @@ if __name__ == '__main__':
 
         current_tf = torch.rand(size=(1, 8, 5), dtype=dtype, device=device)
         current_tf.requires_grad_()
-        current_tf[:, :, 3] = current_tf[:, :, 3] * opacity_scaling
+        # current_tf[:, :, 3] = current_tf[:, :, 3] * opacity_scaling
         for i in range(8):
+            current_tf[:, i, 3] = current_tf[:, i, 3] * opacity_scaling
             current_tf[:, i, 4] = i / 10
 
         loss, transformed_tf, color = model(current_tf)
