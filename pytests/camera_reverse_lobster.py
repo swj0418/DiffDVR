@@ -289,6 +289,7 @@ if __name__ == '__main__':
         # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
 
         loss, transformed_tf, color = model(current_tf)
+        print(transformed_tf)
 
         # preprocess and embed
         # Tensor [C, H, W]
