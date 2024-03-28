@@ -266,7 +266,7 @@ if __name__ == '__main__':
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
             # Camera transform = activation
             transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
-            print(current_yaw)
+            transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
 
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
