@@ -101,26 +101,28 @@ if __name__ == '__main__':
     # dtype = volume.getDataGpu(0).dtype
 
     # settings
-    fov_degree = 60.0
-    camera_origin = np.array([150, 161, 885]) / 2000 # Camera Position
-    camera_lookat = np.array([150, 161, 27]) / 2000  # Focal point
-    camera_up = np.array([0.0, 1.0, 0.0])
+    # fov_degree = 60.0
+    # camera_origin = np.array([150, 161, 885]) / 2000 # Camera Position
+    # camera_lookat = np.array([150, 161, 27]) / 2000  # Focal point
+    # camera_up = np.array([0.0, 1.0, 0.0])
 
-    # fov_radians = np.radians(45.0)
-    # camera_orientation = pyrenderer.Orientation.Ym
+    fov_radians = np.radians(45.0)
+    camera_orientation = pyrenderer.Orientation.Ym
     # camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-    # camera_reference_pitch = torch.tensor([[np.radians(-37.5)]], dtype=dtype, device=device)
-    # camera_reference_yaw = torch.tensor([[np.radians(87.5)]], dtype=dtype, device=device)
-    # camera_reference_distance = torch.tensor([[0.8]], dtype=dtype, device=device)
+    camera_center = torch.tensor([[150, 161, 27]], dtype=dtype, device=device)
+    camera_reference_pitch = torch.tensor([[np.radians(-37.5)]], dtype=dtype, device=device)
+    camera_reference_yaw = torch.tensor([[np.radians(87.5)]], dtype=dtype, device=device)
+    camera_reference_distance = torch.tensor([[0.8]], dtype=dtype, device=device)
+
     # camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
     #                                     device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     # camera_initial_yaw = torch.tensor([[np.radians(-20)]], dtype=dtype,
     #                                   device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     # camera_initial_distance = torch.tensor([[0.7]], dtype=dtype, device=device)
-    #
-    # viewport = pyrenderer.Camera.viewport_from_sphere(
-    #     camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
-    # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
+
+    viewport = pyrenderer.Camera.viewport_from_sphere(
+        camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
+    ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     tf_mode = pyrenderer.TFMode.Linear
     opacity_scaling = 25.0
@@ -134,11 +136,11 @@ if __name__ == '__main__':
         [0.0, 0.0, 0.0, 0.01, 0.99]
     ]], dtype=dtype, device=device)
 
-    invViewMatrix = pyrenderer.Camera.compute_matrix(
-        make_real3(camera_origin), make_real3(camera_lookat), make_real3(camera_up),
-        fov_degree, W, H)
-    print("view matrix:")
-    print(np.array(invViewMatrix))
+    # invViewMatrix = pyrenderer.Camera.compute_matrix(
+    #     make_real3(camera_origin), make_real3(camera_lookat), make_real3(camera_up),
+    #     fov_degree, W, H)
+    # print("view matrix:")
+    # print(np.array(invViewMatrix))
 
     print("Create renderer inputs")
     inputs = pyrenderer.RendererInputs()
@@ -147,10 +149,10 @@ if __name__ == '__main__':
     inputs.volume_filter_mode = pyrenderer.VolumeFilterMode.Trilinear
     inputs.box_min = pyrenderer.real3(-0.5, -0.5, -0.5)
     inputs.box_size = pyrenderer.real3(1, 1, 1)
-    inputs.camera_mode = pyrenderer.CameraMode.InverseViewMatrix
-    # inputs.camera_mode = pyrenderer.CameraMode.RayStartDir
-    inputs.camera = invViewMatrix
-    # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
+    # inputs.camera_mode = pyrenderer.CameraMode.InverseViewMatrix
+    inputs.camera_mode = pyrenderer.CameraMode.RayStartDir
+    # inputs.camera = invViewMatrix
+    inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
     inputs.step_size = 0.5 / X
     inputs.tf_mode = tf_mode
     inputs.tf = tf
