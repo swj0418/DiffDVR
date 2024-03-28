@@ -214,8 +214,8 @@ if __name__ == '__main__':
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 0:3]
-            grad_ray_dir = c_gradients[..., 3:6]
+            grad_ray_start = c_gradients[..., 0:3] / 5
+            grad_ray_dir = c_gradients[..., 3:6] / 5
 
             # TF map
             grad_tf = torch.zeros_like(current_tf)
