@@ -92,7 +92,7 @@ class TransformCamera(torch.nn.Module):
         ], dim=2)
 
 
-class InverseTransformTF(torch.nn.Module):
+class InverseTransformCamera(torch.nn.Module):
     def __init__(self):
         super().__init__()
 
