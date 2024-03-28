@@ -100,9 +100,9 @@ if __name__ == '__main__':
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
-    camera_initial_pitch = torch.tensor([[np.radians(90)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(90)]], dtype=dtype,
+    camera_initial_yaw = torch.tensor([[np.radians(45)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     camera_initial_distance = torch.tensor([[3.0]], dtype=dtype, device=device)
 
@@ -322,9 +322,6 @@ if __name__ == '__main__':
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
-
-        # for frame in range(num_frames):
-        print(frame)
         fig, axs = plt.subplots(4, 2, figsize=(6, 9))
 
         # Your plotting logic here
