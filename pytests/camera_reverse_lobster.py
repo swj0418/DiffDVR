@@ -20,8 +20,11 @@ import pyrenderer
 
 from vis import tfvis
 
-dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
-data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
+# dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
+# data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
+dataset = ov.LoadDataset('volumes/lobster.vti')
+data = ov.ReadEntireScalarField(dataset)
+print(data)
 
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
 tokenizer = open_clip.get_tokenizer('ViT-B-32')
