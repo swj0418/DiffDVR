@@ -89,7 +89,7 @@ class TransformCamera(torch.nn.Module):
         return torch.cat([
             self.sigmoid(pitch),
             self.sigmoid(yaw)
-        ], dim=2)
+        ])
 
 
 class InverseTransformCamera(torch.nn.Module):
@@ -103,7 +103,7 @@ class InverseTransformCamera(torch.nn.Module):
         return torch.cat([
             inverseSigmoid(pitch),
             inverseSigmoid(yaw)
-        ], dim=2)
+        ])
 
 
 if __name__ == '__main__':
