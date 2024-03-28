@@ -51,7 +51,8 @@ def renderTfLinear(
   colorDensities = tf[:,4]
 
   # compute colors at the control points of the opacities
-  xmin, xmax, ymin, ymax = min(opacityDensities), max(opacityDensities), min(opacityValues), max(opacityValues)
+  xmin, xmax, ymin, ymax = (min(opacityDensities), max(opacityDensities) + 0.0000001,
+                            min(opacityValues), max(opacityValues) + 0.00000001)
   #(xmin, xmax, ymin, ymax)
   colorsAtOpacities = np.empty((1, 200, 3), dtype=float)
   for i,d in enumerate(np.linspace(xmin, xmax, num=colorsAtOpacities.shape[1], endpoint=True)):
