@@ -26,7 +26,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a red lobster"]).cuda()
+text = tokenizer(["A CT scan of a red lobster's claw"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.05
