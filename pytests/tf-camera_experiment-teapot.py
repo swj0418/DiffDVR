@@ -30,8 +30,8 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a teapot"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 0.5
-step_size = 200
+lr = 5.0
+step_size = 100
 gamma = 0.1
 iterations = 400  # Optimization iterations
 B = 1  # batch dimension
