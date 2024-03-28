@@ -387,7 +387,7 @@ if __name__ == '__main__':
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
             "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-             frame, reconstructed_loss[0], reconstructed_cliploss[0]))
+             frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
         fig.tight_layout()
 
         # Save the frame
