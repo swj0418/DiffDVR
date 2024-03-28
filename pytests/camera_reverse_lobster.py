@@ -176,9 +176,9 @@ if __name__ == '__main__':
     #     [-1, -1, -1, -1, -1],
     # ]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
+        [-1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1],
         [0, 1, 2, 3, -1],
-        [-1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
@@ -224,9 +224,9 @@ if __name__ == '__main__':
     # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.23, 0.30, 0.75, 0.9 * opacity_scaling, 0.01 / 255],
+        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
         [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 120 / 255],
-        [0.70, 0.015, 0.15, 0.0 * opacity_scaling, 255 / 255]
+        [0.70, 0.015, 0.15, 0.9 * opacity_scaling, 255 / 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
