@@ -94,8 +94,8 @@ if __name__ == '__main__':
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
-    Y = 56
-    Z = 324
+    Y = 324
+    Z = 56
     X = 301
     # device = volume.getDataGpu(0).device
     # dtype = volume.getDataGpu(0).dtype
@@ -203,12 +203,12 @@ if __name__ == '__main__':
     print("Render initial")
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.2, 0.9, 0.5, 0.01, 0],
-        [0.2, 0.9, 0.5, 0.01, 0.1],
+        [0.2, 0.9, 0.5, 0.99, 0],
+        [0.2, 0.9, 0.5, 0.99, 0.1],
         [0.1, 0.4, 0.7, 0.8, 0.3],
         [0.6, 0.6, 0.3, 0.4, 0.5],
-        [0.3, 0.2, 0.2, 0.99, 0.7],
-        [0.2, 0.9, 0.5, 0.99, 0.99]
+        [0.3, 0.2, 0.2, 0.1, 0.7],
+        [0.2, 0.9, 0.5, 0.1, 0.99]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
