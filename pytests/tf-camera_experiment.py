@@ -87,8 +87,8 @@ class TransformCamera(torch.nn.Module):
 
     def forward(self, pitch, yaw):
         return torch.cat([
-            self.sigmoid(pitch) * 3.14 * 2,
-            self.sigmoid(yaw) * 3.14 * 2
+            self.sigmoid(pitch) / 2,
+            self.sigmoid(yaw) / 2
         ])
 
 
@@ -98,7 +98,7 @@ class InverseTransformCamera(torch.nn.Module):
 
     def forward(self, pitch, yaw):
         def inverseSigmoid(y):
-            y = y / 3.14 * 2
+            y = y * 2
             return torch.log(-y / (y - 1))
 
         return torch.cat([
@@ -298,7 +298,7 @@ if __name__ == '__main__':
     current_distance = camera_initial_distance.clone()
     current_pitch.requires_grad_()
     current_yaw.requires_grad_()
-    # current_distance.requires_grad_()
+    current_distance.requires_grad_()
 
     current_tf = tf.clone()
     current_tf.requires_grad_()
