@@ -356,10 +356,10 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
-    axs[3, 0].set_title("Img Loss")
-    axs[3, 1].set_title("CLIP Loss")
-    axs[3, 0].plot(reconstructed_loss)
-    axs[4, 0].plot(reconstructed_cliploss)
+    axs[3, 1].set_title("Img Loss")
+    axs[4, 1].set_title("CLIP Loss")
+    axs[3, 1].plot(reconstructed_loss)
+    axs[4, 1].plot(reconstructed_cliploss)
 
     for i in range(3):
         for j in range(2):
