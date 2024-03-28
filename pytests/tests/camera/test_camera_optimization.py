@@ -97,14 +97,17 @@ if __name__=='__main__':
     @staticmethod
     def forward(ctx, ray_start, ray_dir):
       inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
+
       # allocate outputs
       output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
       output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
       outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
       gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
+
       # render
       pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
       ctx.save_for_backward(gradients_out)
+
       return output_color
 
     @staticmethod
@@ -132,8 +135,7 @@ if __name__=='__main__':
       viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
       #print("viewport:", viewport)
-      ray_start, ray_dir = pyrenderer.Camera.generate_rays(
-        viewport, fov_radians, W, H)
+      ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
       color = renderer_deriv_camera(ray_start, ray_dir)
       if target_color is None:
         loss = 0

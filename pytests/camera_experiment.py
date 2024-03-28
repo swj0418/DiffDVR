@@ -20,15 +20,18 @@ import pyrenderer
 
 from vis import tfvis
 
-clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
-tokenizer = open_clip.get_tokenizer('ViT-B-32')
+dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
+data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
 
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
+clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a red lobster"]).cuda()
-
 torch.set_printoptions(sci_mode=False, precision=3)
+
+
 lr = 0.5
 step_size = 200
 gamma = 0.1
@@ -80,37 +83,48 @@ class InverseTransformTF(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(pyrenderer.__doc__)
 
-    # Load data
-    dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
-    data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
+    s = Settings("config-files/skull1b.json")  # I need this from ref TF for now.
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     dtype = torch.float32
     data = data.astype(np.float)
     volume = torch.from_numpy(data).unsqueeze(0)
     volume = torch.tensor(volume, dtype=dtype, device=device)
-    X, Y, Z = 301, 324, 56
+    print(f"Volume Data Type: {volume}")
+    # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
-    # Camera settings
+    Y = 324
+    Z = 56
+    X = 301
+    # device = volume.getDataGpu(0).device
+    # dtype = volume.getDataGpu(0).dtype
+
+    # settings
+    # fov_degree = 60.0
+    # camera_origin = np.array([150, 161, 885]) / 2000 # Camera Position
+    # camera_lookat = np.array([150, 161, 27]) / 2000  # Focal point
+    # camera_up = np.array([0.0, 1.0, 0.0])
+
     fov_radians = np.radians(45.0)
     camera_orientation = pyrenderer.Orientation.Ym
     camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-
+    # camera_center = torch.tensor([[150, 161, 27]], dtype=dtype, device=device)
     camera_reference_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
-    camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
-                                        device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(-20)]], dtype=dtype,
-                                      device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[0.7]], dtype=dtype, device=device)
+    # camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
+    #                                     device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
+    # camera_initial_yaw = torch.tensor([[np.radians(-20)]], dtype=dtype,
+    #                                   device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
+    # camera_initial_distance = torch.tensor([[0.7]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
-    # TF settings
     tf_mode = pyrenderer.TFMode.Linear
     opacity_scaling = 25.0
     tf = torch.tensor([[
@@ -123,6 +137,12 @@ if __name__ == '__main__':
         [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
+    # invViewMatrix = pyrenderer.Camera.compute_matrix(
+    #     make_real3(camera_origin), make_real3(camera_lookat), make_real3(camera_up),
+    #     fov_degree, W, H)
+    # print("view matrix:")
+    # print(np.array(invViewMatrix))
+
     print("Create renderer inputs")
     inputs = pyrenderer.RendererInputs()
     inputs.screen_size = pyrenderer.int2(W, H)
@@ -130,7 +150,9 @@ if __name__ == '__main__':
     inputs.volume_filter_mode = pyrenderer.VolumeFilterMode.Trilinear
     inputs.box_min = pyrenderer.real3(-0.5, -0.5, -0.5)
     inputs.box_size = pyrenderer.real3(1, 1, 1)
+    # inputs.camera_mode = pyrenderer.CameraMode.InverseViewMatrix
     inputs.camera_mode = pyrenderer.CameraMode.RayStartDir
+    # inputs.camera = invViewMatrix
     inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
     inputs.step_size = 0.5 / X
     inputs.tf_mode = tf_mode
@@ -139,16 +161,24 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 4 * 4 + 6  # TF + camera
+    differences_settings.D = 4 * 4  # I want gradients for all inner control points
+    # derivative_tf_indices = torch.tensor([[
+    #     [-1, -1, -1, -1, -1],
+    #     [0, 1, 2, 3, -1],
+    #     [4, 5, 6, 7, -1],
+    #     [8, 9, 10, 11, -1],
+    #     [12, 13, 14, 15, -1],
+    #     [16, 17, 18, 19, -1],
+    #     [20, 21, 22, 23, -1],
+    #     [-1, -1, -1, -1, -1],
+    # ]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
-        [6, 7, 8, 9, -1],
-        [10, 11, 12, 13, -1],
-        [14, 15, 16, 17, -1],
-        [18, 19, 20, 21, -1],
+        [0, 1, 2, 3, -1],
+        [4, 5, 6, 7, -1],
+        [8, 9, 10, 11, -1],
+        [12, 13, 14, 15, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
-    differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
-    differences_settings.d_rayDir = pyrenderer.int3(3, 4, 5)
     differences_settings.has_tf_derivatives = True
 
     print("Create renderer outputs")
@@ -165,8 +195,30 @@ if __name__ == '__main__':
     reference_tf = tf.cpu().numpy()[0]
     print("GT Shape: ", reference_color_gpu.shape)
 
+    # Save image
+    # torchvision.utils.save_image(reference_color_gpu, 'test_ref.png')
+    # print(reference_color_image)  # betwen 0 and 1
+
+    def rescale_array(array):
+        return np.clip(array * 255, 0, 255).astype(np.uint8)
+
+
+    gtimg = Image.fromarray(rescale_array(reference_color_image), 'RGBA')
+    gtimg.save('test_ref.png')
+
     # initialize initial TF and render
     print("Render initial")
+    # initial_tf = torch.tensor([[
+    #     # r,g,b,a,pos
+    #     [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
+    #     [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.0255 / 255],
+    #     [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 31.307 / 255],
+    #     [0.86, 0.86, 0.86, 0.9 * opacity_scaling, 85.2038 / 255],
+    #     [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 120 / 255],
+    #     [0.87, 0.39, 0.31, 0.8 * opacity_scaling, 204 / 255],
+    #     [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 254 / 255],
+    #     [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 255 / 255]
+    # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 0],
@@ -184,94 +236,35 @@ if __name__ == '__main__':
     initial_tf = initial_tf.cpu().numpy()[0]
 
 
-    # class RendererDeriv(torch.autograd.Function):
-    #     @staticmethod
-    #     def forward(ctx, ray_start, ray_end, current_tf):
-    #         inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
-    #         inputs.tf = current_tf
-    #
-    #         # Allocate output tensors
-    #         output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
-    #         output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
-    #         outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
-    #         gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
-    #
-    #         # Render
-    #         pyrenderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
-    #         ctx.save_for_backward(gradients_out, current_tf)
-    #         return output_color
-    #
-    #     @staticmethod
-    #     def backward(ctx, grad_output_color):
-    #         gradients_out, current_tf = ctx.saved_tensors
-    #
-    #         grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
-    #         gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
-    #         print("Gradient size: ", gradients.shape)
-    #
-    #         # I don't know how to aggregate if I were to compute gradients for camera and TF
-    #         gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
-    #
-    #         # Map to output variables
-    #         grad_ray_start = gradients[..., 0:3]
-    #         grad_ray_dir = gradients[..., 3:6]
-    #
-    #         # TF map
-    #         grad_tf = torch.zeros_like(current_tf)
-    #         for R in range(grad_tf.shape[1]):
-    #             for C in range(grad_tf.shape[2]):
-    #                 idx = derivative_tf_indices[0, R, C]  # Indices already offset by camera grad indices
-    #                 if idx >= 0:
-    #                     grad_tf[:, R, C] = gradients[:, idx]
-    #
-    #         return grad_ray_start, grad_ray_dir, grad_tf
-    #
-    #     renderer_deriv = RendererDeriv.apply
-
-
     # Construct the model
-    class RendererDeriv(torch.autograd.Function):
+    class RendererDerivTF(torch.autograd.Function):
         @staticmethod
-        def forward(ctx, ray_start, ray_end, current_tf):
-            inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
+        def forward(ctx, current_tf):
             inputs.tf = current_tf
-
-            # Allocate output tensors
-            output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
-            output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
-            outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
-            gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
-
-            # Render
-            pyrenderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
-            ctx.save_for_backward(gradients_out, current_tf)
+            # render
+            pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
+            ctx.save_for_backward(current_tf, gradients_out)
             return output_color
 
         @staticmethod
         def backward(ctx, grad_output_color):
-            gradients_out, current_tf = ctx.saved_tensors
-
+            current_tf, gradients_out = ctx.saved_tensors
+            # apply forward derivatives to the adjoint of the color
+            # to get the adjoint of the tf
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
-            print("Gradient size: ", gradients.shape)
-
-            # I don't know how to aggregate if I were to compute gradients for camera and TF
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
-
-            # Map to output variables
-            grad_ray_start = gradients[..., 0:3]
-            grad_ray_dir = gradients[..., 3:6]
-
-            # TF map
+            # map to output variables
             grad_tf = torch.zeros_like(current_tf)
             for R in range(grad_tf.shape[1]):
                 for C in range(grad_tf.shape[2]):
-                    idx = derivative_tf_indices[0, R, C]  # Indices already offset by camera grad indices
+                    idx = derivative_tf_indices[0, R, C]
                     if idx >= 0:
                         grad_tf[:, R, C] = gradients[:, idx]
+            return grad_tf
 
-            return grad_ray_start, grad_ray_dir, grad_tf
-    rendererDeriv = RendererDeriv.apply
+
+    rendererDerivTF = RendererDerivTF.apply
 
 
     class OptimModel(torch.nn.Module):
@@ -279,47 +272,38 @@ if __name__ == '__main__':
             super().__init__()
             self.tf_transform = TransformTF()
 
-        def forward(self, current_pitch, current_yaw, current_distance, current_tf):
-            # Camera
-            viewport = pyrenderer.Camera.viewport_from_sphere(
-                camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
-            ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
-
-            # TF
+        def forward(self, current_tf):
+            # TODO: softplus for opacity, sigmoid for color
             transformed_tf = self.tf_transform(current_tf)
-
-            # Forward
-            color = rendererDeriv(ray_start, ray_dir, transformed_tf)
-
+            color = rendererDerivTF(transformed_tf)
             loss = torch.nn.functional.mse_loss(color, reference_color_gpu)
-            return loss, viewport, transformed_tf, color
+            return loss, transformed_tf, color
+
+
     model = OptimModel()
 
     # run optimization
     reconstructed_color = []
-    reconstructed_viewport = []
     reconstructed_tf = []
     reconstructed_loss = []
     reconstructed_cliploss = []
-
-    # Working parameters
-    current_pitch = camera_initial_pitch.clone()
-    current_yaw = camera_initial_yaw.clone()
-    current_distance = camera_initial_distance.clone()
-    current_pitch.requires_grad_()
-    current_yaw.requires_grad_()
-    current_distance.requires_grad_()
-
     current_tf = tf.clone()
     current_tf.requires_grad_()
-
-
-    optimizer = torch.optim.Adam([current_pitch, current_yaw, current_distance, current_tf], lr=lr)
+    optimizer = torch.optim.Adam([current_tf], lr=lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
+    count = 0
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        loss, viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
+        # camera_reference_pitch = torch.tensor([[np.radians(-37.5 + count)]], dtype=dtype, device=device)
+        # camera_reference_yaw = torch.tensor([[np.radians(87.5 + count)]], dtype=dtype, device=device)
+        # count += 1
+
+        # viewport = pyrenderer.Camera.viewport_from_sphere(
+        #     camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
+        # ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
+        # inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
+        loss, transformed_tf, color = model(current_tf)
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -356,7 +340,7 @@ if __name__ == '__main__':
         reconstructed_loss.append(loss.item())
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
-
+        # loss.backward()
         score.backward()
         optimizer.step()
         scheduler.step()
