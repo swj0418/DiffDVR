@@ -372,7 +372,6 @@ if __name__ == '__main__':
         axs[3, 0].plot(reconstructed_loss)
         axs[3, 1].plot(reconstructed_cliploss)
 
-
         # Adjust titles, labels, etc., here
         axs[0, 0].set_title("Color")
         axs[0, 1].set_title("Transfer Function")
@@ -388,7 +387,7 @@ if __name__ == '__main__':
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
             "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-            0, reconstructed_loss[0], reconstructed_cliploss[0]))
+             frame, reconstructed_loss[0], reconstructed_cliploss[0]))
         fig.tight_layout()
 
         # Save the frame
