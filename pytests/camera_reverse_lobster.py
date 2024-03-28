@@ -32,7 +32,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["a red lobster"]).cuda()
+text = tokenizer(["a lobster"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.5
@@ -359,7 +359,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(3, 2, figsize=(8, 6))
+    fig, axs = plt.subplots(4, 2, figsize=(8, 6))
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -371,6 +371,9 @@ if __name__ == '__main__':
     axs[0, 0].set_ylabel("Reference")
     axs[1, 0].set_ylabel("Optimization")
     axs[2, 0].set_ylabel("Initial")
+    axs[3, 1].set_ylabel("Cos Dist")
+    axs[3, 1].plot(reconstructed_cliploss)
+
     # axs[3, 1].set_title("Img Loss")
     # axs[4, 1].set_title("CLIP Loss")
     # axs[3, 0].imshow(initial_color_image[:, :, 0:3])
