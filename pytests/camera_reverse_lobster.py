@@ -208,8 +208,8 @@ if __name__ == '__main__':
         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 31.307 / 255],
         [0.86, 0.86, 0.86, 0.9 * opacity_scaling, 85.2038 / 255],
         [0.96, 0.75, 0.65, 0.9 * opacity_scaling, 120 / 255],
-        [0.87, 0.39, 0.31, 0.0 * opacity_scaling, 204 / 255],
-        [0.70, 0.015, 0.15, 0.0 * opacity_scaling, 255 / 255]
+        [0.87, 0.39, 0.31, 0.8 * opacity_scaling, 204 / 255],
+        [0.70, 0.015, 0.15, 0.8 * opacity_scaling, 255 / 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
