@@ -94,8 +94,8 @@ if __name__ == '__main__':
     print(f"Volume Data Type: {volume}")
     # print("density tensor: ", volume.getDataGpu(0).shape, volume.getDataGpu(0).dtype, volume.getDataGpu(0).device)
 
-    Y = 324
-    Z = 56
+    Y = 56
+    Z = 324
     X = 301
     # device = volume.getDataGpu(0).device
     # dtype = volume.getDataGpu(0).dtype
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
     # camera_center = torch.tensor([[150, 161, 27]], dtype=dtype, device=device)
     camera_reference_pitch = torch.tensor([[np.radians(-37.5)]], dtype=dtype, device=device)
-    camera_reference_yaw = torch.tensor([[np.radians(7.0)]], dtype=dtype, device=device)
+    camera_reference_yaw = torch.tensor([[np.radians(87.5)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
     # camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
