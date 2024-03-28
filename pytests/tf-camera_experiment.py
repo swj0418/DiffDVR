@@ -319,9 +319,11 @@ if __name__ == '__main__':
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
     os.makedirs(tmp_fig_folder, exist_ok=True)
-
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
-    for frame in range(num_frames):
+    def generate_frame(frame):
+        # Your existing logic to generate and save a single frame
+
+        # for frame in range(num_frames):
         print(frame)
         fig, axs = plt.subplots(4, 2, figsize=(6, 9))
 
@@ -355,7 +357,7 @@ if __name__ == '__main__':
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
             "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-             frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+                frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
         fig.tight_layout()
 
         # Save the frame
@@ -363,10 +365,18 @@ if __name__ == '__main__':
         fig.savefig(frame_filename)
         plt.close(fig)  # Close the figure to free memory
 
+    from concurrent.futures import ProcessPoolExecutor
+
+    # Parallelize frame generation
+    with ProcessPoolExecutor() as executor:
+        executor.map(generate_frame, range(num_frames))
+
     # Compile frames into a GIF
     frame_files = [f"{tmp_fig_folder}/frame_{frame:04d}.png" for frame in range(num_frames)]
     images = [imageio.v2.imread(frame_file) for frame_file in frame_files]
-    imageio.mimsave('test_tf_optimization.gif', images, fps=10)  # Adjust fps as needed
+    imageio.mimsave('test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
+
+
 
     # Optionally, clean up the frame files after creating the GIF
     for frame_file in frame_files:
