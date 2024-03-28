@@ -351,7 +351,7 @@ if __name__ == '__main__':
         print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
 
     print("Visualize Optimization")
-    fig, axs = plt.subplots(4, 2, figsize=(8, 8))
+    fig, axs = plt.subplots(4, 2)
     axs[0, 0].imshow(reference_color_image[:, :, 0:3])
     tfvis.renderTfLinear(reference_tf, axs[0, 1])
     axs[1, 0].imshow(reconstructed_color[0])
@@ -367,17 +367,6 @@ if __name__ == '__main__':
 
     plt.subplot(2, 1, 1)
     plt.plot(reconstructed_cliploss)
-
-    # axs[3, :].plot(reconstructed_cliploss)
-
-    # axs[3, 1].set_title("Img Loss")
-    # axs[4, 1].set_title("CLIP Loss")
-    # axs[3, 0].imshow(initial_color_image[:, :, 0:3])
-    # tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    # axs[3, 1].plot(reconstructed_loss)
-    # axs[4, 0].imshow(initial_color_image[:, :, 0:3])
-    # tfvis.renderTfLinear(initial_tf, axs[2, 1])
-    # axs[4, 1].plot(reconstructed_cliploss)
 
     for i in range(3):
         for j in range(2):
@@ -398,7 +387,7 @@ if __name__ == '__main__':
             axs[1, 0].imshow(reconstructed_color[frame])
             tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
             fig.suptitle("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (
-            frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
+                          frame, reconstructed_loss[frame], reconstructed_cliploss[frame]))
             fig.savefig(f"{tmp_fig_folder}/frame_{frame:04d}.png")
             if frame > 0: pbar.update(1)
 
