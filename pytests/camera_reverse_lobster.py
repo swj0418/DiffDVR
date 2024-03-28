@@ -32,7 +32,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a lobster"]).cuda()
+text = tokenizer(["a red lobster"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.5
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 4  # I want gradients for all inner control points
+    differences_settings.D = 4 * 4  # I want gradients for all inner control points
     # derivative_tf_indices = torch.tensor([[
     #     [-1, -1, -1, -1, -1],
     #     [0, 1, 2, 3, -1],
@@ -176,9 +176,10 @@ if __name__ == '__main__':
     #     [-1, -1, -1, -1, -1],
     # ]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
-        [-1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1],
         [0, 1, 2, 3, -1],
+        [4, 5, 6, 7, -1],
+        [8, 9, 10, 11, -1],
+        [12, 13, 14, 15, -1],
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.has_tf_derivatives = True
@@ -223,9 +224,10 @@ if __name__ == '__main__':
     # ]], dtype=dtype, device=device)
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0.01 / 255],
-        [0.96, 0.75, 0.65, 0.0 * opacity_scaling, 20],
-        [0.70, 0.015, 0.15, 0.9 * opacity_scaling, 255]
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 0],
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 20],
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 235],
+        [0.96, 0.75, 0.65, 0.2 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
