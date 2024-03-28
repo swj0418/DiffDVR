@@ -80,6 +80,32 @@ class InverseTransformTF(torch.nn.Module):
         ], dim=2)
 
 
+class TransformCamera(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.sigmoid = torch.nn.Sigmoid()
+
+    def forward(self, pitch, yaw):
+        return torch.cat([
+            self.sigmoid(pitch),
+            self.sigmoid(yaw)
+        ], dim=2)
+
+
+class InverseTransformTF(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, pitch, yaw):
+        def inverseSigmoid(y):
+            return torch.log(-y / (y - 1))
+
+        return torch.cat([
+            inverseSigmoid(pitch),
+            inverseSigmoid(yaw)
+        ], dim=2)
+
+
 if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -102,6 +128,7 @@ if __name__ == '__main__':
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
+    # [0, 2pi]
     camera_initial_pitch = torch.tensor([[np.radians(30)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
@@ -234,6 +261,7 @@ if __name__ == '__main__':
         def __init__(self):
             super().__init__()
             self.tf_transform = TransformTF()
+            self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
             # Camera
@@ -241,7 +269,11 @@ if __name__ == '__main__':
                 camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
-            # TF
+            # Camera transform = activation
+            transformed_camera = self.camera_transform(current_pitch, current_yaw)
+            print(transformed_camera.shape)
+
+            # TF transform - activation
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
