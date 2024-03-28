@@ -128,8 +128,8 @@ if __name__ == '__main__':
     opacity_scaling = 25.0
     tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.0, 0.0, 0.0, 0.01, 0],
-        [0.8, 0.1, 0.1, 0.01, 0.1],
+        [0.0, 0.0, 0.0, 0.01 * opacity_scaling, 0],
+        [0.8, 0.1, 0.1, 0.01 * opacity_scaling, 0.1],
         [0.5, 0.3, 0.3, 0.4 * opacity_scaling, 0.3],
         [0.3, 0.3, 0.3, 0.8 * opacity_scaling, 0.5],
         [0.0, 0.0, 0.0, 0.01, 0.7],
