@@ -196,7 +196,7 @@ if __name__ == '__main__':
             gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
 
             # Render
-            pyrenderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
+            pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
             ctx.save_for_backward(gradients_out, current_tf)
             return output_color
 
