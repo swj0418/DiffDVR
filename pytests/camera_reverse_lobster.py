@@ -204,12 +204,12 @@ if __name__ == '__main__':
     print("Render initial")
     initial_tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.2, 0.9, 0.5, 0.0 * opacity_scaling, 0],
-        [0.2, 0.9, 0.5, 0.0 * opacity_scaling, 0.12],
+        [0.2, 0.9, 0.5, -0.2 * opacity_scaling, 0],
+        [0.2, 0.9, 0.5, -0.2 * opacity_scaling, 0.12],
         [0.1, 0.4, 0.7, 0.9 * opacity_scaling, 0.25],
         [0.6, 0.6, 0.3, 0.9 * opacity_scaling, 0.6],
-        [0.3, 0.2, 0.2, 0.0 * opacity_scaling, 0.9],
-        [0.2, 0.9, 0.5, 0.0 * opacity_scaling, 0.99]
+        [0.3, 0.2, 0.2, 0.5 * opacity_scaling, 0.9],
+        [0.2, 0.9, 0.5, 0.5 * opacity_scaling, 0.99]
     ]], dtype=dtype, device=device)
 
     print("Initial tf (original):", initial_tf)
