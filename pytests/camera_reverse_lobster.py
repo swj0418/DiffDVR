@@ -132,12 +132,12 @@ if __name__ == '__main__':
     opacity_scaling = 25.0
     tf = torch.tensor([[
         # r,g,b,a,pos
-        [0.0, 0.0, 0.0, 0.01 * opacity_scaling, 0],
-        [0.8, 0.1, 0.1, 0.01 * opacity_scaling, 0.1],
-        [0.5, 0.3, 0.3, 0.4 * opacity_scaling, 0.3],
-        [0.3, 0.3, 0.3, 0.8 * opacity_scaling, 0.5],
-        [0.0, 0.0, 0.0, 0.01, 0.7],
-        [0.0, 0.0, 0.0, 0.01, 0.99]
+        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 80],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 160],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 230],
+        [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
     # invViewMatrix = pyrenderer.Camera.compute_matrix(
