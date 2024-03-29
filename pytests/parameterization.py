@@ -379,6 +379,7 @@ if __name__ == '__main__':
         # preprocess and embed
         # Tensor [C, H, W]
         tmpimg = color[:, :, :, :3][0]
+        print(tmpimg.shape)
 
         prep_img = grad_preprocess(tmpimg)
         prep_img = prep_img.float()
