@@ -138,7 +138,6 @@ class TransformTFParameterization(torch.nn.Module):
         return height
 
     def _build_tf(self, tf, start, width, height):
-        tf = tf.clone()
         tf[:, 0, 4] = start
         tf[:, 1, 4] = (start + width) / 2.
         tf[:, 1, 3] = height
@@ -153,10 +152,13 @@ class TransformTFParameterization(torch.nn.Module):
         return tf
 
     def forward(self, tf, param_tf):
+        # L A B
+
+        # Opacity, Control Point
         start = self._check_start_condition(param_tf[0])
         width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
-        tf = self._build_tf(tf, start, width, height)
+        tf = self._build_tf(start, width, height)
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
@@ -263,8 +265,9 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
+    tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-    initial_tf = TransformTFParameterization()(initial_tf)
+    initial_tf = TransformTFParameterization()(tf, initial_tf)
 
     print("Initial tf (original):", initial_tf)
     inputs.tf = initial_tf
