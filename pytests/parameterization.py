@@ -416,7 +416,7 @@ if __name__ == '__main__':
     print(num_frames)
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
-        fig, axs = plt.subplots(1, 2, figsize=(6, 9))
+        fig, axs = plt.subplots(2, 2, figsize=(6, 9))
 
         axs[0, 0].imshow(reconstructed_color[frame])
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[0, 1])
