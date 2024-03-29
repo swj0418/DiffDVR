@@ -163,6 +163,7 @@ class TransformTFParameterization(torch.nn.Module):
         start, width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
         tf = self._build_tf(start, width, height, param_tf)
+        print(tf)
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
