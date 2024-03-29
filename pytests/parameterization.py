@@ -338,7 +338,7 @@ if __name__ == '__main__':
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
-            color = rendererDeriv(ray_start, ray_dir, current_tf, transformed_tf)
+            color = rendererDeriv(ray_start, ray_dir, transformed_tf)
 
             return viewport, transformed_tf, color
     model = OptimModel()
