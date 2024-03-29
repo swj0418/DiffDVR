@@ -150,12 +150,6 @@ class TransformTFParameterization(torch.nn.Module):
         tf[:, 1, 1] = rgb[1]
         tf[:, 1, 2] = rgb[2]
 
-        # tf = torch.tensor([[
-        #     # r,g,b,a,pos
-        #     [0.23, 0.30, 0.75, 0.0, start],
-        #     [0.39, 0.52, 0.92, height, (start + width) / 2.],
-        #     [0.86, 0.86, 0.86, 0.0, start + width]
-        # ]], dtype=dtype, device=device)
         return tf
 
     def forward(self, param_tf):
@@ -175,33 +169,33 @@ class TransformTFParameterization(torch.nn.Module):
         ], dim=2)
 
 
-class InverseTransformTFParameterization(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, tf):
-        # Tf -> start, width, height
-        def inverseSigmoid(y):
-            return torch.log(-y / (y - 1))
-
-        def inverseSoftplus(y, beta=1, threshold=20):
-            # if y*beta>threshold: return y
-            return torch.log(torch.exp(beta * y) - 1) / beta
-
-        assert len(tf.shape) == 3
-        assert tf.shape[2] == 5
-        tf = torch.cat([
-            inverseSigmoid(tf[:, :, 0:3]),  # color
-            inverseSoftplus(tf[:, :, 3:4]),  # opacity
-            tf[:, :, 4:5]  # position
-        ], dim=2)
-
-        # start width and height
-        start = tf[:, 0, 4]
-        width = tf[:, 2, 4] - start
-        height = tf[:, 1: 3]
-        r, g, b = tf[:, 1, 0], tf[:, 1, 1], tf[:, 1, 2]
-        return torch.tensor([start, width, height, r, g, b], dtype=dtype, device=device)
+# class InverseTransformTFParameterization(torch.nn.Module):
+#     def __init__(self):
+#         super().__init__()
+#
+#     def forward(self, tf):
+#         # Tf -> start, width, height
+#         def inverseSigmoid(y):
+#             return torch.log(-y / (y - 1))
+#
+#         def inverseSoftplus(y, beta=1, threshold=20):
+#             # if y*beta>threshold: return y
+#             return torch.log(torch.exp(beta * y) - 1) / beta
+#
+#         assert len(tf.shape) == 3
+#         assert tf.shape[2] == 5
+#         tf = torch.cat([
+#             inverseSigmoid(tf[:, :, 0:3]),  # color
+#             inverseSoftplus(tf[:, :, 3:4]),  # opacity
+#             tf[:, :, 4:5]  # position
+#         ], dim=2)
+#
+#         # start width and height
+#         start = tf[:, 0, 4]
+#         width = tf[:, 2, 4] - start
+#         height = tf[:, 1: 3]
+#         r, g, b = tf[:, 1, 0], tf[:, 1, 1], tf[:, 1, 2]
+#         return torch.tensor([start, width, height, r, g, b], dtype=dtype, device=device)
 
 
 if __name__ == '__main__':
