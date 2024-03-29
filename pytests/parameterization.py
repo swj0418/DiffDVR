@@ -154,13 +154,13 @@ class TransformTFParameterization(torch.nn.Module):
 
     def forward(self, param_tf):
         # L A B
-        print("PR:", param_tf)
+        print("PR:", param_tf.item())
 
         # Opacity, Control Point
         start = self._check_start_condition(param_tf[0])
         start, width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
-        tf = self._build_tf(start, width, height, param_tf[:3])
+        tf = self._build_tf(start, width, height, param_tf)
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
@@ -381,15 +381,11 @@ if __name__ == '__main__':
 
         # Embed
         embedding = clipmodel.encode_image(prep_img.unsqueeze(0).cuda())[0]
-
-        # Text feature
         text_features = clipmodel.encode_text(text)
-
         nembedding = embedding / embedding.norm(dim=-1, keepdim=True)
         ntext_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
         score = 1 - nembedding @ ntext_features.T
-        # cliploss = torch.nn.functional.mse_loss(embedding, gtembedding)
 
         # compute loss
         # if iteration % 4 == 0:
