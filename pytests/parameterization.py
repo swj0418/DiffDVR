@@ -27,7 +27,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["a red lobster"]).cuda()
+text = tokenizer(["A CT scan of a teapot"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 5.0
@@ -416,22 +416,17 @@ if __name__ == '__main__':
     print(num_frames)
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
-        fig, axs = plt.subplots(3, 2, figsize=(6, 9))
+        fig, axs = plt.subplots(1, 2, figsize=(6, 9))
 
-        axs[1, 0].imshow(reconstructed_color[frame])
-        tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
+        axs[0, 0].imshow(reconstructed_color[frame])
+        tfvis.renderTfLinear(reconstructed_tf[frame], axs[0, 1])
 
         # Update other plots as needed
-        # axs[3, 1].plot(reconstructed_cliploss)
-        #
-        # for i in range(3):
-        #     for j in range(2):
-        #         axs[i, j].set_xticks([])
-        #         if j == 0: axs[i, j].set_yticks([])
-        # fig.suptitle(
-        #     "Iteration % 4d, Cosine Distance: %7.5f" % (
-        #         frame, reconstructed_cliploss[frame]
-        #     ))
+        axs[3, 1].plot(reconstructed_cliploss)
+        fig.suptitle(
+            "Iteration % 4d, Cosine Distance: %7.5f" % (
+                frame, reconstructed_cliploss[frame]
+            ))
         fig.tight_layout()
 
         # Save the frame
