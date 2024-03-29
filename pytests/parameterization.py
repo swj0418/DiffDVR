@@ -200,7 +200,8 @@ class InverseTransformTFParameterization(torch.nn.Module):
         start = tf[:, 0, 4]
         width = tf[:, 2, 4] - start
         height = tf[:, 1: 3]
-        return torch.tensor([start, width, height], dtype=dtype, device=device)
+        r, g, b = tf[:, 1, 0], tf[:, 1, 1], tf[:, 1, 2]
+        return torch.tensor([start, width, height, r, g, b], dtype=dtype, device=device)
 
 
 if __name__ == '__main__':
