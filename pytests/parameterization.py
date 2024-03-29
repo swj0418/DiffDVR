@@ -292,7 +292,8 @@ if __name__ == '__main__':
             output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
             output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
             outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
-            gradients_out = torch.empty(1, H, W, 6, dtype=dtype, device=device)
+            # gradients_out = torch.empty(1, H, W, 6, dtype=dtype, device=device)
+            gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
 
             # Render
             pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
