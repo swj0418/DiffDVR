@@ -399,6 +399,7 @@ if __name__ == '__main__':
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
+        print(color.shape)
         # reconstructed_loss.append(loss.item())
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
