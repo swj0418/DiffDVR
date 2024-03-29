@@ -297,13 +297,12 @@ if __name__ == '__main__':
 
             # Render
             pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
-            ctx.save_for_backward(gradients_out, current_tf)
+            ctx.save_for_backward(gradients_out, transformed_tf, current_tf)
             return output_color
 
         @staticmethod
         def backward(ctx, grad_output_color):
-            gradients_out, current_tf = ctx.saved_tensors
-            print("Gradients Out: ", gradients_out)
+            gradients_out, transformed_tf, current_tf = ctx.saved_tensors
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
@@ -318,7 +317,7 @@ if __name__ == '__main__':
             grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
 
             # TF map
-            grad_tf = torch.zeros_like(current_tf)
+            grad_tf = torch.zeros_like(transformed_tf)
             for R in range(grad_tf.shape[1]):
                 for C in range(grad_tf.shape[2]):
                     idx = derivative_tf_indices[0, R, C]  # Indices already offset by camera grad indices
