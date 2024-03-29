@@ -286,7 +286,7 @@ if __name__ == '__main__':
             output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
             output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
             outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
-            gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
+            gradients_out = torch.empty(1, H, W, 6, dtype=dtype, device=device)
 
             # Render
             pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
@@ -296,6 +296,7 @@ if __name__ == '__main__':
         @staticmethod
         def backward(ctx, grad_output_color):
             gradients_out, current_tf = ctx.saved_tensors
+            print("Gradients Out: ", gradients_out)
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
