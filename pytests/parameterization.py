@@ -137,7 +137,9 @@ class TransformTFParameterization(torch.nn.Module):
             height = torch.tensor([100], dtype=dtype, device=device)
         return height
 
-    def _build_tf(self, tf, start, width, height):
+    def _build_tf(self, start, width, height):
+        # Convert LAB into RGB
+        tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
         tf[:, 0, 4] = start
         tf[:, 1, 4] = (start + width) / 2.
         tf[:, 1, 3] = height
@@ -151,7 +153,7 @@ class TransformTFParameterization(torch.nn.Module):
         # ]], dtype=dtype, device=device)
         return tf
 
-    def forward(self, tf, param_tf):
+    def forward(self, param_tf):
         # L A B
         print("PR:", param_tf)
 
@@ -159,7 +161,7 @@ class TransformTFParameterization(torch.nn.Module):
         start = self._check_start_condition(param_tf[0])
         start, width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
-        tf = self._build_tf(tf, start, width, height)
+        tf = self._build_tf(start, width, height)
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
@@ -271,7 +273,7 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    form_tf = torch.zeros(size=(1, 4, 5), dtype=dtype, device=device)
+    form_tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(form_tf, initial_tf)
 
@@ -341,7 +343,7 @@ if __name__ == '__main__':
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
             # TF transform - activation
-            transformed_tf = self.tf_transform(form_tf, current_tf)
+            transformed_tf = self.tf_transform(current_tf)
 
             # Forward
             color = rendererDeriv(ray_start, ray_dir, current_tf, transformed_tf)
