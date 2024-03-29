@@ -153,11 +153,12 @@ class TransformTFParameterization(torch.nn.Module):
 
     def forward(self, tf, param_tf):
         # L A B
+        print(param_tf)
 
         # Opacity, Control Point
-        # start = self._check_start_condition(param_tf[0])
-        # start, width = self._check_width_condition(param_tf[0], param_tf[1])
-        # height = self._check_height_condition(param_tf[2])
+        start = self._check_start_condition(param_tf[0])
+        start, width = self._check_width_condition(param_tf[0], param_tf[1])
+        height = self._check_height_condition(param_tf[2])
         tf = self._build_tf(tf, start, width, height)
 
         return torch.cat([
