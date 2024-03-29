@@ -30,7 +30,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a teapot"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 5.0
+lr = 0.5
 step_size = 100
 gamma = 0.1
 iterations = 300  # Optimization iterations
@@ -227,7 +227,7 @@ if __name__ == '__main__':
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     camera_initial_roll = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
+    camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
