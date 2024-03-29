@@ -265,16 +265,16 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
+    form_tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-    initial_tf = TransformTFParameterization()(tf, initial_tf)
+    initial_tf = TransformTFParameterization()(form_tf, initial_tf)
 
-    print("Initial tf (original):", initial_tf)
-    inputs.tf = initial_tf
-    pyrenderer.Renderer.render_forward(inputs, outputs)
-    initial_color_image = output_color.cpu().numpy()[0]
-    tf = InverseTransformTF()(initial_tf)
-    print("Initial tf (transformed):", tf)
+    # print("Initial tf (original):", initial_tf)
+    # inputs.tf = initial_tf
+    # pyrenderer.Renderer.render_forward(inputs, outputs)
+    # initial_color_image = output_color.cpu().numpy()[0]
+    # tf = InverseTransformTF()(initial_tf)
+    # print("Initial tf (transformed):", tf)
 
     class RendererDeriv(torch.autograd.Function):
         @staticmethod
@@ -358,7 +358,7 @@ if __name__ == '__main__':
     # current_yaw.requires_grad_()
     # current_distance.requires_grad_()
 
-    current_tf = tf.clone()
+    current_tf = initial_tf.clone()
     current_tf.requires_grad_()
 
     optimizer = torch.optim.Adam([current_pitch, current_yaw, current_distance, current_tf], lr=lr)
