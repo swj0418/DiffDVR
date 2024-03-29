@@ -444,7 +444,7 @@ if __name__ == '__main__':
 
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
-        print(frame_filenames)
+        print(frame_filename)
         fig.savefig(frame_filename)
         plt.close(fig)  # Close the figure to free memory
 
