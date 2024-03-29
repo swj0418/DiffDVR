@@ -251,13 +251,13 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 32  # TF + camera
-    # derivative_tf_indices = torch.tensor([0, 1, 2, 3, 4, 5], dtype=torch.int32)
-    derivative_tf_indices = torch.tensor([[
-        [0, 1, 2, 3, 4],
-        [5, 6, 7, 8, 9],
-        [10, 11, 12, 13, 14]
-    ]], dtype=torch.int32)
+    differences_settings.D = 6  # TF + camera
+    derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
+    # derivative_tf_indices = torch.tensor([[
+    #     [0, 1, 2, 3, 4],
+    #     [5, 6, 7, 8, 9],
+    #     [10, 11, 12, 13, 14]
+    # ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
     differences_settings.d_rayDir = pyrenderer.int3(3, 4, 5)
