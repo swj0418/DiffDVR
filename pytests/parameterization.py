@@ -273,7 +273,7 @@ if __name__ == '__main__':
     print("Render initial")
     form_tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-    initial_tf = TransformTFParameterization()(form_tf, initial_tf)
+    initial_transformed_tf = TransformTFParameterization()(form_tf, initial_tf)
 
     # print("Initial tf (original):", initial_tf)
     # inputs.tf = initial_tf
@@ -425,8 +425,8 @@ if __name__ == '__main__':
         # Your existing logic to generate and save a single frame
         fig, axs = plt.subplots(4, 2, figsize=(6, 9))
 
-        axs[2, 0].imshow(initial_color_image[:, :, 0:3])
-        tfvis.renderTfLinear(initial_tf, axs[2, 1])
+        # axs[2, 0].imshow(initial_color_image[:, :, 0:3])
+        tfvis.renderTfLinear(initial_transformed_tf, axs[2, 1])
 
         # Update other plots as needed
         axs[3, 0].plot(reconstructed_loss)
