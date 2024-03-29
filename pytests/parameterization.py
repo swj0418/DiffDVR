@@ -200,7 +200,7 @@ if __name__ == '__main__':
     dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
     data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
     dtype = torch.float32
-    data = data.astype(np.float)
+    data = data.astype(float)
     volume = torch.from_numpy(data).unsqueeze(0)
     volume = torch.tensor(volume, dtype=dtype, device=device)
     X, Y, Z = 256, 256, 178
@@ -229,11 +229,9 @@ if __name__ == '__main__':
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     # TF settings
+    # Triangular TF: start, width, height, L, A, B
     tf_mode = pyrenderer.TFMode.Linear
     opacity_scaling = 25.0
-
-    # Triangular TF: start, width, height, L, A, B
-    tf = None
 
     print("Create renderer inputs")
     inputs = pyrenderer.RendererInputs()
@@ -246,7 +244,6 @@ if __name__ == '__main__':
     inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
     inputs.step_size = 0.5 / X
     inputs.tf_mode = tf_mode
-    inputs.tf = tf
     inputs.blend_mode = pyrenderer.BlendMode.BeerLambert
 
     print("Create forward difference settings")
