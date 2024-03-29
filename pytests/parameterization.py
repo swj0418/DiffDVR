@@ -300,12 +300,12 @@ if __name__ == '__main__':
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
-            print("Gradient size: ", gradients.shape)  # [1, 224, 224, 22 (D), 4 (Channel)]
+            # print("Gradient size: ", gradients.shape)  # [1, 224, 224, 22 (D), 4 (Channel)]
 
             # I don't know how to aggregate if I were to compute gradients for camera and TF
             c_gradients = torch.sum(gradients, dim=4)  # reduce over channel
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
-            print(c_gradients.shape, gradients.shape)
+            # print(c_gradients.shape, gradients.shape)
 
             # Map to output variables
             grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
