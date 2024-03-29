@@ -250,8 +250,13 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 6 + 6  # TF + camera
-    derivative_tf_indices = torch.tensor([0, 1, 2, 3, 4, 5], dtype=torch.int32)
+    differences_settings.D = 15 + 6  # TF + camera
+    # derivative_tf_indices = torch.tensor([0, 1, 2, 3, 4, 5], dtype=torch.int32)
+    derivative_tf_indices = torch.tensor([[
+        [0, 1, 2, 3, 4],
+        [5, 6, 7, 8, 9],
+        [10, 11, 12, 13, 14]
+    ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
     differences_settings.d_rayDir = pyrenderer.int3(3, 4, 5)
@@ -278,9 +283,9 @@ if __name__ == '__main__':
 
     class RendererDeriv(torch.autograd.Function):
         @staticmethod
-        def forward(ctx, ray_start, ray_end, current_tf):
+        def forward(ctx, ray_start, ray_end, current_tf, transformed_tf):
             inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
-            inputs.tf = current_tf
+            inputs.tf = transformed_tf
 
             # Allocate output tensors
             output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
@@ -324,7 +329,7 @@ if __name__ == '__main__':
     class OptimModel(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.tf_transform = TransformTF()
+            self.tf_transform = TransformTFParameterization()
             self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
@@ -337,7 +342,7 @@ if __name__ == '__main__':
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
-            color = rendererDeriv(ray_start, ray_dir, transformed_tf)
+            color = rendererDeriv(ray_start, ray_dir, current_tf, transformed_tf)
 
             return loss, viewport, transformed_tf, color
     model = OptimModel()
