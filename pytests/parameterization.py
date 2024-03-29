@@ -137,13 +137,18 @@ class TransformTFParameterization(torch.nn.Module):
             height = torch.tensor([100], dtype=dtype, device=device)
         return height
 
-    def _build_tf(self, start, width, height):
+    def _build_tf(self, start, width, height, rgb):
         # Convert LAB into RGB
         tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
         tf[:, 0, 4] = start
         tf[:, 1, 4] = (start + width) / 2.
         tf[:, 1, 3] = height
         tf[:, 2, 4] = start + width
+
+        # RGB
+        tf[:, 1, 0] = rgb[0]
+        tf[:, 1, 1] = rgb[1]
+        tf[:, 1, 2] = rgb[2]
 
         # tf = torch.tensor([[
         #     # r,g,b,a,pos
@@ -161,7 +166,7 @@ class TransformTFParameterization(torch.nn.Module):
         start = self._check_start_condition(param_tf[0])
         start, width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
-        tf = self._build_tf(start, width, height)
+        tf = self._build_tf(start, width, height, param_tf[:3])
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
