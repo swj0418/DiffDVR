@@ -422,16 +422,16 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[1, 1])
 
         # Update other plots as needed
-        axs[3, 1].plot(reconstructed_cliploss)
-
-        for i in range(3):
-            for j in range(2):
-                axs[i, j].set_xticks([])
-                if j == 0: axs[i, j].set_yticks([])
-        fig.suptitle(
-            "Iteration % 4d, Cosine Distance: %7.5f" % (
-                frame, reconstructed_cliploss[frame]
-            ))
+        # axs[3, 1].plot(reconstructed_cliploss)
+        #
+        # for i in range(3):
+        #     for j in range(2):
+        #         axs[i, j].set_xticks([])
+        #         if j == 0: axs[i, j].set_yticks([])
+        # fig.suptitle(
+        #     "Iteration % 4d, Cosine Distance: %7.5f" % (
+        #         frame, reconstructed_cliploss[frame]
+        #     ))
         fig.tight_layout()
 
         # Save the frame
