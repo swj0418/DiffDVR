@@ -422,7 +422,7 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[0, 1])
 
         # Update other plots as needed
-        axs[3, 1].plot(reconstructed_cliploss)
+        axs[1, 1].plot(reconstructed_cliploss)
         fig.suptitle(
             "Iteration % 4d, Cosine Distance: %7.5f" % (
                 frame, reconstructed_cliploss[frame]
