@@ -346,7 +346,7 @@ if __name__ == '__main__':
             # Forward
             color = rendererDeriv(ray_start, ray_dir, current_tf, transformed_tf)
 
-            return loss, viewport, transformed_tf, color
+            return viewport, transformed_tf, color
     model = OptimModel()
 
     # run optimization
@@ -374,7 +374,7 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        loss, viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
+        viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -407,7 +407,7 @@ if __name__ == '__main__':
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
-        reconstructed_loss.append(loss.item())
+        # reconstructed_loss.append(loss.item())
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
@@ -415,7 +415,7 @@ if __name__ == '__main__':
         score.backward()
         optimizer.step()
         scheduler.step()
-        print("Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f" % (iteration, loss.item(), score.item()))
+        print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
@@ -430,7 +430,6 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(initial_transformed_tf, axs[2, 1])
 
         # Update other plots as needed
-        axs[3, 0].plot(reconstructed_loss)
         axs[3, 1].plot(reconstructed_cliploss)
 
         # Adjust titles, labels, etc., here
@@ -447,8 +446,8 @@ if __name__ == '__main__':
                 axs[i, j].set_xticks([])
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
-            "Iteration % 4d, Loss: %7.5f, Cosine Distance: %7.5f, P-Y:%7.5f-%7.5f" % (
-                frame, reconstructed_loss[frame], reconstructed_cliploss[frame],
+            "Iteration % 4d, Cosine Distance: %7.5f, P-Y:%7.5f-%7.5f" % (
+                frame, reconstructed_cliploss[frame],
                 reconstructed_pitchyaw[frame][0], reconstructed_pitchyaw[frame][1]
             ))
         fig.tight_layout()
