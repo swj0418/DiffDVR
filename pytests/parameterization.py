@@ -153,7 +153,7 @@ class TransformTFParameterization(torch.nn.Module):
 
     def forward(self, tf, param_tf):
         # L A B
-        print(param_tf)
+        print("PR:", param_tf)
 
         # Opacity, Control Point
         start = self._check_start_condition(param_tf[0])
