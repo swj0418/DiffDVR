@@ -324,7 +324,7 @@ if __name__ == '__main__':
                     if idx >= 0:
                         grad_tf[:, R, C] = gradients[:, idx]
 
-            return grad_ray_start, grad_ray_dir, grad_tf
+            return grad_ray_start, grad_ray_dir
     rendererDeriv = RendererDeriv.apply
 
     class OptimModel(torch.nn.Module):
