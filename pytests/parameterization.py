@@ -273,20 +273,12 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    form_tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(initial_tf)
 
-    # print("Initial tf (original):", initial_tf)
-    # inputs.tf = initial_tf
-    # pyrenderer.Renderer.render_forward(inputs, outputs)
-    # initial_color_image = output_color.cpu().numpy()[0]
-    # tf = InverseTransformTF()(initial_tf)
-    # print("Initial tf (transformed):", tf)
-
     class RendererDeriv(torch.autograd.Function):
         @staticmethod
-        def forward(ctx, ray_start, ray_end, current_tf, transformed_tf):
+        def forward(ctx, ray_start, ray_end, transformed_tf):
             inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
             inputs.tf = transformed_tf
 
@@ -299,12 +291,12 @@ if __name__ == '__main__':
 
             # Render
             pyrenderer.Renderer.render_forward_gradients(inputs, differences_settings, outputs, gradients_out)
-            ctx.save_for_backward(gradients_out, transformed_tf, current_tf)
+            ctx.save_for_backward(gradients_out, transformed_tf)
             return output_color
 
         @staticmethod
         def backward(ctx, grad_output_color):
-            gradients_out, transformed_tf, current_tf = ctx.saved_tensors
+            gradients_out, transformed_tf = ctx.saved_tensors
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
