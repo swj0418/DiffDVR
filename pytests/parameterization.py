@@ -380,20 +380,11 @@ if __name__ == '__main__':
         # Tensor [C, H, W]
         tmpimg = color[:, :, :, :3][0]
 
-        tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
-        gtimg = torch.swapdims(gtimg, 0, 2)
-
-        tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
-        gtimg = torch.swapdims(gtimg, 1, 2)
-
         prep_img = grad_preprocess(tmpimg)
-        prep_gt = grad_preprocess(gtimg)
         prep_img = prep_img.float()
-        prep_gt = prep_gt.float()
 
         # Embed
         embedding = clipmodel.encode_image(prep_img.unsqueeze(0).cuda())[0]
-        gtembedding = clipmodel.encode_image(prep_gt.unsqueeze(0).cuda())[0]
 
         # Text feature
         text_features = clipmodel.encode_text(text)
