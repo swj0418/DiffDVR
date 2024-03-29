@@ -399,8 +399,6 @@ if __name__ == '__main__':
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
-        print(color.shape)
-        # reconstructed_loss.append(loss.item())
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
@@ -417,21 +415,10 @@ if __name__ == '__main__':
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
-        fig, axs = plt.subplots(4, 2, figsize=(6, 9))
-
-        tfvis.renderTfLinear(initial_transformed_tf, axs[1, 1])
+        fig, axs = plt.subplots(3, 2, figsize=(6, 9))
 
         # Update other plots as needed
         axs[3, 1].plot(reconstructed_cliploss)
-
-        # Adjust titles, labels, etc., here
-        axs[0, 0].set_title("Color")
-        axs[0, 1].set_title("Transfer Function")
-        axs[0, 0].set_ylabel("Reference")
-        axs[1, 0].set_ylabel("Optimization")
-        axs[2, 0].set_ylabel("Initial")
-        axs[3, 1].set_title("Cos Dist")
-        axs[3, 0].set_title("Img Loss")
 
         for i in range(3):
             for j in range(2):
@@ -445,7 +432,6 @@ if __name__ == '__main__':
 
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
-        print(frame_filename)
         fig.savefig(frame_filename)
         plt.close(fig)  # Close the figure to free memory
 
