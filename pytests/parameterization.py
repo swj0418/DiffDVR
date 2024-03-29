@@ -135,6 +135,8 @@ class TransformTFParameterization(torch.nn.Module):
         # height < 100 (?)
         if height > 100:
             height = torch.tensor([100], dtype=dtype, device=device)
+        if height < 0:
+            height = torch.tensor([0], dtype=dtype, device=device)
         return height
 
     def _build_tf(self, start, width, height, rgb):
