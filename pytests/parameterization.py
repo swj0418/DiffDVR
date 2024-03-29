@@ -339,7 +339,7 @@ if __name__ == '__main__':
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
             # TF transform - activation
-            transformed_tf = self.tf_transform(current_tf)
+            transformed_tf = self.tf_transform(form_tf, current_tf)
 
             # Forward
             color = rendererDeriv(ray_start, ray_dir, current_tf, transformed_tf)
