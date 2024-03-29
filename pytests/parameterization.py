@@ -271,7 +271,7 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    form_tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
+    form_tf = torch.zeros(size=(1, 4, 5), dtype=dtype, device=device)
     initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(form_tf, initial_tf)
 
