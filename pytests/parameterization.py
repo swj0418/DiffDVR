@@ -379,7 +379,8 @@ if __name__ == '__main__':
         # preprocess and embed
         # Tensor [C, H, W]
         tmpimg = color[:, :, :, :3][0]
-        tmpimg.swapdims(0, -1)
+        tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
+        tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
 
         prep_img = grad_preprocess(tmpimg)
         prep_img = prep_img.float()
