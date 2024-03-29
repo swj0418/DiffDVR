@@ -33,7 +33,7 @@ torch.set_printoptions(sci_mode=False, precision=3)
 lr = 5.0
 step_size = 100
 gamma = 0.1
-iterations = 400  # Optimization iterations
+iterations = 100  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224  # screen width
@@ -413,8 +413,7 @@ if __name__ == '__main__':
         # Your existing logic to generate and save a single frame
         fig, axs = plt.subplots(4, 2, figsize=(6, 9))
 
-        # axs[2, 0].imshow(initial_color_image[:, :, 0:3])
-        tfvis.renderTfLinear(initial_transformed_tf, axs[2, 1])
+        tfvis.renderTfLinear(initial_transformed_tf, axs[1, 1])
 
         # Update other plots as needed
         axs[3, 1].plot(reconstructed_cliploss)
@@ -433,9 +432,8 @@ if __name__ == '__main__':
                 axs[i, j].set_xticks([])
                 if j == 0: axs[i, j].set_yticks([])
         fig.suptitle(
-            "Iteration % 4d, Cosine Distance: %7.5f, P-Y:%7.5f-%7.5f" % (
-                frame, reconstructed_cliploss[frame],
-                reconstructed_pitchyaw[frame][0], reconstructed_pitchyaw[frame][1]
+            "Iteration % 4d, Cosine Distance: %7.5f" % (
+                frame, reconstructed_cliploss[frame]
             ))
         fig.tight_layout()
 
