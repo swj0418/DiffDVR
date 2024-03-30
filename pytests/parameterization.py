@@ -156,7 +156,7 @@ class TransformTFParameterization(torch.nn.Module):
 
     def forward(self, param_tf):
         # L A B
-        print("PR:", param_tf.detach().cpu().numpy())
+        # print("PR:", param_tf.detach().cpu().numpy())
 
         # Opacity, Control Point
         start = self._check_start_condition(param_tf[0])
@@ -369,7 +369,7 @@ if __name__ == '__main__':
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
-        print(current_tf.detach().cpu().numpy())
+        print("Current: ", current_tf.detach().cpu().numpy())
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
 
