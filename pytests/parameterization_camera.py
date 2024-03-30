@@ -272,7 +272,6 @@ if __name__ == '__main__':
             # grad_ray_dir = c_gradients[..., 18:21]
             # print(grad_ray_dir.sum(), grad_ray_start.sum())
 
-
             grad_ray_start = c_gradients[..., 0:3]
             grad_ray_dir = c_gradients[..., 3:6]
 
