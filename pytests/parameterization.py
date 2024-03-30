@@ -27,7 +27,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a lobster"]).cuda()
+text = tokenizer(["A CT scan of a teapot"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
@@ -163,7 +163,6 @@ class TransformTFParameterization(torch.nn.Module):
         start, width = self._check_width_condition(param_tf[0], param_tf[1])
         height = self._check_height_condition(param_tf[2])
         tf = self._build_tf(start, width, height, param_tf)
-        print(tf)
 
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
