@@ -148,9 +148,9 @@ class TransformTFParameterization(torch.nn.Module):
         tf[:, 2, 4] = start + width
 
         # RGB
-        tf[:, 1, 0] = rgb[0]
-        tf[:, 1, 1] = rgb[1]
-        tf[:, 1, 2] = rgb[2]
+        tf[:, 1, 0] = rgb[3]
+        tf[:, 1, 1] = rgb[4]
+        tf[:, 1, 2] = rgb[5]
 
         return tf
 
