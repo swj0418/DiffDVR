@@ -32,17 +32,17 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a fish"]).cuda()
 
 # Load data
-dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
-data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
+# dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
+# data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
 
-# dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
-# data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
+dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
+data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
 
 dtype = torch.float32
 data = data.astype(float)
 volume = torch.from_numpy(data).unsqueeze(0)
 volume = torch.tensor(volume, dtype=dtype, device=device)
-X, Y, Z = 256, 256, 178
+X, Y, Z = 256, 256, 512
 camera_gradient_discount_factor = 2
 
 torch.set_printoptions(sci_mode=False, precision=3)
