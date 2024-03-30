@@ -296,7 +296,7 @@ if __name__ == '__main__':
             # Camera transform = activation
             # transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
             # transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
-            # print(current_yaw, current_pitch)
+            print(current_yaw.detach().cpu().item(), current_pitch.detach().cpu().item())
 
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
@@ -338,7 +338,7 @@ if __name__ == '__main__':
         optimizer.zero_grad()
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
-        print("Current: ", transformed_tf.detach().cpu().numpy())
+        # print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
