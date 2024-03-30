@@ -270,9 +270,10 @@ if __name__ == '__main__':
             # Map to output variables
             grad_ray_start = c_gradients[..., 15:18]
             grad_ray_dir = c_gradients[..., 18:21]
+            print(grad_ray_dir, grad_ray_start)
 
-            # grad_ray_start = c_gradients[..., 0:3]
-            # grad_ray_dir = c_gradients[..., 3:6]
+            grad_ray_start = c_gradients[..., 0:3]
+            grad_ray_dir = c_gradients[..., 3:6]
 
             # TF map
             grad_tf = torch.zeros_like(transformed_tf)
