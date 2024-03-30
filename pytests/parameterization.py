@@ -227,9 +227,9 @@ if __name__ == '__main__':
     camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
-    camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(5)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(20)]], dtype=dtype,
+    camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     camera_initial_roll = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
@@ -375,7 +375,7 @@ if __name__ == '__main__':
         optimizer.zero_grad()
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
-        print("Current: ", transformed_tf.detach().cpu().numpy())
+        # print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
