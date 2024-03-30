@@ -313,8 +313,11 @@ if __name__ == '__main__':
             # print(c_gradients.shape, gradients.shape)
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
-            grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
+            # grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
+            # grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
+
+            grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
+            grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
 
             # TF map
             grad_tf = torch.zeros_like(transformed_tf)
