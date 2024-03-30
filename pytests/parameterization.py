@@ -369,9 +369,9 @@ if __name__ == '__main__':
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
-        print("Current: ", current_tf.detach().cpu().numpy())
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
+        print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
