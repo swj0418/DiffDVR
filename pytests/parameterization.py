@@ -275,7 +275,7 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    initial_tf = torch.tensor([0, 5, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
+    initial_tf = torch.tensor([55, 10, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(initial_tf)
 
     class RendererDeriv(torch.autograd.Function):
