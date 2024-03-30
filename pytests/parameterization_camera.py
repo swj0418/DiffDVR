@@ -297,6 +297,7 @@ if __name__ == '__main__':
             transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
             transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
             print(current_yaw.detach().cpu().item(), current_pitch.detach().cpu().item())
+            print(transformed_yaw.detach().cpu().item(), transformed_pitch.detach().cpu().item())
 
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
