@@ -55,47 +55,6 @@ H = 224  # screen height
 W = 224  # screen width
 
 
-# TF parameterization:
-# color by Sigmoid, opacity by SoftPlus
-class TransformTF(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.sigmoid = torch.nn.Sigmoid()
-        self.softplus = torch.nn.Softplus()
-
-    def forward(self, tf):
-        assert len(tf.shape) == 3
-        assert tf.shape[2] == 5
-        return torch.cat([
-            self.sigmoid(tf[:, :, 0:3]),  # color
-            self.softplus(tf[:, :, 3:4]),  # opacity
-            # torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
-            tf[:, :, 4:5]  # position
-        ], dim=2)
-
-
-class InverseTransformTF(torch.nn.Module):
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, tf):
-        def inverseSigmoid(y):
-            return torch.log(-y / (y - 1))
-
-        def inverseSoftplus(y, beta=1, threshold=20):
-            # if y*beta>threshold: return y
-            return torch.log(torch.exp(beta * y) - 1) / beta
-
-        print(tf.shape)
-        assert len(tf.shape) == 3
-        assert tf.shape[2] == 5
-        return torch.cat([
-            inverseSigmoid(tf[:, :, 0:3]),  # color
-            inverseSoftplus(tf[:, :, 3:4]),  # opacity
-            tf[:, :, 4:5]  # position
-        ], dim=2)
-
-
 class TransformCamera(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -221,10 +180,6 @@ if __name__ == '__main__':
     fov_radians = np.radians(45.0)
     camera_orientation = pyrenderer.Orientation.Ym
     camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-    camera_reference_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-    camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-    camera_reference_roll = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-    camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
     camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
@@ -236,7 +191,7 @@ if __name__ == '__main__':
     camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
-        camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
+        camera_center, camera_initial_yaw, camera_initial_pitch, camera_initial_distance, camera_orientation)
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     # TF settings
@@ -340,6 +295,7 @@ if __name__ == '__main__':
             # Camera transform = activation
             # transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
             # transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
+            print(current_yaw, current_pitch)
 
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
