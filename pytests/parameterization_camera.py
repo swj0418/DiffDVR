@@ -259,7 +259,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 15  # TF + camera
+    differences_settings.D = 15 + 6  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [0, 1, 2, 3, 4],
@@ -292,7 +292,6 @@ if __name__ == '__main__':
             output_color = torch.empty(1, H, W, 4, dtype=dtype, device=device)
             output_termination_index = torch.empty(1, H, W, dtype=torch.int32, device=device)
             outputs = pyrenderer.RendererOutputs(output_color, output_termination_index)
-            # gradients_out = torch.empty(1, H, W, 6, dtype=dtype, device=device)
             gradients_out = torch.empty(1, H, W, differences_settings.D, 4, dtype=dtype, device=device)
 
             # Render
@@ -314,8 +313,8 @@ if __name__ == '__main__':
             # print(c_gradients.shape, gradients.shape)
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
-            grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
+            grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
+            grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
 
             # TF map
             grad_tf = torch.zeros_like(transformed_tf)
@@ -362,9 +361,9 @@ if __name__ == '__main__':
     current_yaw = camera_initial_yaw.clone()
     current_roll = camera_initial_roll.clone()
     current_distance = camera_initial_distance.clone()
-    # current_pitch.requires_grad_()
-    # current_yaw.requires_grad_()
-    # current_distance.requires_grad_()
+    current_pitch.requires_grad_()
+    current_yaw.requires_grad_()
+    current_distance.requires_grad_()
 
     current_tf = initial_tf.clone()
     current_tf.requires_grad_()
