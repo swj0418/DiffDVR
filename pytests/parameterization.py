@@ -220,14 +220,14 @@ if __name__ == '__main__':
     # Camera settings
     fov_radians = np.radians(45.0)
     camera_orientation = pyrenderer.Orientation.Ym
-    camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
+    camera_center = torch.tensor([[0.5, 0.0, 0.0]], dtype=dtype, device=device)
     camera_reference_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_roll = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
     camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
-    camera_initial_pitch = torch.tensor([[np.radians(5)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
