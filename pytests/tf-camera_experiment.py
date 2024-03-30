@@ -27,7 +27,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a lobster with black background"]).cuda()
+text = tokenizer(["A CT scan of a fish with black background"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.05
@@ -111,13 +111,18 @@ if __name__ == '__main__':
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Load data
-    dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
-    data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
+    # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/lobster/lobster.idx', cache_dir='./cache')
+    # data = dataset.read(x=(0, 301), y=(0, 324), z=(0, 56))
+
+    dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
+    data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
+
     dtype = torch.float32
     data = data.astype(np.float)
     volume = torch.from_numpy(data).unsqueeze(0)
     volume = torch.tensor(volume, dtype=dtype, device=device)
-    X, Y, Z = 301, 324, 56
+    # X, Y, Z = 301, 324, 56
+    X, Y, Z = 256, 256, 512
     camera_gradient_discount_factor = 10
 
     # Camera settings
