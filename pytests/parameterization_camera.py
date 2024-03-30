@@ -29,7 +29,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a round thing"]).cuda()
+text = tokenizer(["A CT scan of something"]).cuda()
 
 # Load data
 dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
@@ -43,7 +43,6 @@ data = data.astype(float)
 volume = torch.from_numpy(data).unsqueeze(0)
 volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = 256, 256, 178
-camera_gradient_discount_factor = 2
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 5.0
