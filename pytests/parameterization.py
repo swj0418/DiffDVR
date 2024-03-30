@@ -207,7 +207,7 @@ if __name__ == '__main__':
     # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
     # data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
 
-    ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
+    dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
     data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
 
     dtype = torch.float32
