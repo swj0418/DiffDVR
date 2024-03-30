@@ -227,7 +227,7 @@ if __name__ == '__main__':
     camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
-    camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
