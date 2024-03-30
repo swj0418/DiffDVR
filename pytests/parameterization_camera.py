@@ -21,6 +21,8 @@ from concurrent.futures import ProcessPoolExecutor
 
 from vis import tfvis
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
 tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
@@ -28,6 +30,20 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a fish"]).cuda()
+
+# Load data
+# dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
+# data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
+
+dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
+data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
+
+dtype = torch.float32
+data = data.astype(float)
+volume = torch.from_numpy(data).unsqueeze(0)
+volume = torch.tensor(volume, dtype=dtype, device=device)
+X, Y, Z = 256, 256, 512
+camera_gradient_discount_factor = 2
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 5.0
@@ -201,22 +217,6 @@ class TransformTFParameterization(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-    # Load data
-    # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
-    # data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
-
-    dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
-    data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
-
-    dtype = torch.float32
-    data = data.astype(float)
-    volume = torch.from_numpy(data).unsqueeze(0)
-    volume = torch.tensor(volume, dtype=dtype, device=device)
-    X, Y, Z = 256, 256, 512
-    camera_gradient_discount_factor = 10
-
     # Camera settings
     fov_radians = np.radians(45.0)
     camera_orientation = pyrenderer.Orientation.Ym
@@ -313,11 +313,11 @@ if __name__ == '__main__':
             # print(c_gradients.shape, gradients.shape)
 
             # Map to output variables
-            # grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
-            # grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
+            grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
+            grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
 
-            grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
-            grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
+            # grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
+            # grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
 
             # TF map
             grad_tf = torch.zeros_like(transformed_tf)
