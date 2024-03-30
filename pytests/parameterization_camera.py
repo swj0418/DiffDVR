@@ -58,12 +58,12 @@ W = 224  # screen width
 class TransformCamera(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self.sigmoid = torch.nn.Sigmoid()
+        self.tanh = torch.nn.Tanh()
 
     def forward(self, pitch, yaw):
         return torch.cat([
-            self.sigmoid(pitch),
-            self.sigmoid(yaw)
+            self.tanh(pitch),
+            self.tanh(yaw)
         ])
 
 
