@@ -143,7 +143,7 @@ class TransformTFParameterization(torch.nn.Module):
         # Convert LAB into RGB
         tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
         tf[:, 0, 4] = start
-        tf[:, 1, 4] = (start + width) / 2.
+        tf[:, 1, 4] = start + (width / 2.)
         tf[:, 1, 3] = height
         tf[:, 2, 4] = start + width
 
