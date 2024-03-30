@@ -103,8 +103,8 @@ class TransformCamera(torch.nn.Module):
 
     def forward(self, pitch, yaw):
         return torch.cat([
-            self.sigmoid(pitch) / 2,
-            self.sigmoid(yaw) / 2
+            self.sigmoid(pitch),
+            self.sigmoid(yaw)
         ])
 
 
@@ -227,9 +227,9 @@ if __name__ == '__main__':
     camera_reference_distance = torch.tensor([[1.0]], dtype=dtype, device=device)
 
     # [0, 2pi]
-    camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
+    camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype,
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
+    camera_initial_yaw = torch.tensor([[np.radians(45)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
     camera_initial_roll = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
@@ -338,12 +338,12 @@ if __name__ == '__main__':
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
             # Camera transform = activation
-            transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
-            transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
+            # transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
+            # transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
 
             # Camera
             viewport = pyrenderer.Camera.viewport_from_sphere(
-                camera_center, transformed_yaw, transformed_pitch, current_distance, camera_orientation)
+                camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
             # TF transform - activation
