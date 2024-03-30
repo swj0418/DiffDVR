@@ -251,8 +251,8 @@ if __name__ == '__main__':
             # grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
             # grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
 
-            grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
-            grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
+            grad_ray_start = c_gradients[..., 15:18]
+            grad_ray_dir = c_gradients[..., 18:21]
 
             # TF map
             grad_tf = torch.zeros_like(current_tf)
