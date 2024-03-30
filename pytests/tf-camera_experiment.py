@@ -30,7 +30,7 @@ clipmodel = clipmodel.cuda()
 text = tokenizer(["A CT scan of a fish with black background"]).cuda()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 0.05
+lr = 0.5
 step_size = 200
 gamma = 0.1
 iterations = 200  # Optimization iterations
@@ -139,7 +139,7 @@ if __name__ == '__main__':
                                         device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
     camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype,
                                       device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[3.0]], dtype=dtype, device=device)
+    camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_reference_yaw, camera_reference_pitch, camera_reference_distance, camera_orientation)
@@ -248,8 +248,11 @@ if __name__ == '__main__':
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
-            grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
+            # grad_ray_start = c_gradients[..., 0:3] / camera_gradient_discount_factor
+            # grad_ray_dir = c_gradients[..., 3:6] / camera_gradient_discount_factor
+
+            grad_ray_start = c_gradients[..., 15:18] / camera_gradient_discount_factor
+            grad_ray_dir = c_gradients[..., 18:21] / camera_gradient_discount_factor
 
             # TF map
             grad_tf = torch.zeros_like(current_tf)
