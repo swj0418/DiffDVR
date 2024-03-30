@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 15 + 6  # TF + camera
+    differences_settings.D = 15  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [0, 1, 2, 3, 4],
@@ -268,9 +268,9 @@ if __name__ == '__main__':
             # print(c_gradients.shape, gradients.shape)
 
             # Map to output variables
-            grad_ray_start = c_gradients[..., 15:18]
-            grad_ray_dir = c_gradients[..., 18:21]
-            print(grad_ray_dir.sum(), grad_ray_start.sum())
+            # grad_ray_start = c_gradients[..., 15:18]
+            # grad_ray_dir = c_gradients[..., 18:21]
+            # print(grad_ray_dir.sum(), grad_ray_start.sum())
 
             grad_ray_start = c_gradients[..., 0:3]
             grad_ray_dir = c_gradients[..., 3:6]
