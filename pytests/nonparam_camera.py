@@ -7,7 +7,7 @@ import open_clip
 import imageio
 import OpenVisus as ov
 
-from pytests.tf_transforms import TransformTFParameterization, TransformCamera
+from tf_transforms import TransformTFParameterization, TransformCamera
 from utils import _clip_preprocess
 
 sys.path.insert(0, os.getcwd())
