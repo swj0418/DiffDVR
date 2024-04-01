@@ -1,8 +1,57 @@
 import torch
 
 
+def hue_to_rgb(p, q, t):
+    if t < 0:
+        t += 1
+    if t > 1:
+        t -= 1
+    if t < 1 / 6:
+        return p + (q - p) * 6 * t
+    if t < 1 / 2:
+        return q
+    if t < 2 / 3:
+        return p + (q - p) * (2 / 3 - t) * 6
+    return p
+
+def hsl_to_rgb(hsl):
+    print(hsl)
+    h, s, l = hsl[:, 0], hsl[:, 1], hsl[:, 2]
+    # h, s, l = hsl[0], hsl[1], hsl[2]
+
+    q = torch.where(l < 0.5, l * (1 + s), l + s - l * s)
+    p = 2 * l - q
+
+    r = hue_to_rgb(p, q, h + 1/3)
+    g = hue_to_rgb(p, q, h)
+    b = hue_to_rgb(p, q, h - 1/3)
+
+    result = torch.stack((r, g, b), dim=1)
+    return result
+
+class TransformTFHSL(torch.nn.Module):
+    def __init__(self, lab=False):
+        super().__init__()
+        self.sigmoid = torch.nn.Sigmoid()
+        self.softplus = torch.nn.Softplus()
+
+    def forward(self, tf):
+        assert len(tf.shape) == 3
+        assert tf.shape[2] == 5
+
+        # Convert HSL to RGB
+        for i in range(tf.shape[1]):
+            tf[:, i, 0:3] = hsl_to_rgb(tf[:, i, 0:3])
+
+        return torch.cat([
+            self.sigmoid(tf[:, :, 0:3]),  # color
+            self.softplus(tf[:, :, 3:4]),  # opacity
+            tf[:, :, 4:5]  # position
+        ], dim=2)
+
+
 class TransformTF(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, lab=False):
         super().__init__()
         self.sigmoid = torch.nn.Sigmoid()
         self.softplus = torch.nn.Softplus()
@@ -139,3 +188,20 @@ class TransformCamera(torch.nn.Module):
             self.tanh(pitch) * 2,
             self.tanh(yaw) * 2
         ])
+
+
+if __name__ == '__main__':
+    hsl = torch.tensor([[
+        [0.2, 0.2, 0.2, 45, 255],
+        [0.2, 0.2, 0.2, 45, 255],
+        [0.2, 0.2, 0.2, 45, 255],
+    ]])
+    trans = TransformTFHSL()
+
+    # test_data = hsl[0, 0, 0:3]
+    # print(test_data)
+    # transformed = hsl_to_rgb(test_data)
+    # print(transformed)
+
+    transformed = trans(hsl)
+    print(transformed)
