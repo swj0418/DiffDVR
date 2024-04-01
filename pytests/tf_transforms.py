@@ -1,5 +1,23 @@
 import torch
 
+
+class TransformTF(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.sigmoid = torch.nn.Sigmoid()
+        self.softplus = torch.nn.Softplus()
+
+    def forward(self, tf):
+        assert len(tf.shape) == 3
+        assert tf.shape[2] == 5
+        return torch.cat([
+            self.sigmoid(tf[:, :, 0:3]),  # color
+            self.softplus(tf[:, :, 3:4]),  # opacity
+            # torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
+            tf[:, :, 4:5]  # position
+        ], dim=2)
+
+
 class TransformTFParameterization(torch.nn.Module):
     def __init__(self, dtype, device):
         super().__init__()
