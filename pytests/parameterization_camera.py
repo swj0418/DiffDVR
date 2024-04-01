@@ -321,7 +321,6 @@ if __name__ == '__main__':
     # Working parameters
     current_pitch = camera_initial_pitch.clone()
     current_yaw = camera_initial_yaw.clone()
-    current_roll = camera_initial_roll.clone()
     current_distance = camera_initial_distance.clone()
     # current_pitch.requires_grad_()
     # current_yaw.requires_grad_()
