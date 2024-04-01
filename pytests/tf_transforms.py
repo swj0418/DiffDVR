@@ -1,18 +1,28 @@
 import torch
 
 
+# def hue_to_rgb(p, q, t):
+#     new_t = t.clone()
+#     if t < 0:
+#         new_t = t + 1
+#     if new_t > 1:
+#         new_t = new_t - 1
+#     if new_t < 1 / 6:
+#         return p + (q - p) * 6 * new_t
+#     if new_t < 1 / 2:
+#         return q
+#     if new_t < 2 / 3:
+#         return p + (q - p) * (2 / 3 - new_t) * 6
+#     return p
+
 def hue_to_rgb(p, q, t):
-    if t < 0:
-        t += 1
-    if t > 1:
-        t -= 1
-    if t < 1 / 6:
-        return p + (q - p) * 6 * t
-    if t < 1 / 2:
-        return q
-    if t < 2 / 3:
-        return p + (q - p) * (2 / 3 - t) * 6
-    return p
+    t = torch.where(t < 0, t + 1, t)
+    t = torch.where(t > 1, t - 1, t)
+    r = torch.where(t < 1/6, p + (q - p) * 6 * t, q)
+    r = torch.where((t >= 1/6) & (t < 1/2), q, r)
+    r = torch.where((t >= 1/2) & (t < 2/3), p + (q - p) * (2/3 - t) * 6, r)
+    return torch.where(t >= 2/3, p, r)
+
 
 def hsl_to_rgb(hsl):
     print(hsl)
