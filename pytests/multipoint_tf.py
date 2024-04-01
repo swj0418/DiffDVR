@@ -54,10 +54,16 @@ print("Render initial")
 initial_tf = torch.tensor([[
         # r,g,b,a,pos
         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 80],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 160],
-        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 230],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
         [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
     ]], dtype=dtype, device=device)
 
@@ -94,7 +100,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 16  # TF + camera
+    differences_settings.D = 40  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
@@ -102,6 +108,12 @@ if __name__ == '__main__':
         [4, 5, 6, 7, -1],
         [8, 9, 10, 11, -1],
         [12, 13, 14, 15, -1],
+        [16, 17, 18, 19, -1],
+        [20, 21, 22, 23, -1],
+        [24, 25, 26, 27, -1],
+        [28, 29, 30, 31, -1],
+        [32, 33, 34, 35, -1],
+        [36, 37, 38, 39, -1],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
