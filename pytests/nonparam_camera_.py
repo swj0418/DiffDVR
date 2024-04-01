@@ -32,7 +32,7 @@ grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A tree"]).cuda()
 
-dataset = VolumeDatasetLoader('tree')
+dataset = VolumeDatasetLoader('teapot')
 volume_dataset = ov.load_dataset(dataset['url'], cache_dir='./cache')
 data = dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
