@@ -41,7 +41,7 @@ data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
 dtype = torch.float32
 data = data.astype(float)
 volume = torch.from_numpy(data).unsqueeze(0)
-volume = torch.tensor(volume, dtype=torch.float16, device=device)
+volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = 256, 256, 512
 
 torch.set_printoptions(sci_mode=False, precision=3)
@@ -234,7 +234,7 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    initial_tf = torch.tensor([55, 10, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
+    initial_tf = torch.tensor([200, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(initial_tf)
 
     class RendererDeriv(torch.autograd.Function):
