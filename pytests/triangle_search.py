@@ -267,8 +267,6 @@ def run(tf):
         optimizer.step()
         scheduler.step()
         print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
-
-    pyrenderer.cleanup()
     return reconstructed_color, reconstructed_tf, reconstructed_cliploss
 
 
@@ -279,5 +277,7 @@ if __name__ == '__main__':
         # ttf = TransformTFParameterization(dtype, device)(tf)
         reconstructed_color, reconstructed_tf, reconstructed_cliploss = run(tf)
         visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
+
+        pyrenderer.cleanup()
 
 
