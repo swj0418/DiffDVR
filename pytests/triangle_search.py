@@ -66,6 +66,7 @@ def visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss):
     print(num_frames)
 
     def generate_frame(frame):
+        print(f"Frame: {frame}")
         # Your existing logic to generate and save a single frame
         fig, axs = plt.subplots(2, 2, figsize=(6, 9))
 
