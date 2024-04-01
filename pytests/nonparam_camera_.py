@@ -51,6 +51,16 @@ B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
 
+# Camera settings
+fov_radians = np.radians(45.0)
+camera_orientation = pyrenderer.Orientation.Ym
+camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
+camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
+                                    device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(135)]], dtype=dtype,
+                                  device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
+camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
+
 
 class TransformCamera(torch.nn.Module):
     def __init__(self):
@@ -174,18 +184,6 @@ class TransformTFParameterization(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    # Camera settings
-    fov_radians = np.radians(45.0)
-    camera_orientation = pyrenderer.Orientation.Ym
-    camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-
-    # [0, 2pi]
-    camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
-                                        device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-    camera_initial_yaw = torch.tensor([[np.radians(135)]], dtype=dtype,
-                                      device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
-    camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
-
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_initial_yaw, camera_initial_pitch, camera_initial_distance, camera_orientation)
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
