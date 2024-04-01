@@ -29,7 +29,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A CT scan of a fish"]).cuda()
+text = tokenizer(["A tree"]).cuda()
 
 # Load data
 # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
