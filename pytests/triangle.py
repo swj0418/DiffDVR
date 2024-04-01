@@ -46,7 +46,7 @@ gamma = 0.1
 iterations = 300  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
-W = 224 * 2 # screen width
+W = 224 # screen width
 opacity_scaling = 25
 
 # initialize initial TF and render
