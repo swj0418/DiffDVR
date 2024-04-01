@@ -35,8 +35,8 @@ text = tokenizer(["A tree"]).cuda()
 # dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx', cache_dir='./cache')
 # data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 178))
 
-dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
-data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
+# dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/carp/carp.idx', cache_dir='./cache')
+# data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 512))
 
 dataset = ov.load_dataset('https://klacansky.com/open-scivis-datasets/bonsai/bonsai.idx', cache_dir='./cache')
 data = dataset.read(x=(0, 256), y=(0, 256), z=(0, 256))
@@ -237,7 +237,7 @@ if __name__ == '__main__':
 
     # initialize initial TF and render
     print("Render initial")
-    initial_tf = torch.tensor([200, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
+    initial_tf = torch.tensor([50, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
     initial_transformed_tf = TransformTFParameterization()(initial_tf)
 
     class RendererDeriv(torch.autograd.Function):
