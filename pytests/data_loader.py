@@ -15,8 +15,8 @@ dataset_map = {
     'teapot': {
         'url': 'https://klacansky.com/open-scivis-datasets/boston_teapot/boston_teapot.idx',
         'x': 256,
-        'y': 256,
-        'z': 100
+        'y': 128,
+        'z': 178
     },
     'lobster': {
         'url': 'https://klacansky.com/open-scivis-datasets/lobster/lobster.idx',
