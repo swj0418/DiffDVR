@@ -210,6 +210,7 @@ def run(tf):
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
             # TF transform - activation
+            print(current_tf)
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
