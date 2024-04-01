@@ -105,7 +105,6 @@ def run(tf):
     # TF settings
     # Triangular TF: start, width, height, L, A, B
     tf_mode = pyrenderer.TFMode.Linear
-    opacity_scaling = 25.0
 
     print("Create renderer inputs")
     inputs = pyrenderer.RendererInputs()
@@ -281,8 +280,8 @@ def run(tf):
 
 if __name__ == '__main__':
     # initialize initial TF and render
-    for starting_point in [0, 60, 120, 180, 225]:
-        tf = torch.tensor([starting_point, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
+    for starting_point in [0., 60., 120., 180., 225.s]:
+        tf = torch.tensor([starting_point, 30., 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
         tf = TransformTFParameterization(dtype, device)(tf)
         run(tf)
 
