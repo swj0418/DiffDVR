@@ -28,7 +28,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
-text = tokenizer(["A white tree"]).cuda()
+# text = tokenizer(["A white tree"]).cuda()
 # text = tokenizer(["A tree with yellow branches and a white trunk"]).cuda()
 
 dataset = VolumeDatasetLoader('tree')
