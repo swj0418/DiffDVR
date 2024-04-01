@@ -115,7 +115,7 @@ class TransformTFParameterization(torch.nn.Module):
 
     def _build_tf(self, start, width, height, rgb):
         # Convert LAB into RGB
-        tf = torch.zeros(size=(1, 3, 5), dtype=dtype, device=device)
+        tf = torch.zeros(size=(1, 5, 5), dtype=dtype, device=device)
         tf[:, 0, 4] = start
         tf[:, 1, 4] = start + (width / 2.)
         tf[:, 1, 3] = height
@@ -211,12 +211,14 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 15 + 6  # TF + camera
+    differences_settings.D = 15  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
-        [0, 1, 2, 3, 4],
+        [-1, -1, -1, -1, -1],
         [5, 6, 7, 8, 9],
         [10, 11, 12, 13, 14]
+        [10, 11, 12, 13, 14]
+        [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
@@ -293,7 +295,7 @@ if __name__ == '__main__':
             # Camera transform = activation
             # transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
             # transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
-            print(current_yaw.detach().cpu().item(), current_pitch.detach().cpu().item())
+            # print(current_yaw.detach().cpu().item(), current_pitch.detach().cpu().item())
             # print(transformed_yaw.detach().cpu().item(), transformed_pitch.detach().cpu().item())
 
             # Camera
