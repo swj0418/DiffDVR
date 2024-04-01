@@ -34,7 +34,7 @@ text = tokenizer(["A tree"]).cuda()
 
 dataset = VolumeDatasetLoader('teapot')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
-data = dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
+data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
 dtype = torch.float32
 data = data.astype(float)
