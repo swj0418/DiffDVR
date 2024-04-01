@@ -58,10 +58,8 @@ initial_transformed_tf = TransformTFParameterization(dtype, device)(initial_tf)
 fov_radians = np.radians(45.0)
 camera_orientation = pyrenderer.Orientation.Ym
 camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-camera_initial_pitch = torch.tensor([[np.radians(45)]], dtype=dtype,
-                                    device=device)  # torch.tensor([[np.radians(-14.5)]], dtype=dtype, device=device)
-camera_initial_yaw = torch.tensor([[np.radians(135)]], dtype=dtype,
-                                  device=device)  # torch.tensor([[np.radians(113.5)]], dtype=dtype, device=device)
+camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
 if __name__ == '__main__':
