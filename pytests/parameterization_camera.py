@@ -120,6 +120,7 @@ class TransformTFParameterization(torch.nn.Module):
         tf[:, 2, 4] = start + (width / 2.)
         tf[:, 2, 3] = height
         tf[:, 3, 4] = start + width
+        tf[:, 4, 4] = 255
 
         # RGB
         tf[:, 2, 0] = rgb[3]
@@ -337,7 +338,7 @@ if __name__ == '__main__':
         optimizer.zero_grad()
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
-        print("Current: ", transformed_tf.detach().cpu().numpy())
+        # print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
