@@ -215,9 +215,9 @@ if __name__ == '__main__':
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
+        [0, 1, 2, 3, 4],
         [5, 6, 7, 8, 9],
-        [10, 11, 12, 13, 14]
-        [10, 11, 12, 13, 14]
+        [10, 11, 12, 13, 14],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
