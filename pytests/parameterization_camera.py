@@ -325,9 +325,9 @@ if __name__ == '__main__':
     current_yaw = camera_initial_yaw.clone()
     current_roll = camera_initial_roll.clone()
     current_distance = camera_initial_distance.clone()
-    current_pitch.requires_grad_()
-    current_yaw.requires_grad_()
-    current_distance.requires_grad_()
+    # current_pitch.requires_grad_()
+    # current_yaw.requires_grad_()
+    # current_distance.requires_grad_()
 
     current_tf = initial_tf.clone()
     current_tf.requires_grad_()
