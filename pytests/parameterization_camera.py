@@ -337,7 +337,7 @@ if __name__ == '__main__':
         optimizer.zero_grad()
 
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
-        # print("Current: ", transformed_tf.detach().cpu().numpy())
+        print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
