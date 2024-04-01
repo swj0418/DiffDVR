@@ -51,7 +51,7 @@ opacity_scaling = 25
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = torch.tensor([120, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
+initial_tf = torch.tensor([80, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
 initial_transformed_tf = TransformTFParameterization(dtype, device)(initial_tf)
 
 # Camera settings
