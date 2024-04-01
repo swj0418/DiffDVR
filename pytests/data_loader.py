@@ -23,7 +23,13 @@ dataset_map = {
         'x': 301,
         'y': 324,
         'z': 56
-    }
+    },
+    'visible_male': {
+        'url': 'https://klacansky.com/open-scivis-datasets/vis_male/vis_male.idx',
+        'x': 128,
+        'y': 256,
+        'z': 256
+    },
 }
 
 

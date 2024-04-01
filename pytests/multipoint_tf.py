@@ -28,9 +28,10 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
-text = tokenizer(["A tree"]).cuda()
+# text = tokenizer(["A tree"]).cuda()
+text = tokenizer(["A set of teeth"]).cuda()
 
-dataset = VolumeDatasetLoader('tree')
+dataset = VolumeDatasetLoader('visible_male')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
