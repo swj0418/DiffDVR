@@ -268,8 +268,8 @@ def run(tf):
         scheduler.step()
         print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
 
-    visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
     pyrenderer.cleanup()
+    return reconstructed_color, reconstructed_tf, reconstructed_cliploss
 
 
 if __name__ == '__main__':
@@ -277,6 +277,7 @@ if __name__ == '__main__':
     for starting_point in [0., 60., 120., 180., 225.]:
         tf = torch.tensor([starting_point, 30., 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
         # ttf = TransformTFParameterization(dtype, device)(tf)
-        run(tf)
+        reconstructed_color, reconstructed_tf, reconstructed_cliploss = run(tf)
+        visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
 
 
