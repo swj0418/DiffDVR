@@ -28,6 +28,7 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
+text = tokenizer(["A white tree"]).cuda()
 # text = tokenizer(["A tree with yellow branches and a white trunk"]).cuda()
 
 dataset = VolumeDatasetLoader('tree')
@@ -42,9 +43,9 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 1.0
-step_size = 400
+step_size = 150
 gamma = 0.1
-iterations = 1000  # Optimization iterations
+iterations = 300  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
