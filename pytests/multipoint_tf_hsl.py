@@ -229,7 +229,7 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        print("Current: ", current_tf.detach().cpu().numpy())
+        # print("Current: ", current_tf.detach().cpu().numpy())
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
         # print("Current: ", transformed_tf.detach().cpu().numpy())
 
