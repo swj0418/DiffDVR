@@ -161,7 +161,7 @@ if __name__ == '__main__':
     class OptimModel(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.tf_transform = TransformTFParameterization()
+            self.tf_transform = TransformTFParameterization(dtype, device)
             self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
