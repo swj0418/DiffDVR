@@ -277,7 +277,7 @@ if __name__ == '__main__':
         tf = torch.tensor([starting_point, 30., 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
         # ttf = TransformTFParameterization(dtype, device)(tf)
         reconstructed_color, reconstructed_tf, reconstructed_cliploss = run(tf)
-        visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
+        # visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
 
         pyrenderer.cleanup()
 
