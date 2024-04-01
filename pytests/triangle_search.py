@@ -210,7 +210,6 @@ def run(tf):
             ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
             # TF transform - activation
-            print(current_tf)
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
@@ -277,7 +276,7 @@ if __name__ == '__main__':
     # initialize initial TF and render
     for starting_point in [0., 60., 120., 180., 225.]:
         tf = torch.tensor([starting_point, 30., 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-        ttf = TransformTFParameterization(dtype, device)(tf)
-        run(ttf)
+        # ttf = TransformTFParameterization(dtype, device)(tf)
+        run(tf)
 
 
