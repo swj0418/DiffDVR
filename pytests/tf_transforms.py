@@ -25,7 +25,6 @@ def hue_to_rgb(p, q, t):
 
 
 def hsl_to_rgb(hsl):
-    print(hsl)
     h, s, l = hsl[:, 0], hsl[:, 1], hsl[:, 2]
 
     q = torch.where(l < 0.5, l * (1 + s), l + s - l * s)
