@@ -17,7 +17,6 @@ def hue_to_rgb(p, q, t):
 def hsl_to_rgb(hsl):
     print(hsl)
     h, s, l = hsl[:, 0], hsl[:, 1], hsl[:, 2]
-    # h, s, l = hsl[0], hsl[1], hsl[2]
 
     q = torch.where(l < 0.5, l * (1 + s), l + s - l * s)
     p = 2 * l - q
@@ -40,13 +39,14 @@ class TransformTFHSL(torch.nn.Module):
         assert tf.shape[2] == 5
 
         # Convert HSL to RGB
+        converted_tf = tf.clone()
         for i in range(tf.shape[1]):
-            tf[:, i, 0:3] = hsl_to_rgb(tf[:, i, 0:3])
+            converted_tf[:, i, 0:3] = hsl_to_rgb(tf[:, i, 0:3])
 
         return torch.cat([
-            self.sigmoid(tf[:, :, 0:3]),  # color
-            self.softplus(tf[:, :, 3:4]),  # opacity
-            tf[:, :, 4:5]  # position
+            self.sigmoid(converted_tf[:, :, 0:3]),  # color
+            self.softplus(converted_tf[:, :, 3:4]),  # opacity
+            converted_tf[:, :, 4:5]  # position
         ], dim=2)
 
 
