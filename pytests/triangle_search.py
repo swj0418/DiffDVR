@@ -221,19 +221,13 @@ def run(tf):
 
     # run optimization
     reconstructed_color = []
-    reconstructed_viewport = []
     reconstructed_tf = []
-    reconstructed_loss = []
     reconstructed_cliploss = []
-    reconstructed_pitchyaw = []
 
     # Working parameters
     current_pitch = camera_initial_pitch.clone()
     current_yaw = camera_initial_yaw.clone()
     current_distance = camera_initial_distance.clone()
-    # current_pitch.requires_grad_()
-    # current_yaw.requires_grad_()
-    # current_distance.requires_grad_()
 
     current_tf = tf.clone()
     current_tf.requires_grad_()
@@ -268,7 +262,6 @@ def run(tf):
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
         reconstructed_cliploss.append(score.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
-        reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
         score.backward()
         optimizer.step()
@@ -278,11 +271,12 @@ def run(tf):
     visualize(reconstructed_color, reconstructed_tf, reconstructed_cliploss)
     pyrenderer.cleanup()
 
+
 if __name__ == '__main__':
     # initialize initial TF and render
     for starting_point in [0., 60., 120., 180., 225.]:
         tf = torch.tensor([starting_point, 30., 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-        tf = TransformTFParameterization(dtype, device)(tf)
-        run(tf)
+        ttf = TransformTFParameterization(dtype, device)(tf)
+        run(ttf)
 
 
