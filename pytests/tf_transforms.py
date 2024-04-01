@@ -54,13 +54,13 @@ class TransformTFHSL(torch.nn.Module):
         ], dim=2)
 
         # Convert HSL to RGB
-        # converted_tf = new_tf.clone()
+        converted_tf = new_tf.clone()
         for i in range(tf.shape[1]):
-            new_tf[:, i, 0:3] = hsl_to_rgb(new_tf[:, i, 0:3])
+            converted_tf[:, i, 0:3] = hsl_to_rgb(new_tf[:, i, 0:3])
 
         return torch.cat([
-            new_tf[:, :, 0:3],  # color
-            self.softplus(new_tf[:, :, 3:4]),  # opacity
+            converted_tf[:, :, 0:3],  # color
+            self.softplus(converted_tf[:, :, 3:4]),  # opacity
             tf[:, :, 4:5]  # position
         ], dim=2)
 
