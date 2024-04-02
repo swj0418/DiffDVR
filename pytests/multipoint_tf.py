@@ -54,33 +54,6 @@ H = 224  # screen height
 W = 224 # screen width
 opacity_scaling = 25
 
-# initialize initial TF and render
-print("Render initial")
-initial_tf = torch.tensor([[
-        # r,g,b,a,pos
-        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
-        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
-        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
-        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
-        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
-        [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
-    ]], dtype=dtype, device=device)
-
-# Camera settings
-fov_radians = np.radians(45.0)
-camera_orientation = pyrenderer.Orientation.Ym
-camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
-
-
 def create_tf_indices(rows):
     indices = []
     for i in range(rows):
@@ -93,6 +66,53 @@ def create_tf_indices(rows):
         indices.append(tmp)
     indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
     return indices
+
+
+def random_initial_tf(seed=0, cp=12):
+    torch.manual_seed(seed)
+
+    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=dtype, device=device)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+
+    # Opacity [0, 100]
+    tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
+
+    # Control point [0, 255]
+
+    return tf
+
+
+
+
+# initialize initial TF and render
+print("Render initial")
+# initial_tf = torch.tensor([[
+#         # r,g,b,a,pos
+#         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
+#         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
+#         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
+#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
+#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
+#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
+#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
+#         [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
+#         [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
+#         [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
+#         [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
+#         [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
+#     ]], dtype=dtype, device=device)
+
+initial_tf = create_tf_indices(0, 12)
+
+# Camera settings
+fov_radians = np.radians(45.0)
+camera_orientation = pyrenderer.Orientation.Ym
+camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
+camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
 
 if __name__ == '__main__':
