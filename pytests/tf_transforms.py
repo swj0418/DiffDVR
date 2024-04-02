@@ -49,7 +49,7 @@ class TransformTFHSL(torch.nn.Module):
 
         new_tf = torch.cat([
             self.sigmoid(tf[:, :, 0:1]), # Hue
-            self.sigmoid(tf[:, :, 1:2]) * 0.5, # Saturation - modulate
+            (1 - self.sigmoid(tf[:, :, 1:2])) * 0.5, # Saturation - modulate
             self.sigmoid(tf[:, :, 2:3]), # Luminance
             tf[:, :, 3:4],  # opacity
             tf[:, :, 4:5]  # position
@@ -61,7 +61,7 @@ class TransformTFHSL(torch.nn.Module):
             converted_tf[:, i, 0:3] = hsl_to_rgb(new_tf[:, i, 0:3])
 
         return torch.cat([
-            converted_tf[:, :, 0:3],  # color
+            converted_tf[:, :, 0:3],  # color in RGB
             self.softplus(converted_tf[:, :, 3:4]),  # opacity
             tf[:, :, 4:5]  # position
         ], dim=2)
