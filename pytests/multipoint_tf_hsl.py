@@ -87,7 +87,7 @@ def create_tf_indices(rows):
             if j == 4:
                 tmp.append(-1)
             else:
-                tmp.append(5 * i + j)
+                tmp.append(4 * i + j)
         indices.append(tmp)
     indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
     return indices
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 40  # TF + camera
+    differences_settings.D = 48  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     # derivative_tf_indices = torch.tensor([[
     #     [-1, -1, -1, -1, -1],
