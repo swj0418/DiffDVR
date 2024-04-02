@@ -46,9 +46,9 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 1.0
-step_size = 200
+step_size = 400
 gamma = 0.1
-iterations = 400  # Optimization iterations
+iterations = 1000  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
