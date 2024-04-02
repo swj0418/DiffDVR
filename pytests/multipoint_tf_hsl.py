@@ -75,7 +75,7 @@ fov_radians = np.radians(45.0)
 camera_orientation = pyrenderer.Orientation.Ym
 camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
 camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(15)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
 
