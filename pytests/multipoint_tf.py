@@ -104,7 +104,7 @@ print("Render initial")
 #         [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
 #     ]], dtype=dtype, device=device)
 
-initial_tf = create_tf_indices(0, 12)
+initial_tf = random_initial_tf(0, 12)
 
 # Camera settings
 fov_radians = np.radians(45.0)
