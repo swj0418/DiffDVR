@@ -78,6 +78,20 @@ camera_initial_pitch = torch.tensor([[np.radians(-70)]], dtype=dtype, device=dev
 camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
+
+def create_tf_indices(rows):
+    indices = []
+    for i in range(rows):
+        tmp = []
+        for j in range(5):
+            if j == 4:
+                tmp.append(-1)
+            else:
+                tmp.append(5 * i + j)
+        indices.append(tmp)
+    indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
+    return indices
+
 if __name__ == '__main__':
     viewport = pyrenderer.Camera.viewport_from_sphere(
         camera_center, camera_initial_yaw, camera_initial_pitch, camera_initial_distance, camera_orientation)
@@ -105,20 +119,23 @@ if __name__ == '__main__':
     differences_settings = pyrenderer.ForwardDifferencesSettings()
     differences_settings.D = 40  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
-    derivative_tf_indices = torch.tensor([[
-        [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, -1],
-        [4, 5, 6, 7, -1],
-        [8, 9, 10, 11, -1],
-        [12, 13, 14, 15, -1],
-        [16, 17, 18, 19, -1],
-        [20, 21, 22, 23, -1],
-        [24, 25, 26, 27, -1],
-        [28, 29, 30, 31, -1],
-        [32, 33, 34, 35, -1],
-        [36, 37, 38, 39, -1],
-        [-1, -1, -1, -1, -1]
-    ]], dtype=torch.int32)
+    # derivative_tf_indices = torch.tensor([[
+    #     [-1, -1, -1, -1, -1],
+    #     [0, 1, 2, 3, -1],
+    #     [4, 5, 6, 7, -1],
+    #     [8, 9, 10, 11, -1],
+    #     [12, 13, 14, 15, -1],
+    #     [16, 17, 18, 19, -1],
+    #     [20, 21, 22, 23, -1],
+    #     [24, 25, 26, 27, -1],
+    #     [28, 29, 30, 31, -1],
+    #     [32, 33, 34, 35, -1],
+    #     [36, 37, 38, 39, -1],
+    #     [-1, -1, -1, -1, -1]
+    # ]], dtype=torch.int32)
+    derivative_tf_indices = create_tf_indices(12)
+    print(derivative_tf_indices)
+
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
     differences_settings.d_rayDir = pyrenderer.int3(3, 4, 5)
