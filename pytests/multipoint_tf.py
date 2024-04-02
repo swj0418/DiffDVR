@@ -31,9 +31,9 @@ clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree"]).cuda()
 # text = tokenizer(["A set of teeth"]).cuda()
 # text = tokenizer(["A CT scan of human eyes"]).cuda()
-text = tokenizer(["CT scan of human face"]).cuda()
+text = tokenizer(["CT scan of jumping rope"]).cuda()
 
-dataset = VolumeDatasetLoader('visible_male')
+dataset = VolumeDatasetLoader('bag')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
