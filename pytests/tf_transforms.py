@@ -48,7 +48,9 @@ class TransformTFHSL(torch.nn.Module):
         assert tf.shape[2] == 5
 
         new_tf = torch.cat([
-            self.sigmoid(tf[:, :, 0:3]),  # color
+            self.sigmoid(tf[:, :, 0]), # Hue
+            self.sigmoid(tf[:, :, 1]) * 0.5, # Saturation - modulate
+            self.sigmoid(tf[:, :, 2]), # Luminance
             tf[:, :, 3:4],  # opacity
             tf[:, :, 4:5]  # position
         ], dim=2)
