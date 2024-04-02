@@ -7,7 +7,7 @@ import open_clip
 import imageio
 import OpenVisus as ov
 
-from tf_transforms import TransformTFParameterization, TransformCamera
+from tf_transforms import TransformCamera, TransformTF
 from utils import _clip_preprocess
 
 sys.path.insert(0, os.getcwd())
@@ -27,9 +27,13 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
+# text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
+# text = tokenizer(["A tree"]).cuda()
+# text = tokenizer(["A set of teeth"]).cuda()
+# text = tokenizer(["A CT scan of human eyes"]).cuda()
+text = tokenizer(["CT scan of human face"]).cuda()
 
-dataset = VolumeDatasetLoader('tree')
+dataset = VolumeDatasetLoader('visible_male')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
@@ -51,14 +55,27 @@ opacity_scaling = 25
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = torch.tensor([80, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-initial_transformed_tf = TransformTFParameterization(dtype, device)(initial_tf)
+initial_tf = torch.tensor([[
+        # r,g,b,a,pos
+        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
+        [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
+    ]], dtype=dtype, device=device)
 
 # Camera settings
 fov_radians = np.radians(45.0)
 camera_orientation = pyrenderer.Orientation.Ym
 camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_pitch = torch.tensor([[np.radians(-70)]], dtype=dtype, device=device)
 camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
@@ -87,13 +104,20 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 15  # TF + camera
+    differences_settings.D = 40  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, 4],
-        [5, 6, 7, 8, 9],
-        [10, 11, 12, 13, 14],
+        [0, 1, 2, 3, -1],
+        [4, 5, 6, 7, -1],
+        [8, 9, 10, 11, -1],
+        [12, 13, 14, 15, -1],
+        [16, 17, 18, 19, -1],
+        [20, 21, 22, 23, -1],
+        [24, 25, 26, 27, -1],
+        [28, 29, 30, 31, -1],
+        [32, 33, 34, 35, -1],
+        [36, 37, 38, 39, -1],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
@@ -159,7 +183,7 @@ if __name__ == '__main__':
     class OptimModel(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.tf_transform = TransformTFParameterization(dtype, device)
+            self.tf_transform = TransformTF()
             self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):

@@ -7,7 +7,7 @@ import open_clip
 import imageio
 import OpenVisus as ov
 
-from tf_transforms import TransformTFParameterization, TransformCamera
+from tf_transforms import TransformCamera, TransformTFHSL
 from utils import _clip_preprocess
 
 sys.path.insert(0, os.getcwd())
@@ -28,6 +28,8 @@ tokenizer = open_clip.get_tokenizer('ViT-B-32')
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
 text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
+# text = tokenizer(["A white tree"]).cuda()
+# text = tokenizer(["A tree with yellow branches and a white trunk"]).cuda()
 
 dataset = VolumeDatasetLoader('tree')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
@@ -51,8 +53,21 @@ opacity_scaling = 25
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = torch.tensor([80, 30, 0.8 * opacity_scaling, 0.2, 0.2, 0.2], dtype=dtype, device=device)
-initial_transformed_tf = TransformTFParameterization(dtype, device)(initial_tf)
+initial_tf = torch.tensor([[
+        # r,g,b,a,pos
+        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
+        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
+        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
+        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
+        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
+        [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
+    ]], dtype=dtype, device=device)
 
 # Camera settings
 fov_radians = np.radians(45.0)
@@ -87,13 +102,20 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 15  # TF + camera
+    differences_settings.D = 40  # TF + camera
     # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
     derivative_tf_indices = torch.tensor([[
         [-1, -1, -1, -1, -1],
-        [0, 1, 2, 3, 4],
-        [5, 6, 7, 8, 9],
-        [10, 11, 12, 13, 14],
+        [0, 1, 2, 3, -1],
+        [4, 5, 6, 7, -1],
+        [8, 9, 10, 11, -1],
+        [12, 13, 14, 15, -1],
+        [16, 17, 18, 19, -1],
+        [20, 21, 22, 23, -1],
+        [24, 25, 26, 27, -1],
+        [28, 29, 30, 31, -1],
+        [32, 33, 34, 35, -1],
+        [36, 37, 38, 39, -1],
         [-1, -1, -1, -1, -1]
     ]], dtype=torch.int32)
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
@@ -159,7 +181,7 @@ if __name__ == '__main__':
     class OptimModel(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.tf_transform = TransformTFParameterization(dtype, device)
+            self.tf_transform = TransformTFHSL()
             self.camera_transform = TransformCamera()
 
         def forward(self, current_pitch, current_yaw, current_distance, current_tf):
@@ -207,6 +229,7 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
 
+        # print("Current: ", current_tf.detach().cpu().numpy())
         viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
         # print("Current: ", transformed_tf.detach().cpu().numpy())
 
