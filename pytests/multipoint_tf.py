@@ -79,7 +79,9 @@ def random_initial_tf(seed=0, cp=12):
     # Opacity [0, 100]
     tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
 
-    # Control point [0, 255]
+    # Control point [0, 255], in ascending order. Sort every TF points based on control points.
+    tf = torch.sort(tf, dim=2, descending=False)
+    print(tf)
 
     return tf
 
