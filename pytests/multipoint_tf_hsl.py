@@ -134,7 +134,6 @@ if __name__ == '__main__':
     #     [-1, -1, -1, -1, -1]
     # ]], dtype=torch.int32)
     derivative_tf_indices = create_tf_indices(12)
-    print(derivative_tf_indices)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
