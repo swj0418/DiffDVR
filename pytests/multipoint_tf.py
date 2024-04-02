@@ -31,7 +31,7 @@ clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree"]).cuda()
 # text = tokenizer(["A set of teeth"]).cuda()
 # text = tokenizer(["A CT scan of human eyes"]).cuda()
-text = tokenizer(["CT scan of frog"]).cuda()
+text = tokenizer(["a frog"]).cuda()
 
 dataset = VolumeDatasetLoader('frog')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
