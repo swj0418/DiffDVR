@@ -80,10 +80,10 @@ def random_initial_tf(seed=0, cp=12):
     tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
 
     # Control point [0, 255], in ascending order. Sort every TF points based on control points.
-    opa_elements = tf[:, :, 4]
-    _, sorted_indices = torch.sort(opa_elements, dim=1)
-    sorted_indices = sorted_indices.unsqueeze(0).expand_as(tf)
-    sorted_tensor = torch.gather(tf, 1, sorted_indices)
+    control_points = tf[:, :, 4]
+    _, sorted_indices = torch.sort(control_points, dim=1)
+    sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
+
     print(sorted_tensor)
 
     return sorted_tensor
