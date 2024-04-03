@@ -21,11 +21,11 @@ from vis import tfvis
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
-# tokenizer = open_clip.get_tokenizer('ViT-B-32')
+clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
-clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
-tokenizer = open_clip.get_tokenizer('ViT-g-14')
+# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
+# tokenizer = open_clip.get_tokenizer('ViT-g-14')
 
 grad_preprocess = _clip_preprocess(224)
 # grad_preprocess = preprocess
@@ -51,9 +51,9 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.1
-step_size = 1000
+step_size = 600
 gamma = 0.1
-lamb = 0.1
+lamb = 0
 iterations = 1000  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
