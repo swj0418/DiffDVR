@@ -29,6 +29,7 @@ tokenizer = open_clip.get_tokenizer('ViT-g-14')
 
 # grad_preprocess = _clip_preprocess(224)
 grad_preprocess = preprocess
+print(grad_preprocess)
 
 clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
