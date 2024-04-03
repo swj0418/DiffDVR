@@ -99,7 +99,6 @@ if __name__ == '__main__':
     differences_settings = pyrenderer.ForwardDifferencesSettings()
     differences_settings.D = 40  # TF + camera
     derivative_tf_indices = create_tf_indices(12)
-    print(derivative_tf_indices)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
@@ -261,7 +260,7 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[0, 1])
 
         # Update other plots as needed
-        tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 0])  # Initialization
+        axs[1, 0].imshow(reconstructed_color[0])  # Initialization
         axs[1, 1].plot(reconstructed_cliploss)
         fig.suptitle(
             "Iteration % 4d, Cosine Distance: %7.5f" % (
