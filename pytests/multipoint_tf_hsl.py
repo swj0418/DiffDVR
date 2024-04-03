@@ -255,6 +255,7 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(reconstructed_tf[frame], axs[0, 1])
 
         # Update other plots as needed
+        tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 0])  # Initialization
         axs[1, 1].plot(reconstructed_cliploss)
         fig.suptitle(
             "Iteration % 4d, Cosine Distance: %7.5f" % (
