@@ -23,7 +23,7 @@ def _clip_preprocess(n_px):
 def create_tf_indices(rows):
     indices = []
     indices.append([-1, -1, -1, -1, -1])
-    for i in range(1, rows - 1):
+    for i in range(0, rows - 2):
         tmp = []
         for j in range(5):
             if j == 4:
