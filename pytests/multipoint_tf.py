@@ -36,7 +36,7 @@ clipmodel = clipmodel.cuda()
 # text = tokenizer(["A set of teeth"]).cuda()
 # text = tokenizer(["A CT scan of human eyes"]).cuda()
 # text = tokenizer(["Human skull"]).cuda()
-text = tokenizer(["Tree with brown trunk and green leaves planted in a blue bowl"]).cuda()
+text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
 
 dataset = VolumeDatasetLoader('tree')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
@@ -286,7 +286,7 @@ if __name__ == '__main__':
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
         fig.savefig(frame_filename)
 
-        if frame % 100 == 0:
+        if frame % 100 == 0 or frame == iterations - 1:
             fig.savefig(f"{retain_fig_folder}/frame_{frame:04d}.png")
 
         plt.close(fig)  # Close the figure to free memory

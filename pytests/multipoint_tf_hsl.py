@@ -44,10 +44,11 @@ volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 1.0
+lr = 2.0
 step_size = 200
 gamma = 0.1
-iterations = 400 # Optimization iterations
+lamb = 0.05
+iterations = 600 # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
@@ -227,6 +228,10 @@ if __name__ == '__main__':
 
         score = 1 - nembedding @ ntext_features.T
 
+        # Sparsity
+        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 100))  # Sparsity in opacity only
+        loss = score + lamb * l1
+
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
@@ -266,7 +271,7 @@ if __name__ == '__main__':
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
         fig.savefig(frame_filename)
-        if frame % 100 == 0:
+        if frame % 100 == 0 or frame == iterations - 1:
             fig.savefig(f"{retain_fig_folder}/frame_{frame:04d}.png")
 
         plt.close(fig)  # Close the figure to free memory
