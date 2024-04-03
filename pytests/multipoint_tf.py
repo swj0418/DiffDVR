@@ -35,7 +35,7 @@ def parse_args():
 
 args = parse_args()
 
-experiment_name = f'{args.volume}_{args.prompt}_{args.pitch}_{args.yaw}'
+experiment_name = f'{args.volume}_{args.prompt}_{args.pitch}_{args.yaw}_{args.seed}'
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -182,7 +182,7 @@ if __name__ == '__main__':
     current_tf = initial_tf.clone()
     current_tf.requires_grad_()
 
-    optimizer = torch.optim.SGD([current_tf], lr=lr)
+    optimizer = torch.optim.Adam([current_tf], lr=lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
@@ -224,7 +224,7 @@ if __name__ == '__main__':
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
-    retain_fig_folder = f'{experiment_name}_figure'
+    retain_fig_folder = f'figure_{experiment_name}'
     os.makedirs(tmp_fig_folder, exist_ok=True)
     os.makedirs(retain_fig_folder, exist_ok=True)
 
