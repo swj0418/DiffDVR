@@ -262,6 +262,13 @@ if __name__ == '__main__':
         # Update other plots as needed
         axs[1, 0].imshow(reconstructed_color[0])  # Initialization
         axs[1, 1].plot(reconstructed_cliploss)
+
+        # Titles
+        axs[0, 0].set_title("Optimized Image")
+        axs[0, 1].set_title("TF")
+        axs[1, 0].set_title("Initial Image")
+        axs[1, 1].set_title("Cosine Distance")
+
         fig.suptitle(
             "Iteration % 4d, Cosine Distance: %7.5f" % (
                 frame, reconstructed_cliploss[frame]
