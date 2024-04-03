@@ -7,6 +7,7 @@ import open_clip
 import imageio
 import OpenVisus as ov
 
+from pytests.utils import create_tf_indices, random_initial_tf
 from tf_transforms import TransformCamera, TransformTF
 from utils import _clip_preprocess
 
@@ -21,11 +22,15 @@ from vis import tfvis
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
-tokenizer = open_clip.get_tokenizer('ViT-B-32')
+# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
+# tokenizer = open_clip.get_tokenizer('ViT-B-32')
 
-# clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
-grad_preprocess = _clip_preprocess(224)
+clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
+tokenizer = open_clip.get_tokenizer('ViT-g-14')
+
+# grad_preprocess = _clip_preprocess(224)
+grad_preprocess = preprocess
+
 clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
 # text = tokenizer(["A tree"]).cuda()
@@ -45,71 +50,17 @@ volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 1.0
-step_size = 400
+lr = 2.0
+step_size = 150
 gamma = 0.1
-iterations = 1000  # Optimization iterations
+iterations = 400  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
 opacity_scaling = 25
 
-def create_tf_indices(rows):
-    indices = []
-    for i in range(rows):
-        tmp = []
-        for j in range(5):
-            if j == 4:
-                tmp.append(-1)
-            else:
-                tmp.append(4 * i + j)
-        indices.append(tmp)
-    indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
-    return indices
-
-
-def random_initial_tf(seed=0, cp=12):
-    torch.manual_seed(seed)
-
-    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=dtype, device=device)
-
-    # RGB [0, 1]
-    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
-
-    # Opacity [0, 100]
-    tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
-
-    # Control point [0, 255], in ascending order. Sort every TF points based on control points.
-    # control_points = tf[:, :, 4]
-    # _, sorted_indices = torch.sort(control_points, dim=1)
-    # sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
-
-    # Linearly spaced
-    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32, device=device)
-
-    return tf
-
-
-
-
 # initialize initial TF and render
 print("Render initial")
-# initial_tf = torch.tensor([[
-#         # r,g,b,a,pos
-#         [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
-#         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
-#         [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
-#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
-#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
-#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
-#         [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
-#         [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
-#         [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
-#         [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
-#         [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
-#         [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
-#     ]], dtype=dtype, device=device)
-
 initial_tf = random_initial_tf(0, 12)
 
 # Camera settings
@@ -117,7 +68,7 @@ fov_radians = np.radians(45.0)
 camera_orientation = pyrenderer.Orientation.Ym
 camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
 camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
-camera_initial_yaw = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(15)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
 
@@ -310,7 +261,9 @@ if __name__ == '__main__':
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
+    retain_fig_folder = 'ret_figure'
     os.makedirs(tmp_fig_folder, exist_ok=True)
+    os.makedirs(retain_fig_folder, exist_ok=True)
 
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     print(num_frames)
@@ -332,6 +285,10 @@ if __name__ == '__main__':
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
         fig.savefig(frame_filename)
+
+        if frame % 100 == 0:
+            fig.savefig(f"{retain_fig_folder}/frame_{frame:04d}.png")
+
         plt.close(fig)  # Close the figure to free memory
 
     # Parallelize frame generation

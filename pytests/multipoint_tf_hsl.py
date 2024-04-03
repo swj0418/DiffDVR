@@ -8,7 +8,7 @@ import imageio
 import OpenVisus as ov
 
 from tf_transforms import TransformCamera, TransformTFHSL
-from utils import _clip_preprocess
+from utils import _clip_preprocess, create_tf_indices, random_initial_tf
 
 sys.path.insert(0, os.getcwd())
 
@@ -54,21 +54,7 @@ opacity_scaling = 25
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = torch.tensor([[
-        # r,g,b,a,pos
-        [0.23, 0.30, 0.75, 0.0 * opacity_scaling, 0],
-        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 10],
-        [0.39, 0.52, 0.92, 0.0 * opacity_scaling, 25],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 50],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 75],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 100],
-        [0.86, 0.86, 0.86, 0.4 * opacity_scaling, 125],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 150],
-        [0.96, 0.75, 0.65, 0.8 * opacity_scaling, 175],
-        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 200],
-        [0.87, 0.39, 0.31, 0.99 * opacity_scaling, 225],
-        [0.70, 0.015, 0.15, 0.99 * opacity_scaling, 255]
-    ]], dtype=dtype, device=device)
+initial_tf = random_initial_tf(0, 12)
 
 # Camera settings
 fov_radians = np.radians(45.0)
@@ -78,19 +64,6 @@ camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=devic
 camera_initial_yaw = torch.tensor([[np.radians(15)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
-
-def create_tf_indices(rows):
-    indices = []
-    for i in range(rows):
-        tmp = []
-        for j in range(5):
-            if j == 4:
-                tmp.append(-1)
-            else:
-                tmp.append(4 * i + j)
-        indices.append(tmp)
-    indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
-    return indices
 
 if __name__ == '__main__':
     viewport = pyrenderer.Camera.viewport_from_sphere(
@@ -118,21 +91,6 @@ if __name__ == '__main__':
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
     differences_settings.D = 48  # TF + camera
-    # derivative_tf_indices = torch.tensor([[[0, 1, 2, 3, 4, 5]]], dtype=torch.int32)
-    # derivative_tf_indices = torch.tensor([[
-    #     [-1, -1, -1, -1, -1],
-    #     [0, 1, 2, 3, -1],
-    #     [4, 5, 6, 7, -1],
-    #     [8, 9, 10, 11, -1],
-    #     [12, 13, 14, 15, -1],
-    #     [16, 17, 18, 19, -1],
-    #     [20, 21, 22, 23, -1],
-    #     [24, 25, 26, 27, -1],
-    #     [28, 29, 30, 31, -1],
-    #     [32, 33, 34, 35, -1],
-    #     [36, 37, 38, 39, -1],
-    #     [-1, -1, -1, -1, -1]
-    # ]], dtype=torch.int32)
     derivative_tf_indices = create_tf_indices(12)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
@@ -282,7 +240,9 @@ if __name__ == '__main__':
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
+    retain_fig_folder = 'ret_figure'
     os.makedirs(tmp_fig_folder, exist_ok=True)
+    os.makedirs(retain_fig_folder, exist_ok=True)
 
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
     print(num_frames)
@@ -304,6 +264,9 @@ if __name__ == '__main__':
         # Save the frame
         frame_filename = f"{tmp_fig_folder}/frame_{frame:04d}.png"
         fig.savefig(frame_filename)
+        if frame % 100 == 0:
+            fig.savefig(f"{retain_fig_folder}/frame_{frame:04d}.png")
+
         plt.close(fig)  # Close the figure to free memory
 
     # Parallelize frame generation
