@@ -250,7 +250,7 @@ if __name__ == '__main__':
         loss.backward()
         optimizer.step()
         scheduler.step()
-        print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
+        print("Iteration % 4d, CD: %7.5f, L1: %7.5f" % (iteration, score.item(), l1.item()))
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
