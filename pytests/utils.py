@@ -1,8 +1,6 @@
 import torch
 from torchvision.transforms import functional as F
 
-from pytests.multipoint_tf import dtype, device
-
 
 def _clip_preprocess(n_px):
     def preprocess(image):
@@ -38,7 +36,7 @@ def create_tf_indices(rows):
 def random_initial_tf(seed=0, cp=12):
     torch.manual_seed(seed)
 
-    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=dtype, device=device)
+    tf = torch.randint(low=0, high=255, size=(1, cp, 5))
 
     # RGB [0, 1]
     tf[:, :, 0:3] = tf[:, :, 0:3] / 255
@@ -52,7 +50,7 @@ def random_initial_tf(seed=0, cp=12):
     # sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
 
     # Linearly spaced
-    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32, device=device)
+    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
 
     return tf
 

@@ -61,6 +61,7 @@ opacity_scaling = 25
 # initialize initial TF and render
 print("Render initial")
 initial_tf = random_initial_tf(0, 12)
+initial_tf = initial_tf.to(device)
 
 # Camera settings
 fov_radians = np.radians(45.0)
