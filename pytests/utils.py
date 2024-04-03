@@ -36,7 +36,7 @@ def create_tf_indices(rows):
 def random_initial_tf(seed=0, cp=12):
     torch.manual_seed(seed)
 
-    tf = torch.randint(low=0, high=255, size=(1, cp, 5))
+    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=torch.float32)
 
     # RGB [0, 1]
     tf[:, :, 0:3] = tf[:, :, 0:3] / 255
