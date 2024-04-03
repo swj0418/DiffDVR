@@ -193,6 +193,7 @@ if __name__ == '__main__':
     reconstructed_viewport = []
     reconstructed_tf = []
     reconstructed_loss = []
+    reconstructed_sparsity = []
     reconstructed_cliploss = []
     reconstructed_pitchyaw = []
 
@@ -241,6 +242,7 @@ if __name__ == '__main__':
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
         reconstructed_cliploss.append(score.item())
+        reconstructed_sparsity.append(l1)
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
