@@ -276,7 +276,11 @@ if __name__ == '__main__':
         camera_center, camera_initial_yaw, camera_initial_pitch, camera_initial_distance, camera_orientation)
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, 1024, 1024)
     inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
-    viewport, transformed_tf, color = model(current_tf)
+
+    color = torch.empty(1, 1024, 1024, 4, dtype=dtype, device=device)
+    output_termination_index = torch.empty(1, 1024, 1024, dtype=torch.int32, device=device)
+    outputs = pyrenderer.RendererOutputs(color, output_termination_index)
+
     tmpimg = color[:, :, :, :3][0]
     tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
     tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
