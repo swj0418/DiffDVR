@@ -298,7 +298,7 @@ if __name__ == '__main__':
     # Compile frames into a GIF
     frame_files = [f"{tmp_fig_folder}/frame_{frame:04d}.png" for frame in range(num_frames)]
     images = [imageio.v2.imread(frame_file) for frame_file in frame_files]
-    imageio.mimsave('test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
+    imageio.mimsave(f'{retain_fig_folder}/test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
     for frame_file in frame_files:  # Cleanup
         os.remove(frame_file)
 
