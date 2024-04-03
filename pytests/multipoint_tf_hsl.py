@@ -26,9 +26,11 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pretrained='laion2b_s34b_b88k')
 tokenizer = open_clip.get_tokenizer('ViT-g-14')
+
 grad_preprocess = _clip_preprocess(224)
 clipmodel = clipmodel.cuda()
-text = tokenizer(["Tree with brown trunk and green branches"]).cuda()
+# text = tokenizer(["Tree with brown trunk and green branches"]).cuda()
+text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
 # text = tokenizer(["Human skull"]).cuda()
 # text = tokenizer(["A white tree"]).cuda()
 # text = tokenizer(["A tree with yellow branches and a white trunk"]).cuda()
@@ -45,10 +47,10 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
-step_size = 200
+step_size = 400
 gamma = 0.1
-lamb = 0.05
-iterations = 600 # Optimization iterations
+lamb = 0
+iterations = 1000 # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
@@ -188,6 +190,7 @@ if __name__ == '__main__':
     reconstructed_tf = []
     reconstructed_loss = []
     reconstructed_cliploss = []
+    reconstructed_sparsity = []
     reconstructed_pitchyaw = []
 
     # Working parameters
@@ -229,20 +232,21 @@ if __name__ == '__main__':
         score = 1 - nembedding @ ntext_features.T
 
         # Sparsity
-        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 100))  # Sparsity in opacity only
-        loss = score + lamb * l1
+        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 255))  # Sparsity in opacity only
+        loss = score + (lamb * l1)
 
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
         reconstructed_cliploss.append(score.item())
+        reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
         score.backward()
         optimizer.step()
         scheduler.step()
-        print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
+        print("Iteration % 4d, CD: %7.5f, CD: %7.5f" % (iteration, score.item(), l1.item()))
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
@@ -263,8 +267,8 @@ if __name__ == '__main__':
         tfvis.renderTfLinear(reconstructed_tf[0], axs[1, 0])  # Initialization
         axs[1, 1].plot(reconstructed_cliploss)
         fig.suptitle(
-            "Iteration % 4d, Cosine Distance: %7.5f" % (
-                frame, reconstructed_cliploss[frame]
+            "Iteration % 4d, CD: %7.5f, L1: %7.5f" % (
+                frame, reconstructed_cliploss[frame], reconstructed_sparsity[frame]
             ))
         fig.tight_layout()
 
