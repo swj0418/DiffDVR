@@ -50,8 +50,8 @@ volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 1.0
-step_size = 200
+lr = 0.1
+step_size = 600
 gamma = 0.1
 lamb = 0.0
 iterations = 600  # Optimization iterations
@@ -237,7 +237,7 @@ if __name__ == '__main__':
 
         # Sparsity
         l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 100))  # Sparsity in opacity only
-        loss = score + lamb * l1
+        loss = score + (lamb * l1)
 
         # compute loss
         # if iteration % 4 == 0:
