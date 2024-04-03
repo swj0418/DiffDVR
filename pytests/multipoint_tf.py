@@ -29,6 +29,7 @@ def parse_args():
     parser.add_argument('--pitch', type=int)
     parser.add_argument('--yaw', type=int)
     parser.add_argument('--prompt', type=str)
+    parser.add_argument('--seed', type=int)
 
     return parser.parse_args()
 
@@ -71,7 +72,7 @@ W = 224 # screen width
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = random_initial_tf(0, 12)
+initial_tf = random_initial_tf(args.seed, 12)
 initial_tf = initial_tf.to(device)
 
 # Camera settings
