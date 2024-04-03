@@ -7,9 +7,8 @@ import open_clip
 import imageio
 import OpenVisus as ov
 
-from pytests.utils import create_tf_indices, random_initial_tf
+from utils import _clip_preprocess, create_tf_indices, random_initial_tf
 from tf_transforms import TransformCamera, TransformTF
-from utils import _clip_preprocess
 
 sys.path.insert(0, os.getcwd())
 
