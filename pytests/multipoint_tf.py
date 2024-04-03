@@ -38,7 +38,7 @@ clipmodel = clipmodel.cuda()
 # text = tokenizer(["Human skull"]).cuda()
 # text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
 # text = tokenizer(["A black and white tree"]).cuda()
-text = tokenizer(["Volume visualization of lobster"])
+text = tokenizer(["Volume visualization of lobster"]).cuda()
 
 dataset = VolumeDatasetLoader('lobster')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
