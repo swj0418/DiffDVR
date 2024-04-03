@@ -53,7 +53,7 @@ torch.set_printoptions(sci_mode=False, precision=3)
 lr = 0.1
 step_size = 600
 gamma = 0.1
-lamb = 0.0
+lamb = 0.1
 iterations = 600  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
