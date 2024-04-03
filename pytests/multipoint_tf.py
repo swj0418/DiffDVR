@@ -52,6 +52,7 @@ torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
 step_size = 200
 gamma = 0.1
+lamb = 0.1
 iterations = 600  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
@@ -232,6 +233,10 @@ if __name__ == '__main__':
 
         score = 1 - nembedding @ ntext_features.T
 
+        # Sparsity
+        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4]))  # Sparsity in opacity only
+        loss = score + lamb * l1
+
         # compute loss
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
@@ -239,7 +244,7 @@ if __name__ == '__main__':
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
-        score.backward()
+        loss.backward()
         optimizer.step()
         scheduler.step()
         print("Iteration % 4d, Cosine Distance: %7.5f" % (iteration, score.item()))
