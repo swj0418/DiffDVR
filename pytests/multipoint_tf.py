@@ -224,7 +224,7 @@ if __name__ == '__main__':
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
-    retain_fig_folder = f'figure_{experiment_name}'
+    retain_fig_folder = f'experiment_figs/figure_{experiment_name}'
     os.makedirs(tmp_fig_folder, exist_ok=True)
     os.makedirs(retain_fig_folder, exist_ok=True)
 
