@@ -243,7 +243,7 @@ if __name__ == '__main__':
         # if iteration % 4 == 0:
         reconstructed_color.append(color.detach().cpu().numpy()[0, :, :, 0:3])
         reconstructed_cliploss.append(score.item())
-        reconstructed_sparsity.append(l1)
+        reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
@@ -278,8 +278,8 @@ if __name__ == '__main__':
         axs[1, 1].set_title("Cosine Distance")
 
         fig.suptitle(
-            "Iteration % 4d, Cosine Distance: %7.5f" % (
-                frame, reconstructed_cliploss[frame]
+            "Iteration % 4d, CD: %7.5f, L1: %7.5f" % (
+                frame, reconstructed_cliploss[frame], reconstructed_sparsity[frame]
             ))
         fig.tight_layout()
 
