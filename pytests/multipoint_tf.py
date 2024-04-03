@@ -35,11 +35,11 @@ clipmodel = clipmodel.cuda()
 # text = tokenizer(["A tree"]).cuda()
 # text = tokenizer(["A set of teeth"]).cuda()
 # text = tokenizer(["A CT scan of human eyes"]).cuda()
-# text = tokenizer(["Human skull"]).cuda()
-text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
+text = tokenizer(["Human skull"]).cuda()
+# text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
 # text = tokenizer(["A black and white tree"]).cuda()
 
-dataset = VolumeDatasetLoader('tree')
+dataset = VolumeDatasetLoader('visible_male')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
@@ -51,10 +51,10 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
-step_size = 400
+step_size = 150
 gamma = 0.1
 lamb = 0
-iterations = 1000  # Optimization iterations
+iterations = 500  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
