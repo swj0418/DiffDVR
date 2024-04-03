@@ -72,13 +72,14 @@ class TransformTF(torch.nn.Module):
         super().__init__()
         self.sigmoid = torch.nn.Sigmoid()
         self.softplus = torch.nn.Softplus()
+        self.relu = torch.nn.ReLU()
 
     def forward(self, tf):
         assert len(tf.shape) == 3
         assert tf.shape[2] == 5
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
-            self.softplus(tf[:, :, 3:4]),  # opacity
+            self.relu(tf[:, :, 3:4]),  # opacity
             # torch.clamp(tf[:, :, 4:5], min=0, max=1)  # position
             tf[:, :, 4:5]  # position
         ], dim=2)
