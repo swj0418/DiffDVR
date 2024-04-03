@@ -235,7 +235,7 @@ if __name__ == '__main__':
         score = 1 - nembedding @ ntext_features.T
 
         # Sparsity
-        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4]))  # Sparsity in opacity only
+        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 100))  # Sparsity in opacity only
         loss = score + lamb * l1
 
         # compute loss
