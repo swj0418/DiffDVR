@@ -1,5 +1,3 @@
-import argparse
-
 import numpy as np
 import torch
 import sys
@@ -8,7 +6,6 @@ import matplotlib.pyplot as plt
 import open_clip
 import imageio
 import OpenVisus as ov
-import torchvision.utils
 
 from utils import _clip_preprocess, create_tf_indices, random_initial_tf
 from tf_transforms import TransformCamera, TransformTF
@@ -22,20 +19,6 @@ from data_loader import VolumeDatasetLoader
 
 from vis import tfvis
 
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--volume', type=str)
-    parser.add_argument('--pitch', type=int)
-    parser.add_argument('--yaw', type=int)
-    parser.add_argument('--prompt', type=str)
-
-    return parser.parse_args()
-
-args = parse_args()
-
-experiment_name = f'{args.volume}_{args.prompt}_{args.pitch}_{args.yaw}'
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
@@ -45,11 +28,19 @@ clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-g-14', pre
 tokenizer = open_clip.get_tokenizer('ViT-g-14')
 
 grad_preprocess = _clip_preprocess(224)
+# grad_preprocess = preprocess
 
 clipmodel = clipmodel.cuda()
-text = tokenizer([args.prompt]).cuda()
+# text = tokenizer(["A tree with brown trunk and green branches"]).cuda()
+# text = tokenizer(["A tree"]).cuda()
+# text = tokenizer(["A set of teeth"]).cuda()
+# text = tokenizer(["A CT scan of human eyes"]).cuda()
+# text = tokenizer(["Human skull"]).cuda()
+# text = tokenizer(["Tree with brown trunk and green leaves"]).cuda()
+# text = tokenizer(["A black and white tree"]).cuda()
+text = tokenizer(["Volume visualization of lobster"]).cuda()
 
-dataset = VolumeDatasetLoader(args.volume)
+dataset = VolumeDatasetLoader('lobster')
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
 
@@ -68,6 +59,7 @@ iterations = 600  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
+opacity_scaling = 25
 
 # initialize initial TF and render
 print("Render initial")
@@ -78,8 +70,8 @@ initial_tf = initial_tf.to(device)
 fov_radians = np.radians(45.0)
 camera_orientation = pyrenderer.Orientation.Ym
 camera_center = torch.tensor([[0.0, 0.0, 0.0]], dtype=dtype, device=device)
-camera_initial_pitch = torch.tensor([[np.radians(args.pitch)]], dtype=dtype, device=device)
-camera_initial_yaw = torch.tensor([[np.radians(args.yaw)]], dtype=dtype, device=device)
+camera_initial_pitch = torch.tensor([[np.radians(0)]], dtype=dtype, device=device)
+camera_initial_yaw = torch.tensor([[np.radians(15)]], dtype=dtype, device=device)
 camera_initial_distance = torch.tensor([[2.0]], dtype=dtype, device=device)
 
 
@@ -89,7 +81,9 @@ if __name__ == '__main__':
     ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
 
     # TF settings
+    # Triangular TF: start, width, height, L, A, B
     tf_mode = pyrenderer.TFMode.Linear
+    opacity_scaling = 25.0
 
     print("Create renderer inputs")
     inputs = pyrenderer.RendererInputs()
@@ -122,7 +116,8 @@ if __name__ == '__main__':
 
     class RendererDeriv(torch.autograd.Function):
         @staticmethod
-        def forward(ctx, transformed_tf):
+        def forward(ctx, ray_start, ray_end, transformed_tf):
+            inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
             inputs.tf = transformed_tf
 
             # Allocate output tensors
@@ -142,8 +137,20 @@ if __name__ == '__main__':
 
             grad_output_color = grad_output_color.unsqueeze(3)  # for broadcasting over the derivatives
             gradients = torch.mul(gradients_out, grad_output_color)  # adjoint-multiplication
+            # print("Gradient size: ", gradients.shape)  # [1, 224, 224, 22 (D), 4 (Channel)]
 
+            # I don't know how to aggregate if I were to compute gradients for camera and TF
+            c_gradients = torch.sum(gradients, dim=4)  # reduce over channel
             gradients = torch.sum(gradients, dim=[1, 2, 4])  # reduce over screen height, width and channel
+            # print(c_gradients.shape, gradients.shape)
+
+            # Map to output variables
+            grad_ray_start = c_gradients[..., 0: 3]
+            grad_ray_dir = c_gradients[..., 3: 6]
+            # print(grad_ray_dir.sum(), grad_ray_start.sum())
+
+            # grad_ray_start = c_gradients[..., 0:3]
+            # grad_ray_dir = c_gradients[..., 3:6]
 
             # TF map
             grad_tf = torch.zeros_like(transformed_tf)
@@ -153,40 +160,64 @@ if __name__ == '__main__':
                     if idx >= 0:
                         grad_tf[:, R, C] = gradients[:, idx]
 
-            return grad_tf
+            return grad_ray_start, grad_ray_dir, grad_tf
     rendererDeriv = RendererDeriv.apply
 
     class OptimModel(torch.nn.Module):
         def __init__(self):
             super().__init__()
             self.tf_transform = TransformTF()
+            self.camera_transform = TransformCamera()
 
-        def forward(self, current_tf):
+        def forward(self, current_pitch, current_yaw, current_distance, current_tf):
+            # Camera transform = activation
+            # transformed_pitch, transformed_yaw = self.camera_transform(current_pitch, current_yaw)
+            # transformed_pitch, transformed_yaw = transformed_pitch.unsqueeze(0), transformed_yaw.unsqueeze(0)
+            # print(current_yaw.detach().cpu().item(), current_pitch.detach().cpu().item())
+            # print(transformed_yaw.detach().cpu().item(), transformed_pitch.detach().cpu().item())
+
+            # Camera
+            viewport = pyrenderer.Camera.viewport_from_sphere(
+                camera_center, current_yaw, current_pitch, current_distance, camera_orientation)
+            ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, W, H)
+
             # TF transform - activation
             transformed_tf = self.tf_transform(current_tf)
 
             # Forward
-            color = rendererDeriv(transformed_tf)
+            color = rendererDeriv(ray_start, ray_dir, transformed_tf)
+
             return viewport, transformed_tf, color
     model = OptimModel()
 
     # run optimization
     reconstructed_color = []
+    reconstructed_viewport = []
     reconstructed_tf = []
     reconstructed_loss = []
     reconstructed_sparsity = []
     reconstructed_cliploss = []
+    reconstructed_pitchyaw = []
 
     # Working parameters
+    current_pitch = camera_initial_pitch.clone()
+    current_yaw = camera_initial_yaw.clone()
+    current_distance = camera_initial_distance.clone()
+    # current_pitch.requires_grad_()
+    # current_yaw.requires_grad_()
+    # current_distance.requires_grad_()
+
     current_tf = initial_tf.clone()
     current_tf.requires_grad_()
 
-    optimizer = torch.optim.SGD([current_tf], lr=lr)
+    optimizer = torch.optim.Adam([current_pitch, current_yaw, current_distance, current_tf], lr=lr)
+    # optimizer = torch.optim.SGD([current_pitch, current_yaw, current_distance, current_tf], lr=lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        viewport, transformed_tf, color = model(current_tf)
+        viewport, transformed_tf, color = model(current_pitch, current_yaw, current_distance, current_tf)
+        # print("Current: ", transformed_tf.detach().cpu().numpy())
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -215,6 +246,7 @@ if __name__ == '__main__':
         reconstructed_cliploss.append(score.item())
         reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
+        reconstructed_pitchyaw.append((current_pitch.cpu(), current_distance.cpu()))
 
         loss.backward()
         optimizer.step()
@@ -223,11 +255,12 @@ if __name__ == '__main__':
 
     print("Visualize Optimization")
     tmp_fig_folder = 'tmp_figure'
-    retain_fig_folder = f'{experiment_name}_figure'
+    retain_fig_folder = 'ret_figure'
     os.makedirs(tmp_fig_folder, exist_ok=True)
     os.makedirs(retain_fig_folder, exist_ok=True)
 
     num_frames = len(reconstructed_color)  # Assuming reconstructed_color holds the data for each frame
+    print(num_frames)
     def generate_frame(frame):
         # Your existing logic to generate and save a single frame
         fig, axs = plt.subplots(2, 2, figsize=(6, 9))
@@ -270,16 +303,5 @@ if __name__ == '__main__':
     imageio.mimsave(f'{retain_fig_folder}/test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
     for frame_file in frame_files:  # Cleanup
         os.remove(frame_file)
-
-    # Final render
-    viewport = pyrenderer.Camera.viewport_from_sphere(
-        camera_center, camera_initial_yaw, camera_initial_pitch, camera_initial_distance, camera_orientation)
-    ray_start, ray_dir = pyrenderer.Camera.generate_rays(viewport, fov_radians, 1024, 1024)
-    inputs.camera = pyrenderer.CameraPerPixelRays(ray_start, ray_dir)
-    viewport, transformed_tf, color = model(current_tf)
-    tmpimg = color[:, :, :, :3][0]
-    tmpimg = torch.swapdims(tmpimg, 0, 2)  # [C, W, H]
-    tmpimg = torch.swapdims(tmpimg, 1, 2)  # [C, H, W]
-    torchvision.utils.save_image(tmpimg, f"{retain_fig_folder}/final.png", normalize=True)
 
     pyrenderer.cleanup()
