@@ -31,6 +31,11 @@ def create_tf_indices(rows):
                 tmp.append(4 * i + j)
         indices.append(tmp)
     indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
+
+    # Do not optimize 0 and 255
+    indices[:, 0, :] = -1
+    indices[:, -1, :] = -1
+
     return indices
 
 
@@ -52,6 +57,10 @@ def random_initial_tf(seed=0, cp=12):
 
     # Linearly spaced
     tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = 0
+    tf[:, -1, 3] = 0
 
     return tf
 
