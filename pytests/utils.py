@@ -3,6 +3,7 @@ from torchvision.transforms import functional as F
 
 
 def _clip_preprocess(n_px):
+    # ViT-B/32, ViT-g/14
     def preprocess(image):
         # Assuming `image` is a PyTorch tensor of shape [C, H, W] and in the range [0, 1]
         # Resize and center crop
