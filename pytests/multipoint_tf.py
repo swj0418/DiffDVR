@@ -50,8 +50,8 @@ volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 0.1
-step_size = 600
+lr = 1.0
+step_size = 400
 gamma = 0.1
 lamb = 0
 iterations = 1000  # Optimization iterations
