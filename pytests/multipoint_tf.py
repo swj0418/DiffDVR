@@ -35,7 +35,6 @@ def parse_args():
 args = parse_args()
 
 experiment_name = f'{args.volume}_{args.prompt}_{args.pitch}_{args.yaw}_{args.seed}'
-
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 # clipmodel, _, preprocess = open_clip.create_model_and_transforms('ViT-B-32', pretrained='laion2b_s34b_b79k')
