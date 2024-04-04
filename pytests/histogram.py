@@ -28,7 +28,11 @@ def find_peaks(volume, num_peaks, steepest=False):
     peak_magnitudes = [0 if peaks[i] == 0 else abs(slopes[i]) + abs(slopes[i + 1]) for i in range(len(slopes) - 1)]
 
     # Sort
-    idx = np.argsort(peak_magnitudes)[::-1]
+    if steepest:
+        idx = np.argsort(peak_magnitudes)[::-1]
+    else:
+        idx = np.argsort(peak_magnitudes)
+
 
     # Nonzero
     nonzero_elements_count = np.sum(np.where(np.array(peak_magnitudes) > 0, True, False))
