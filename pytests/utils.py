@@ -71,6 +71,9 @@ def histo_initial_tf(peaks, seed=0, width=20):
     torch.manual_seed(seed)
     num_peaks = len(peaks)
 
+    # Sort
+    peaks = torch.sort(peaks, dim=0, descending=False)
+
     tf = torch.randint(low=0, high=255, size=(1, num_peaks * 3 + 2, 5), dtype=torch.float32)
 
     # RGB [0, 1]
