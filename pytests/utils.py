@@ -67,6 +67,32 @@ def random_initial_tf(seed=0, cp=12):
     return tf
 
 
+def histo_initial_tf(peaks, seed=0, width=10):
+    torch.manual_seed(seed)
+    num_peaks = len(peaks)
+
+    tf = torch.randint(low=0, high=255, size=(1, num_peaks * 3 + 2, 5), dtype=torch.float32)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+
+    # Opacity [0, 100]
+    # tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
+
+    # Control points
+    count = 0
+    for peak in peaks:
+        tf[:, 1 + 3 * count, 4] = peak - (width / 2)
+        tf[:, 1 + 3 * count + 1, 4] = peak
+        tf[:, 1 + 3 * count + 2, 4] = peak - (width / 2)
+        count += 1
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = 0
+    tf[:, -1, 3] = 0
+
+    return tf
+
 # derivative_tf_indices = torch.tensor([[
 #     [-1, -1, -1, -1, -1],
 #     [0, 1, 2, 3, -1],

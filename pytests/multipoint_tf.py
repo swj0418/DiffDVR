@@ -10,17 +10,16 @@ import imageio
 import OpenVisus as ov
 import torchvision.utils
 
-from utils import _clip_preprocess, create_tf_indices, random_initial_tf
+from utils import _clip_preprocess, create_tf_indices, random_initial_tf, histo_initial_tf
 from tf_transforms import TransformCamera, TransformTF
 
 sys.path.insert(0, os.getcwd())
 
-# load pyrenderer
 import pyrenderer
 from concurrent.futures import ProcessPoolExecutor
 from data_loader import VolumeDatasetLoader
-
 from vis import tfvis
+from histogram import find_peaks
 
 
 def parse_args():
@@ -53,6 +52,7 @@ text = tokenizer([args.prompt]).cuda()
 dataset = VolumeDatasetLoader(args.volume)
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
+peaks = find_peaks(data, num_peaks=3, steepest=False)
 
 dtype = torch.float32
 data = data.astype(float)
@@ -72,7 +72,8 @@ W = 224 # screen width
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = random_initial_tf(args.seed, 12)
+# initial_tf = random_initial_tf(args.seed, 12)
+initial_tf = histo_initial_tf(peaks, seed=args.seed, width=10)
 initial_tf = initial_tf.to(device)
 
 # Camera settings
@@ -108,7 +109,7 @@ if __name__ == '__main__':
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
     differences_settings.D = 40  # TF + camera
-    derivative_tf_indices = create_tf_indices(12)
+    derivative_tf_indices = create_tf_indices(11)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
