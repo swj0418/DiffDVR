@@ -34,6 +34,18 @@ def parse_args():
 
 args = parse_args()
 
+torch.set_printoptions(sci_mode=False, precision=3)
+lr = 2.0
+step_size = 200
+gamma = 0.1
+lamb = 0
+num_peaks = 6
+steepest = True
+iterations = 600  # Optimization iterations
+B = 1  # batch dimension
+H = 224  # screen height
+W = 224 # screen width
+
 experiment_name = f'{args.volume}_{args.prompt}_{args.pitch}_{args.yaw}_{args.seed}'
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -51,29 +63,17 @@ text = tokenizer([args.prompt]).cuda()
 dataset = VolumeDatasetLoader(args.volume)
 volume_dataset = ov.load_dataset(dataset.get_url(), cache_dir='./cache')
 data = volume_dataset.read(x=(0, dataset.get_xyz()[0]), y=(0, dataset.get_xyz()[1]), z=(0, dataset.get_xyz()[2]))
+peaks = find_peaks(data, num_peaks=num_peaks, steepest=steepest)
 
 dtype = torch.float32
-data = data.astype(float)
+# data = data.astype(float)
 volume = torch.from_numpy(data).unsqueeze(0)
 volume = torch.tensor(volume, dtype=dtype, device=device)
 X, Y, Z = dataset.get_xyz()
 
-torch.set_printoptions(sci_mode=False, precision=3)
-lr = 2.0
-step_size = 200
-gamma = 0.1
-lamb = 0
-num_peaks = 6
-steepest = True
-iterations = 600  # Optimization iterations
-B = 1  # batch dimension
-H = 224  # screen height
-W = 224 # screen width
-
 # initialize initial TF and render
 print("Render initial")
 # initial_tf = random_initial_tf(args.seed, 12)
-peaks = find_peaks(data, num_peaks=num_peaks, steepest=steepest)
 initial_tf = histo_initial_tf(peaks, seed=args.seed, width=20)
 initial_tf = initial_tf.to(device)
 print(initial_tf)
