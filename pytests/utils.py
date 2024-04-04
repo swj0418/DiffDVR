@@ -73,7 +73,7 @@ def histo_initial_tf(peaks, seed=0):
     num_peaks = len(peaks)
 
     # Sort
-    peaks = torch.sort(torch.tensor(peaks), dim=0, descending=False)[0]
+    peaks = np.sort(peaks)[::-1]
     peaks = list(peaks)
 
     tf = torch.randint(low=0, high=255, size=(1, num_peaks + 2, 5), dtype=torch.float32)
