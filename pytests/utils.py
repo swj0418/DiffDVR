@@ -80,7 +80,7 @@ def histo_initial_tf(peaks, seed=0):
     tf = torch.randint(low=0, high=255, size=(1, num_peaks + 2, 5), dtype=torch.float32)
 
     # RGB [0, 1]
-    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255 * 0.1
 
     # Opacity [0, 100]
     tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
