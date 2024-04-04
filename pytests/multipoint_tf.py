@@ -74,7 +74,7 @@ X, Y, Z = dataset.get_xyz()
 # initialize initial TF and render
 print("Render initial")
 # initial_tf = random_initial_tf(args.seed, 12)
-initial_tf = histo_initial_tf(peaks, seed=args.seed, width=20)
+initial_tf = histo_initial_tf(peaks, seed=args.seed)
 initial_tf = initial_tf.to(device)
 print(initial_tf)
 
