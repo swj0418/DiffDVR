@@ -35,7 +35,7 @@ def parse_args():
 args = parse_args()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 5.0
+lr = 2.0
 step_size = 200
 gamma = 0.1
 lamb = 0

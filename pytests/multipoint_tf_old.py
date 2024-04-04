@@ -65,7 +65,7 @@ X, Y, Z = dataset.get_xyz()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
-step_size = 200
+step_size = 400
 gamma = 0.1
 lamb = 0
 iterations = 600  # Optimization iterations
