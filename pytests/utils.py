@@ -67,7 +67,7 @@ def random_initial_tf(seed=0, cp=12):
     return tf
 
 
-def histo_initial_tf(peaks, seed=0, width=10):
+def histo_initial_tf(peaks, seed=0, width=20):
     torch.manual_seed(seed)
     num_peaks = len(peaks)
 
@@ -95,7 +95,9 @@ def histo_initial_tf(peaks, seed=0, width=10):
 
     # 0 and 255 to 0
     tf[:, 0, 3] = 0
+    tf[:, 0, 4] = 0
     tf[:, -1, 3] = 0
+    tf[:, -1, 4] = 255
 
     return tf
 
