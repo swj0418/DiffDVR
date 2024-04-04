@@ -75,6 +75,7 @@ print("Render initial")
 # initial_tf = random_initial_tf(args.seed, 12)
 initial_tf = histo_initial_tf(peaks, seed=args.seed, width=10)
 initial_tf = initial_tf.to(device)
+print(initial_tf)
 
 # Camera settings
 fov_radians = np.radians(45.0)
