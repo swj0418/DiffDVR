@@ -37,6 +37,8 @@ def find_peaks(volume, num_peaks, steepest=False):
     nonzero_elements_count = np.sum(np.where(np.array(peak_magnitudes) > 0, True, False))
     nonzero_idx = idx[:nonzero_elements_count]
 
+    print(nonzero_idx)
+
     return nonzero_idx[:num_peaks]
 
 

@@ -70,12 +70,10 @@ def random_initial_tf(seed=0, cp=12):
 def histo_initial_tf(peaks, seed=0, width=20):
     torch.manual_seed(seed)
     num_peaks = len(peaks)
-    peaks = torch.tensor(peaks)
 
     # Sort
     peaks = torch.sort(peaks, dim=0, descending=False)
     peaks = list(peaks)
-    print(peaks)
 
     tf = torch.randint(low=0, high=255, size=(1, num_peaks * 3 + 2, 5), dtype=torch.float32)
 
