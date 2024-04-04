@@ -73,7 +73,7 @@ def histo_initial_tf(peaks, seed=0):
     num_peaks = len(peaks)
 
     # Sort
-    peaks = np.sort(peaks)[::-1]
+    peaks = np.sort(peaks)
     peaks = list(peaks)
     print(peaks)
 
