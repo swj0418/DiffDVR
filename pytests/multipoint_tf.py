@@ -39,7 +39,8 @@ lr = 2.0
 step_size = 200
 gamma = 0.1
 lamb = 0
-num_peaks = 20
+num_peaks = 5
+cp = 12
 steepest = True
 iterations = 600  # Optimization iterations
 B = 1  # batch dimension
@@ -73,8 +74,8 @@ X, Y, Z = dataset.get_xyz()
 
 # initialize initial TF and render
 print("Render initial")
-# initial_tf = random_initial_tf(args.seed, 12)
-initial_tf = histo_initial_tf(peaks, seed=args.seed)
+initial_tf = random_initial_tf(args.seed, cp)
+# initial_tf = histo_initial_tf(peaks, seed=args.seed)
 initial_tf = initial_tf.to(device)
 print(initial_tf)
 
@@ -110,8 +111,12 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 4 * num_peaks  # TF + camera
-    derivative_tf_indices = create_tf_indices(num_peaks + 2)
+
+    # differences_settings.D = 4 * num_peaks  # TF + camera
+    # derivative_tf_indices = create_tf_indices(num_peaks + 2)
+
+    differences_settings.D = 4 * (cp - 2)  # TF + camera
+    derivative_tf_indices = create_tf_indices(cp)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
