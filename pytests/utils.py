@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from torchvision.transforms import functional as F
 
 
@@ -72,7 +73,7 @@ def histo_initial_tf(peaks, seed=0, width=20):
     num_peaks = len(peaks)
 
     # Sort
-    peaks = torch.sort(peaks, dim=0, descending=False)
+    # peaks = np.sort(peaks, dim=0, descending=False)
     peaks = list(peaks)
 
     tf = torch.randint(low=0, high=255, size=(1, num_peaks * 3 + 2, 5), dtype=torch.float32)
