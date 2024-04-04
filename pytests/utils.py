@@ -90,7 +90,7 @@ def histo_initial_tf(peaks, seed=0, width=20):
         # Control point
         tf[:, 1 + 3 * count, 4] = peak - (width / 2)
         tf[:, 1 + 3 * count + 1, 4] = peak
-        tf[:, 1 + 3 * count + 2, 4] = peak - (width / 2)
+        tf[:, 1 + 3 * count + 2, 4] = peak + (width / 2)
 
         # Opacity
         tf[:, 1 + 3 * count, 3] = 0
