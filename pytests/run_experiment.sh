@@ -67,36 +67,36 @@
 #python multipoint_tf.py --volume lobster --prompt "Volume rendering of a red lobster" --pitch 60 --yaw 89 --seed 1
 #python multipoint_tf.py --volume lobster --prompt "Volume rendering of a red lobster" --pitch 89 --yaw 89 --seed 1
 
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 89 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 0 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 0 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 0 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 0 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 30 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 30 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 30 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 30 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 60 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 60 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 60 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 60 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 0 --yaw 89 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 30 --yaw 89 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 60 --yaw 89 --seed 1
+#python multipoint_tf.py --volume tree --prompt "Volume rendering of a tree" --pitch 89 --yaw 89 --seed 1
 
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 0 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 30 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 60 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 89 --yaw 0 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 0 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 30 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 60 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 89 --yaw 30 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 0 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 30 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 60 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 89 --yaw 60 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 0 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 30 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 60 --yaw 89 --seed 1
-python multipoint_tf.py --volume tree --prompt "Tree volume rendering" --pitch 89 --yaw 89 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 0 --yaw 0 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 30 --yaw 0 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 60 --yaw 0 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 89 --yaw 0 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 0 --yaw 30 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 30 --yaw 30 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 60 --yaw 30 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 89 --yaw 30 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 0 --yaw 60 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 30 --yaw 60 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 60 --yaw 60 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 89 --yaw 60 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 0 --yaw 89 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 30 --yaw 89 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 60 --yaw 89 --seed 1
+python multipoint_tf.py --volume tree --prompt "Tree with brown trunk and green leaves" --pitch 89 --yaw 89 --seed 1
