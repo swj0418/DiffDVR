@@ -110,8 +110,8 @@ if __name__ == '__main__':
 
     print("Create forward difference settings")
     differences_settings = pyrenderer.ForwardDifferencesSettings()
-    differences_settings.D = 40  # TF + camera
-    derivative_tf_indices = create_tf_indices(num_peaks * 3 + 2)
+    differences_settings.D = 4 * num_peaks  # TF + camera
+    derivative_tf_indices = create_tf_indices(num_peaks + 2)
 
     differences_settings.d_tf = derivative_tf_indices.to(device=device)
     differences_settings.d_rayStart = pyrenderer.int3(0, 1, 2)
