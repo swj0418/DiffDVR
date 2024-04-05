@@ -51,7 +51,7 @@ def random_initial_tf(seed=0, cp=12):
     tf[:, :, 0:3] = tf[:, :, 0:3] / 255
 
     # Opacity [0, 100]
-    tf[:, :, 3] = tf[:, :, 3] * (100 / 255) / 4
+    tf[:, :, 3] = tf[:, :, 3] * (100 / 255) / 4  # Start small.
 
     # Control point [0, 255], in ascending order. Sort every TF points based on control points.
     # control_points = tf[:, :, 4]
