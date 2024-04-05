@@ -296,20 +296,18 @@ if __name__ == '__main__':
 
     # Camera setting & TF export
     settings = {}
-    current_tf = current_tf.detach().cpu().numpy()
-    current_tf_opacity = current_tf_opacity.detach().cpu().numpy()
+    current_tf = current_tf.detach().cpu()
+    current_tf_opacity = current_tf_opacity.detach().cpu()
     current_tf[:, :, 3:4] = current_tf_opacity[:, :, 3:4]
     settings['tf'] = current_tf
     settings['camera'] = {
         "orientation": "Ym",
-        "center": camera_center.detach().cpu().numpy(),
-        "pitch": camera_initial_pitch.detach().cpu().numpy(),
-        "yaw": camera_initial_yaw.detach().cpu().numpy(),
-        "distance": camera_initial_distance.detach().cpu().numpy()
+        "center": camera_center.detach().cpu(),
+        "pitch": camera_initial_pitch.detach().cpu(),
+        "yaw": camera_initial_yaw.detach().cpu(),
+        "distance": camera_initial_distance.detach().cpu()
     }
-
-    with open(f'{retain_fig_folder}/settings.json', 'w+') as file:
-        json.dump(settings, file)
+    torch.save(settings, f'{retain_fig_folder}/settings.pt')
 
     # Final render
     viewport = pyrenderer.Camera.viewport_from_sphere(
