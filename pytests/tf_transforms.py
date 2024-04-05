@@ -79,7 +79,7 @@ class TransformTF(torch.nn.Module):
         assert tf.shape[2] == 5
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
-            self.softplus(tf[:, :, 3:4]),  # opacity
+            self.softplus(tf[:, :, 3:4]) / 255,  # opacity
             tf[:, :, 4:5]  # position
         ], dim=2)
 

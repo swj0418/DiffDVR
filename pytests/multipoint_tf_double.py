@@ -192,7 +192,7 @@ if __name__ == '__main__':
     current_tf.requires_grad_()
 
     optimizer = torch.optim.Adam([current_tf[:, :, 0:3]], lr=lr)
-    optimizer_opacity = torch.optim.Adam([current_tf[:, :, 3:4]], lr=opacity_lr)
+    # optimizer_opacity = torch.optim.Adam([current_tf[:, :, 3:4]], lr=opacity_lr)
     # optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
@@ -230,7 +230,7 @@ if __name__ == '__main__':
 
         loss.backward()
         optimizer.step()
-        optimizer_opacity.step()
+        # optimizer_opacity.step()
         scheduler.step()
         print("Iteration % 4d, CD: %7.5f, L1: %7.5f" % (iteration, score.item(), l1.item()))
 
