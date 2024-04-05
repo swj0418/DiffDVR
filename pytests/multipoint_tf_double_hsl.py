@@ -201,7 +201,7 @@ if __name__ == '__main__':
     # optimizer_opacity = torch.optim.Adam([current_tf_opacity], lr=opacity_lr)
 
     optimizer = torch.optim.SGD([current_tf], lr=lr)
-    optimizer_opacity = torch.optim.SGD([current_tf_opacity], lr=opacity_lr)
+    optimizer_opacity = torch.optim.SGD([current_tf_opacity[0]], lr=opacity_lr)
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     scheduler_opacity = torch.optim.lr_scheduler.StepLR(optimizer_opacity, step_size=step_size, gamma=gamma)
