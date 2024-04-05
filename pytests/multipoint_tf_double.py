@@ -35,15 +35,15 @@ def parse_args():
 args = parse_args()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 1e-3
-opacity_lr = 1e-3 * 100
-step_size = 5000
+lr = 0.1
+opacity_lr = 1.0
+step_size = 200
 gamma = 0.1
 lamb = 0
 num_peaks = 5
 cp = 12
 steepest = True
-iterations = 2000  # Optimization iterations
+iterations = 600  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
@@ -200,6 +200,7 @@ if __name__ == '__main__':
     optimizer_opacity = torch.optim.Adam([current_tf_opacity], lr=opacity_lr)
     # optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
+    scheduler_opacity = torch.optim.lr_scheduler.StepLR(optimizer_opacity, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
 
@@ -237,6 +238,7 @@ if __name__ == '__main__':
         optimizer.step()
         optimizer_opacity.step()
         scheduler.step()
+        scheduler_opacity.step()
         print("Iteration % 4d, CD: %7.5f, L1: %7.5f" % (iteration, score.item(), l1.item()))
 
     print("Visualize Optimization")
