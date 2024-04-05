@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from torchvision.transforms import functional as F
 
 
@@ -50,7 +51,7 @@ def random_initial_tf(seed=0, cp=12):
     tf[:, :, 0:3] = tf[:, :, 0:3] / 255
 
     # Opacity [0, 100]
-    tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
+    tf[:, :, 3] = tf[:, :, 3] * (100 / 255) / 4  # Start small.
 
     # Control point [0, 255], in ascending order. Sort every TF points based on control points.
     # control_points = tf[:, :, 4]
@@ -61,11 +62,111 @@ def random_initial_tf(seed=0, cp=12):
     tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
 
     # 0 and 255 to 0
-    tf[:, 0, 3] = 0
-    tf[:, -1, 3] = 0
+    tf[:, 0, 3] = -10
+    tf[:, -1, 3] = -10
 
     return tf
 
+
+def flat_initial_tf(seed=0, cp=12):
+    torch.manual_seed(seed)
+
+    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=torch.float32)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+
+    # Opacity [0, 100]
+    tf[:, :, 3] = 10  # Start small.
+
+    # Control point [0, 255], in ascending order. Sort every TF points based on control points.
+    # control_points = tf[:, :, 4]
+    # _, sorted_indices = torch.sort(control_points, dim=1)
+    # sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
+
+    # Linearly spaced
+    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = -10
+    tf[:, -1, 3] = -10
+
+    return tf
+
+
+def histo_initial_tf(peaks, seed=0):
+    torch.manual_seed(seed)
+    num_peaks = len(peaks)
+
+    # Sort
+    peaks = np.sort(peaks)
+    peaks = list(peaks)
+    print(peaks)
+
+    tf = torch.randint(low=0, high=255, size=(1, num_peaks + 2, 5), dtype=torch.float32)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255 * 0.1
+
+    # Opacity [0, 100]
+    tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
+
+    # Control points
+    count = 0
+    for peak in peaks:
+        # Control point
+        tf[:, 1 + count, 4] = peak
+
+        # Opacity
+        # tf[:, 1 + 3 * count + 1, 3] = 50
+        count += 1
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = 0
+    tf[:, 0, 4] = 0
+    tf[:, -1, 3] = 0
+    tf[:, -1, 4] = 255
+
+    return tf
+
+
+def histo_initial_tf_triangle(peaks, seed=0, width=20):
+    torch.manual_seed(seed)
+    num_peaks = len(peaks)
+
+    # Sort
+    # peaks = np.sort(peaks, dim=0, descending=False)
+    peaks = list(peaks)
+
+    tf = torch.randint(low=0, high=255, size=(1, num_peaks * 3 + 2, 5), dtype=torch.float32)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+
+    # Opacity [0, 100]
+    # tf[:, :, 3] = tf[:, :, 3] * (100 / 255)
+
+    # Control points
+    count = 0
+    for peak in peaks:
+        # Control point
+        tf[:, 1 + 3 * count, 4] = peak - (width / 2)
+        tf[:, 1 + 3 * count + 1, 4] = peak
+        tf[:, 1 + 3 * count + 2, 4] = peak + (width / 2)
+
+        # Opacity
+        tf[:, 1 + 3 * count, 3] = 0
+        tf[:, 1 + 3 * count + 1, 3] = 50
+        tf[:, 1 + 3 * count + 2, 3] = 0
+        count += 1
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = 0
+    tf[:, 0, 4] = 0
+    tf[:, -1, 3] = 0
+    tf[:, -1, 4] = 255
+
+    return tf
 
 # derivative_tf_indices = torch.tensor([[
 #     [-1, -1, -1, -1, -1],

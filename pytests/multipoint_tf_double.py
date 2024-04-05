@@ -10,7 +10,7 @@ import imageio
 import OpenVisus as ov
 import torchvision.utils
 
-from utils import _clip_preprocess, create_tf_indices, random_initial_tf, histo_initial_tf
+from utils import _clip_preprocess, create_tf_indices, random_initial_tf, histo_initial_tf, flat_initial_tf
 from tf_transforms import TransformCamera, TransformTF
 
 sys.path.insert(0, os.getcwd())
@@ -36,6 +36,7 @@ args = parse_args()
 
 torch.set_printoptions(sci_mode=False, precision=3)
 lr = 2.0
+opacity_lr = 2.0
 step_size = 200
 gamma = 0.1
 lamb = 0
@@ -74,6 +75,7 @@ X, Y, Z = dataset.get_xyz()
 
 # initialize initial TF and render
 print("Render initial")
+# initial_tf = flat_initial_tf(args.seed, cp)
 initial_tf = random_initial_tf(args.seed, cp)
 # initial_tf = histo_initial_tf(peaks, seed=args.seed)
 initial_tf = initial_tf.to(device)
@@ -170,9 +172,11 @@ if __name__ == '__main__':
             super().__init__()
             self.tf_transform = TransformTF()
 
-        def forward(self, current_tf):
+        def forward(self, current_tf_color, current_tf_opacity):
             # TF transform - activation
-            transformed_tf = self.tf_transform(current_tf)
+            transformed_tf = self.tf_transform(current_tf_color)
+            transformed_tf_opacity = self.tf_transform(current_tf_opacity)
+            transformed_tf[:, :, 3:4] = transformed_tf_opacity[:, :, 3:4]
 
             # Forward
             color = rendererDeriv(transformed_tf)
@@ -188,15 +192,21 @@ if __name__ == '__main__':
 
     # Working parameters
     current_tf = initial_tf.clone()
+    current_tf_opacity = initial_tf.clone()
     current_tf.requires_grad_()
+    current_tf_opacity.requires_grad_()
 
+    # optimizer = torch.optim.Adam([current_tf], lr=lr)
     optimizer = torch.optim.Adam([current_tf], lr=lr)
+    optimizer_opacity = torch.optim.Adam([current_tf_opacity], lr=opacity_lr)
     # optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
+    scheduler_opacity = torch.optim.lr_scheduler.StepLR(optimizer_opacity, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
+        optimizer_opacity.zero_grad()
 
-        viewport, transformed_tf, color = model(current_tf)
+        viewport, transformed_tf, color = model(current_tf, current_tf_opacity)
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -216,7 +226,7 @@ if __name__ == '__main__':
         score = 1 - nembedding @ ntext_features.T
 
         # Sparsity
-        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 255))  # Sparsity in opacity only
+        l1 = torch.sum(torch.abs(current_tf_opacity[:, 1:-1, 3:4] / 255))  # Sparsity in opacity only
         loss = score + (lamb * l1)
 
         # compute loss
@@ -228,7 +238,9 @@ if __name__ == '__main__':
 
         loss.backward()
         optimizer.step()
+        optimizer_opacity.step()
         scheduler.step()
+        scheduler_opacity.step()
         print("Iteration % 4d, CD: %7.5f, L1: %7.5f" % (iteration, score.item(), l1.item()))
 
     print("Visualize Optimization")

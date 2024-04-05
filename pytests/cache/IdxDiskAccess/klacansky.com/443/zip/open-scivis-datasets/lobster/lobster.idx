@@ -1,0 +1,22 @@
+(version)
+6
+(box)
+0 300 0 323 0 55
+(fields)
+data uint8 default_compression(zip) default_layout() default_value(0) min(0) max(0) 
+(bits)
+V010101012012012012012012
+(bitsperblock)
+20
+(blocksperfile)
+16
+(interleave block)
+0
+(time)
+0 0 time_%04d/
+(filename_template)
+./lobster/%04x.bin
+(missing_blocks)
+0
+(arco)
+0
