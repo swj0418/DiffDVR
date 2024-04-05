@@ -1,4 +1,5 @@
 import argparse
+import json
 
 import numpy as np
 import torch
@@ -292,6 +293,21 @@ if __name__ == '__main__':
     imageio.mimsave(f'{retain_fig_folder}/test_tf_optimization.gif', images, loop=10, fps=10)  # Adjust fps as needed
     for frame_file in frame_files:  # Cleanup
         os.remove(frame_file)
+
+    # Camera setting & TF export
+    settings = {}
+    current_tf[:, :, 3:4] = current_tf_opacity[:, :, 3:4]
+    settings['tf'] = current_tf.detach().cpu().numpy()
+    settings['camera'] = {
+        "orientation": "Ym",
+        "center": camera_center.detach().cpu().numpy(),
+        "pitch": camera_initial_pitch.detach().cpu().numpy(),
+        "yaw": camera_initial_yaw.detach().cpu().numpy(),
+        "distance": camera_initial_distance.detach().cpu().numpy()
+    }
+
+    with open(f'{retain_fig_folder}/settings.json', 'w+') as file:
+        json.dump(settings, file)
 
     # Final render
     viewport = pyrenderer.Camera.viewport_from_sphere(

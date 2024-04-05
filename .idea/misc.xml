@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="diffvr3" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="diffvr3" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="ml" project-jdk-type="Python SDK" />
 </project>
