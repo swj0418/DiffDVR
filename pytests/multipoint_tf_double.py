@@ -10,7 +10,7 @@ import imageio
 import OpenVisus as ov
 import torchvision.utils
 
-from utils import _clip_preprocess, create_tf_indices, random_initial_tf, histo_initial_tf
+from utils import _clip_preprocess, create_tf_indices, random_initial_tf, histo_initial_tf, flat_initial_tf
 from tf_transforms import TransformCamera, TransformTF
 
 sys.path.insert(0, os.getcwd())
@@ -75,7 +75,8 @@ X, Y, Z = dataset.get_xyz()
 
 # initialize initial TF and render
 print("Render initial")
-initial_tf = random_initial_tf(args.seed, cp)
+initial_tf = flat_initial_tf(args.seed, cp)
+# initial_tf = random_initial_tf(args.seed, cp)
 # initial_tf = histo_initial_tf(peaks, seed=args.seed)
 initial_tf = initial_tf.to(device)
 print(initial_tf)

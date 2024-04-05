@@ -68,6 +68,32 @@ def random_initial_tf(seed=0, cp=12):
     return tf
 
 
+def flat_initial_tf(seed=0, cp=12):
+    torch.manual_seed(seed)
+
+    tf = torch.randint(low=0, high=255, size=(1, cp, 5), dtype=torch.float32)
+
+    # RGB [0, 1]
+    tf[:, :, 0:3] = tf[:, :, 0:3] / 255
+
+    # Opacity [0, 100]
+    tf[:, :, 3] = 10  # Start small.
+
+    # Control point [0, 255], in ascending order. Sort every TF points based on control points.
+    # control_points = tf[:, :, 4]
+    # _, sorted_indices = torch.sort(control_points, dim=1)
+    # sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
+
+    # Linearly spaced
+    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
+
+    # 0 and 255 to 0
+    tf[:, 0, 3] = 0
+    tf[:, -1, 3] = 0
+
+    return tf
+
+
 def histo_initial_tf(peaks, seed=0):
     torch.manual_seed(seed)
     num_peaks = len(peaks)
