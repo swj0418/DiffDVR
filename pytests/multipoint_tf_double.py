@@ -35,15 +35,15 @@ def parse_args():
 args = parse_args()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 5e-3
-opacity_lr = 5e-3 * 100
-step_size = 600
+lr = 1e-3
+opacity_lr = 1e-3 * 100
+step_size = 5000
 gamma = 0.1
 lamb = 0
 num_peaks = 5
 cp = 12
 steepest = True
-iterations = 600  # Optimization iterations
+iterations = 2000  # Optimization iterations
 B = 1  # batch dimension
 H = 224  # screen height
 W = 224 # screen width
