@@ -171,9 +171,11 @@ if __name__ == '__main__':
             super().__init__()
             self.tf_transform = TransformTF()
 
-        def forward(self, current_tf):
+        def forward(self, current_tf_color, current_tf_opacity):
             # TF transform - activation
-            transformed_tf = self.tf_transform(current_tf)
+            transformed_tf = self.tf_transform(current_tf_color)
+            transformed_tf_opacity = self.tf_transform(current_tf_opacity)
+            transformed_tf[:, :, 3:4] = transformed_tf_opacity[:, :, 3:4]
 
             # Forward
             color = rendererDeriv(transformed_tf)
@@ -189,17 +191,19 @@ if __name__ == '__main__':
 
     # Working parameters
     current_tf = initial_tf.clone()
+    current_tf_opacity = initial_tf.clone()
     current_tf.requires_grad_()
+    current_tf_opacity.requires_grad_()
 
-    optimizer = torch.optim.Adam([current_tf], lr=lr)
-    # optimizer = torch.optim.Adam([current_tf[:, :, 0:3]], lr=lr)
-    # optimizer_opacity = torch.optim.Adam([current_tf[:, :, 3:4]], lr=opacity_lr)
+    # optimizer = torch.optim.Adam([current_tf], lr=lr)
+    optimizer = torch.optim.Adam([current_tf[:, :, 0:3]], lr=lr)
+    optimizer_opacity = torch.optim.Adam([current_tf[:, :, 3:4]], lr=opacity_lr)
     # optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
 
-        viewport, transformed_tf, color = model(current_tf)
+        viewport, transformed_tf, color = model(current_tf, current_tf_opacity)
 
         # preprocess and embed
         # Tensor [C, H, W]
@@ -231,7 +235,7 @@ if __name__ == '__main__':
 
         loss.backward()
         optimizer.step()
-        # optimizer_opacity.step()
+        optimizer_opacity.step()
         scheduler.step()
         print("Iteration % 4d, CD: %7.5f, L1: %7.5f" % (iteration, score.item(), l1.item()))
 
