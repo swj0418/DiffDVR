@@ -35,7 +35,7 @@ def parse_args():
 args = parse_args()
 
 torch.set_printoptions(sci_mode=False, precision=3)
-lr = 0.1
+lr = 2.0
 opacity_lr = 2.0
 step_size = 200
 gamma = 0.1
@@ -225,7 +225,7 @@ if __name__ == '__main__':
         score = 1 - nembedding @ ntext_features.T
 
         # Sparsity
-        l1 = torch.sum(torch.abs(current_tf[:, 1:-1, 3:4] / 255))  # Sparsity in opacity only
+        l1 = torch.sum(torch.abs(current_tf_opacity[:, 1:-1, 3:4] / 255))  # Sparsity in opacity only
         loss = score + (lamb * l1)
 
         # compute loss
