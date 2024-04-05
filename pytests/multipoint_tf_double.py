@@ -196,8 +196,8 @@ if __name__ == '__main__':
     current_tf_opacity.requires_grad_()
 
     # optimizer = torch.optim.Adam([current_tf], lr=lr)
-    optimizer = torch.optim.Adam([current_tf[:, :, 0:3]], lr=lr)
-    optimizer_opacity = torch.optim.Adam([current_tf[:, :, 3:4]], lr=opacity_lr)
+    optimizer = torch.optim.Adam([current_tf], lr=lr)
+    optimizer_opacity = torch.optim.Adam([current_tf_opacity], lr=opacity_lr)
     # optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
