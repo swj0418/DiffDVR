@@ -62,8 +62,8 @@ def random_initial_tf(seed=0, cp=12):
     tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
 
     # 0 and 255 to 0
-    tf[:, 0, 3] = 0
-    tf[:, -1, 3] = 0
+    tf[:, 0, 3] = -10
+    tf[:, -1, 3] = -10
 
     return tf
 
@@ -88,8 +88,8 @@ def flat_initial_tf(seed=0, cp=12):
     tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
 
     # 0 and 255 to 0
-    tf[:, 0, 3] = 0
-    tf[:, -1, 3] = 0
+    tf[:, 0, 3] = -10
+    tf[:, -1, 3] = -10
 
     return tf
 
