@@ -67,44 +67,44 @@ class TransformTFHSL(torch.nn.Module):
         ], dim=2)
 
 
-# class TransformTF(torch.nn.Module):
-#     def __init__(self, lab=False):
-#         super().__init__()
-#         self.sigmoid = torch.nn.Sigmoid()
-#         self.softplus = torch.nn.Softplus()
-#         self.relu = torch.nn.ReLU()
-#
-#     def forward(self, tf):
-#         assert len(tf.shape) == 3
-#         assert tf.shape[2] == 5
-#         return torch.cat([
-#             self.sigmoid(tf[:, :, 0:3]),  # color
-#             self.softplus(tf[:, :, 3:4]),  # opacity
-#             tf[:, :, 4:5]  # position
-#         ], dim=2)
-
-
 class TransformTF(torch.nn.Module):
-    def __init__(self, lab=False, max_softplus_output=20):
+    def __init__(self, lab=False):
         super().__init__()
         self.sigmoid = torch.nn.Sigmoid()
         self.softplus = torch.nn.Softplus()
         self.relu = torch.nn.ReLU()
-        self.max_softplus_output = max_softplus_output  # Max expected value from Softplus
 
     def forward(self, tf):
         assert len(tf.shape) == 3
         assert tf.shape[2] == 5
-
-        # Apply Softplus and then clamp values above 100 to be exactly 100
-        opacity = self.softplus(tf[:, :, 3:4])
-        opacity = torch.clamp(opacity, max=100)  # Clamp opacity to a maximum of 100
-
         return torch.cat([
             self.sigmoid(tf[:, :, 0:3]),  # color
-            opacity,  # opacity, clamped to not exceed 100
+            self.sigmoid(tf[:, :, 3:4]) * 100,  # opacity
             tf[:, :, 4:5]  # position
         ], dim=2)
+
+
+# class TransformTF(torch.nn.Module):
+#     def __init__(self, lab=False, max_softplus_output=20):
+#         super().__init__()
+#         self.sigmoid = torch.nn.Sigmoid()
+#         self.softplus = torch.nn.Softplus()
+#         self.relu = torch.nn.ReLU()
+#         self.max_softplus_output = max_softplus_output  # Max expected value from Softplus
+#
+#     def forward(self, tf):
+#         assert len(tf.shape) == 3
+#         assert tf.shape[2] == 5
+#
+#         # Apply Softplus and then clamp values above 100 to be exactly 100
+#         opacity = self.softplus(tf[:, :, 3:4])
+#         opacity = torch.clamp(opacity, max=100)  # Clamp opacity to a maximum of 100
+#
+#         return torch.cat([
+#             self.sigmoid(tf[:, :, 0:3]),  # color
+#             opacity,  # opacity, clamped to not exceed 100
+#             tf[:, :, 4:5]  # position
+#         ], dim=2)
 
 class TransformTFParameterization(torch.nn.Module):
     def __init__(self, dtype, device):
