@@ -203,6 +203,7 @@ if __name__ == '__main__':
     scheduler_opacity = torch.optim.lr_scheduler.StepLR(optimizer_opacity, step_size=step_size, gamma=gamma)
     for iteration in range(iterations):
         optimizer.zero_grad()
+        optimizer_opacity.zero_grad()
 
         viewport, transformed_tf, color = model(current_tf, current_tf_opacity)
 
