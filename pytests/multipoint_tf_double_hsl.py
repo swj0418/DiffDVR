@@ -212,8 +212,6 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
         optimizer_opacity.zero_grad()
-        print(current_tf.grad)
-        print(current_tf_opacity.grad)
 
         viewport, transformed_tf, color = model(current_tf, current_tf_opacity)
 
@@ -246,6 +244,9 @@ if __name__ == '__main__':
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
 
         loss.backward()
+
+        print(current_tf.grad)
+        print(current_tf_opacity.grad)
         optimizer.step()
         optimizer_opacity.step()
         scheduler.step()
