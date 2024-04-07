@@ -212,6 +212,8 @@ if __name__ == '__main__':
     for iteration in range(iterations):
         optimizer.zero_grad()
         optimizer_opacity.zero_grad()
+        print(current_tf.grad)
+        print(current_tf_opacity.grad)
 
         viewport, transformed_tf, color = model(current_tf, current_tf_opacity)
 
@@ -242,8 +244,6 @@ if __name__ == '__main__':
         reconstructed_cliploss.append(score.item())
         reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
-        print(current_tf.grad)
-        print(current_tf_opacity.grad)
 
         loss.backward()
         optimizer.step()
