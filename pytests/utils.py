@@ -21,17 +21,26 @@ def _clip_preprocess(n_px):
     return preprocess
 
 
-def create_tf_indices(rows):
+def create_tf_indices(rows, optimize_position=False):
     indices = []
     indices.append([-1, -1, -1, -1, -1])
-    for i in range(0, rows - 2):
-        tmp = []
-        for j in range(5):
-            if j == 4:
-                tmp.append(-1)
-            else:
-                tmp.append(4 * i + j)
-        indices.append(tmp)
+
+    if not optimize_position:
+        for i in range(0, rows - 2):
+            tmp = []
+            for j in range(5):
+                if j == 4:
+                    tmp.append(-1)
+                else:
+                    tmp.append(4 * i + j)
+            indices.append(tmp)
+    else:
+        for i in range(0, rows - 2):
+            tmp = []
+            for j in range(5):
+                tmp.append(5 * i + j)
+            indices.append(tmp)
+
     indices.append([-1, -1, -1, -1, -1])
     indices = torch.tensor(indices, dtype=torch.int32).unsqueeze(0)
 
