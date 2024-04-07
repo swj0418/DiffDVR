@@ -59,7 +59,7 @@ def random_initial_tf(seed=0, cp=12):
     # sorted_tensor = torch.gather(tf, 1, sorted_indices.unsqueeze(-1).expand(-1, -1, tf.size(2)))
 
     # Linearly spaced
-    tf[:, :, 4] = torch.linspace(0, 255, steps=cp, dtype=torch.float32)
+    tf[:, :, 4] = torch.linspace(0, 100, steps=cp, dtype=torch.float32)
 
     # 0 and 255 to 0
     tf[:, 0, 3] = -10
