@@ -200,8 +200,8 @@ if __name__ == '__main__':
     # optimizer = torch.optim.Adam([current_tf], lr=lr)
     # optimizer_opacity = torch.optim.Adam([current_tf_opacity], lr=opacity_lr)
 
-    optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.9)
-    optimizer_opacity = torch.optim.SGD([current_tf_opacity], lr=opacity_lr, momentum=0.9)
+    optimizer = torch.optim.SGD([current_tf], lr=lr, momentum=0.1)
+    optimizer_opacity = torch.optim.SGD([current_tf_opacity], lr=opacity_lr, momentum=0.1)
 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size, gamma=gamma)
     scheduler_opacity = torch.optim.lr_scheduler.StepLR(optimizer_opacity, step_size=step_size, gamma=gamma)
@@ -242,6 +242,7 @@ if __name__ == '__main__':
         reconstructed_cliploss.append(score.item())
         reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
+        print(current_tf.grad)
 
         loss.backward()
         optimizer.step()
