@@ -243,6 +243,7 @@ if __name__ == '__main__':
         reconstructed_sparsity.append(l1.item())
         reconstructed_tf.append(transformed_tf.detach().cpu().numpy()[0])
         print(current_tf.grad)
+        print(current_tf_opacity.grad)
 
         loss.backward()
         optimizer.step()
