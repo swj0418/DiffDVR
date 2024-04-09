@@ -245,8 +245,8 @@ if __name__ == '__main__':
 
         loss.backward()
 
-        print(current_tf.grad)
-        print(current_tf_opacity.grad)
+        # print(current_tf.grad)
+        # print(current_tf_opacity.grad)
         optimizer.step()
         optimizer_opacity.step()
         scheduler.step()
